@@ -1,4 +1,6 @@
-import { ResourceOptions } from "adminjs";
+import path from "path";
+import uploadFileFeature from '@adminjs/upload';
+import { ResourceOptions, FeatureType } from "adminjs";
 
 export const animeResourceOptions: ResourceOptions = {
   navigation: "Catálogo",
@@ -29,3 +31,18 @@ export const animeResourceOptions: ResourceOptions = {
     "updatedAt",
   ],
 };
+
+export const animeResourceFeatures: FeatureType[] =[
+  uploadFileFeature({
+    provider:{
+      local:{
+        bucket: path.join(__dirname, "..", "..", "..", "public")
+      }
+    },
+    properties:{
+      key: 'thumbnailUrl',
+      file: 'uploadThumbnail'
+    },
+    uploadPath: (record, filename) => `thumbnails/anime-${record.get('id')}/${filename}`
+  })
+]

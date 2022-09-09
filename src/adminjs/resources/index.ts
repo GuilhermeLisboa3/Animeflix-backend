@@ -3,7 +3,7 @@ import { Category } from './../../models/Category';
 import { ResourceWithOptions } from 'adminjs';
 import { categoryResourceOptions } from './category';
 import { Anime } from '../../models';
-import { animeResourceOptions } from './anime';
+import { animeResourceOptions, animeResourceFeatures } from './anime';
 import { episodeResourceFeatures, episodeResourceOptions } from './episodes';
 
 export const adminJsResource:ResourceWithOptions[]=[
@@ -12,7 +12,8 @@ export const adminJsResource:ResourceWithOptions[]=[
         options: categoryResourceOptions
     },{
         resource: Anime,
-        options:animeResourceOptions
+        options:animeResourceOptions,
+        features: animeResourceFeatures
     },{
         resource: Episode,
         options: episodeResourceOptions,
