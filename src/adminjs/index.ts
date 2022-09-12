@@ -6,6 +6,7 @@ import { sequelize } from "../database";
 import { adminJsResource } from "./resources";
 import { User } from "../models";
 import dotenv from "dotenv"
+import { locale } from './locale';
 dotenv.config()
 
 AdminJs.registerAdapter(AdminJsSequelize);
@@ -35,6 +36,7 @@ export const adminJs = new AdminJs({
       },
     },
   },
+  locale: locale
 });
 
 export const adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(adminJs, {
