@@ -1,13 +1,13 @@
-import  bcrypt  from 'bcrypt';
+import bcrypt from "bcrypt";
 import AdminJs from "adminjs";
 import AdminJsExpress from "@adminjs/express";
 import AdminJsSequelize from "@adminjs/sequelize";
 import { sequelize } from "../database";
 import { adminJsResource } from "./resources";
-import { User } from "../models";
-import dotenv from "dotenv"
-import { locale } from './locale';
-dotenv.config()
+import { Anime, Category, Episode, User } from "../models";
+import dotenv from "dotenv";
+import { locale } from "./locale";
+dotenv.config();
 
 AdminJs.registerAdapter(AdminJsSequelize);
 
@@ -36,25 +36,45 @@ export const adminJs = new AdminJs({
       },
     },
   },
-  locale: locale
-});
+  locale: locale,
+  dashboard: {
+    component: AdminJs.bundle("./components/Dashboard"),
+    handler: async (req, res, context) => {
+      const anime = await Anime.count();
+      const episodes = await Episode.count();
+      const category = await Category.count();
+      const standardUsers = await User.count({ where: { role: "user" } });
 
-export const adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(adminJs, {
-  authenticate: async (email, password) => {
-    const user = await User.findOne({ where: { email } });
-    if( user && user.role === 'admin') {
-      const matched = await bcrypt.compare(password , user.password)
-
-      if(matched){
-        return user
-      }
-    }
-    else{
-      return false
-    }
+      res.json({
+        'Animes': anime,
+        'Episódios': episodes,
+        'Categorias': category,
+        'Usuários': standardUsers
+      })
+    },
   },
-  cookiePassword: String(process.env.PASSWORD_ADMINJS),
-},null,{
-  resave:false,
-  saveUninitialized:false
 });
+
+export const adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
+  adminJs,
+  {
+    authenticate: async (email, password) => {
+      const user = await User.findOne({ where: { email } });
+      if (user && user.role === "admin") {
+        const matched = await bcrypt.compare(password, user.password);
+
+        if (matched) {
+          return user;
+        }
+      } else {
+        return false;
+      }
+    },
+    cookiePassword: String(process.env.PASSWORD_ADMINJS),
+  },
+  null,
+  {
+    resave: false,
+    saveUninitialized: false,
+  }
+);
