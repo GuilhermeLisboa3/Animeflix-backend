@@ -29,9 +29,17 @@ export const animesServices = {
       },
     });
 
-    const randomFeaturedAnimes = featuredAnimes.sort(()=> 0.5 - Math.random())
+    const randomFeaturedAnimes = featuredAnimes.sort(() => 0.5 - Math.random());
 
-    return randomFeaturedAnimes.slice(0,3)
+    return randomFeaturedAnimes.slice(0, 3);
+  },
 
+  getTopTenNewest: async () => {
+    const animes = await Anime.findAll({
+      limit: 10,
+      order:[['created_at', 'DESC']]
+    });
+
+    return animes
   },
 };

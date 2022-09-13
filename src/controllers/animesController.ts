@@ -14,6 +14,18 @@ export const animesController = {
     }
   },
 
+  //GET / animes/newest
+  newest: async (req: Request, res: Response) => {
+    try {
+      const newestAnimes = await animesServices.getTopTenNewest()
+      return res.json(newestAnimes)
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message });
+      }
+    }
+  },
+
   //GET /animes/:id
   show: async (req: Request, res: Response) => {
     const { id } = req.params;
