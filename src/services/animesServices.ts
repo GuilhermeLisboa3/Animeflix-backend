@@ -5,7 +5,7 @@ export const animesServices = {
     const animesWithEpisodes = await Anime.findByPk(id, {
       attributes: ["id", "name", "synopsis", ["thumbnail_url", "thumbnailUrl"]],
       include: {
-        association: "Episodes",
+        association: "episodes",
         attributes: [
           "id",
           "name",
@@ -19,5 +19,19 @@ export const animesServices = {
       },
     });
     return animesWithEpisodes;
+  },
+
+  getRandomFeaturedAnimes: async () => {
+    const featuredAnimes = await Anime.findAll({
+      attributes: ["id", "name", "synopsis", ["thumbnail_url", "thumbnailUrl"]],
+      where: {
+        featured: true,
+      },
+    });
+
+    const randomFeaturedAnimes = featuredAnimes.sort(()=> 0.5 - Math.random())
+
+    return randomFeaturedAnimes.slice(0,3)
+
   },
 };
