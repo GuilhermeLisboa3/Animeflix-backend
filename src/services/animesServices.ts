@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { Anime } from "../models";
 
 export const animesServices = {
@@ -37,9 +38,30 @@ export const animesServices = {
   getTopTenNewest: async () => {
     const animes = await Anime.findAll({
       limit: 10,
-      order:[['created_at', 'DESC']]
+      order: [["created_at", "DESC"]],
     });
 
-    return animes
+    return animes;
+  },
+
+  findByName: async (name: string, page: number, perPage: number) => {
+    const offset = (page - 1) * perPage;
+    const { count, rows } = await Anime.findAndCountAll({
+      attributes: ["id", "name", "synopsis", ["thumbnail_url", "thumbnailUrl"]],
+      where: {
+        name: {
+          [Op.iLike]: `%${name}%`,
+        },
+      },
+      limit: perPage,
+      offset,
+    });
+
+    return {
+      animes: rows,
+      page,
+      perPage,
+      total: count,
+    };
   },
 };
