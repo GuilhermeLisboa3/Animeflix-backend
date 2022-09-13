@@ -3,7 +3,7 @@ import { Anime } from './Anime';
 import { Category } from './Category'
 import { Episode } from './Episodes'
 
-Category.hasMany(Anime)
+Category.hasMany(Anime, {as: 'animes'})
 
 Anime.belongsTo(Category)
 Anime.hasMany(Episode)

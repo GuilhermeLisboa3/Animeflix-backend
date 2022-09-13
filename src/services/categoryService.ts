@@ -17,4 +17,20 @@ export const categoryService = {
       count: count,
     };
   },
+
+  findByIdWithAnimes: async (id: string) => {
+    const categoryWithAnimes = await Category.findByPk(id, {
+      attributes: ["id", "name"],
+      include: {
+        association: "animes",
+        attributes: [
+          "id",
+          "name",
+          "synopsis",
+          ["thumbnail_url", "thumbnailUrl"],
+        ],
+      },
+    });
+    return categoryWithAnimes;
+  },
 };
