@@ -21,6 +21,7 @@ router.get("/animes/:id", ensureAuth, animesController.show);
 
 router.get("/episodes/stream",ensureAuthViaQuery, episodesController.stream);
 
+router.get("/favorites",ensureAuth, favoriteController.index)
 router.post("/favorites",ensureAuth, favoriteController.save)
 
 export default router;

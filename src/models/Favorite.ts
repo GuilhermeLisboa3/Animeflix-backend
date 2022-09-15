@@ -11,8 +11,8 @@ export interface FavoriteAttributes {
 export interface FavoriteInstace
   extends Model<FavoriteAttributes>,
     FavoriteAttributes {
-  animes?: AnimeInstance;
-  user?: UserInstance;
+  Anime?: AnimeInstance;
+  User?: UserInstance;
 }
 
 export const Favorite = sequelize.define<FavoriteInstace, FavoriteAttributes>(

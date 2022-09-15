@@ -9,7 +9,7 @@ Category.hasMany(Anime, { as: "animes" });
 Anime.belongsTo(Category);
 Anime.belongsToMany(User, { through: Favorite });
 Anime.hasMany(Episode, { as: "episodes" });
-Anime.hasMany(Favorite, { as: "FavoriteUser", foreignKey: "anime_id" });
+Anime.hasMany(Favorite, { as: "FavoriteUsers", foreignKey: "anime_id" });
 
 Episode.belongsTo(Anime);
 
