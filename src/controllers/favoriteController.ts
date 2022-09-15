@@ -7,7 +7,7 @@ export const favoriteController = {
   index: async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user!.id;
     try {
-      const favorite = await favoriteService.findByUserId(userId)
+      const favorite = await favoriteService.findByUserId(userId);
 
       return res.status(200).json(favorite);
     } catch (err) {
@@ -26,6 +26,21 @@ export const favoriteController = {
       const favorite = await favoriteService.create(userId, Number(animeId));
 
       return res.status(200).json(favorite);
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message });
+      }
+    }
+  },
+
+  //DELETE /favorties/:id
+  delete: async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user!.id;
+    const animeId = req.params.id;
+
+    try {
+      await favoriteService.delete(userId, Number(animeId));
+      return res.status(204).send()
     } catch (err) {
       if (err instanceof Error) {
         res.status(400).json({ message: err.message });
