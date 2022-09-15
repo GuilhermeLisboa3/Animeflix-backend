@@ -4,6 +4,7 @@ import { animesController } from "./controllers/animesController";
 import { categoriesController } from "./controllers/categoriesController";
 import { episodesController } from "./controllers/episodesController";
 import { ensureAuth, ensureAuthViaQuery } from "./middlewares/auth";
+import { favoriteController } from "./controllers/favoriteController";
 
 const router = express.Router();
 
@@ -19,5 +20,7 @@ router.get("/animes/search", ensureAuth, animesController.search);
 router.get("/animes/:id", ensureAuth, animesController.show);
 
 router.get("/episodes/stream",ensureAuthViaQuery, episodesController.stream);
+
+router.post("/favorites",ensureAuth, favoriteController.save)
 
 export default router;
