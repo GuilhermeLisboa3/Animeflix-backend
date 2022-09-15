@@ -8,5 +8,13 @@ export const likeService = {
         })
 
         return like
-    }
+    },
+    delete: async (userId:number, animeId:number)=>{
+        await Like.destroy({
+            where:{
+                userId,
+                animeId
+            }
+        })
+    },
 }
