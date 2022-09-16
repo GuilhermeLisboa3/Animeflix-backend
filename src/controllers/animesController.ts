@@ -30,6 +30,19 @@ export const animesController = {
     }
   },
 
+  //GET /animes/popular
+
+  popular: async (req: Request, res:Response )=>{
+    try {
+      const topTen = await animesServices.getTopTenByLikes()
+      return res.json(topTen)
+    } catch (err) {
+      if(err instanceof Error){
+        res.status(400).json({message: err.message});
+      }
+    }
+  },
+
   //GET /animes/search?name=
   search: async (req: Request, res: Response) => {
     const { name } = req.query;

@@ -64,4 +64,31 @@ export const animesServices = {
       total: count,
     };
   },
+
+  getTopTenByLikes: async () => {
+    const result = await Anime.sequelize?.query(
+      `SELECT 
+          animes.id,
+          animes.name,
+          animes.synopsis,
+          animes.thumbnail_url AS thumbnailUrl,
+          COUNT(users.id) AS likes
+      FROM animes
+          LEFT OUTER JOIN likes
+            ON animes.id = likes.anime_id
+              INNER JOIN users
+                  ON users.id = likes.user_id
+      GROUP BY animes.id
+      ORDER BY likes DESC
+      LIMIT 10;
+      `
+    );
+
+    if (result) {
+      const [topTen, metada] = result;
+      return topTen
+    }else{
+      return null
+    }
+  },
 };

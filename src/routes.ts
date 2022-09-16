@@ -17,16 +17,17 @@ router.get("/categories/:id", ensureAuth, categoriesController.show);
 
 router.get("/animes/featured", ensureAuth, animesController.featured);
 router.get("/animes/newest", animesController.newest);
+router.get("/animes/popular", ensureAuth, animesController.popular);
 router.get("/animes/search", ensureAuth, animesController.search);
 router.get("/animes/:id", ensureAuth, animesController.show);
 
-router.get("/episodes/stream",ensureAuthViaQuery, episodesController.stream);
+router.get("/episodes/stream", ensureAuthViaQuery, episodesController.stream);
 
-router.get("/favorites",ensureAuth, favoriteController.index)
-router.post("/favorites",ensureAuth, favoriteController.save)
-router.delete("/favorites/:id",ensureAuth, favoriteController.delete)
+router.get("/favorites", ensureAuth, favoriteController.index);
+router.post("/favorites", ensureAuth, favoriteController.save);
+router.delete("/favorites/:id", ensureAuth, favoriteController.delete);
 
-router.post("/likes", ensureAuth, likeController.save)
-router.delete("/likes/:id", ensureAuth, likeController.delete)
+router.post("/likes", ensureAuth, likeController.save);
+router.delete("/likes/:id", ensureAuth, likeController.delete);
 
 export default router;
