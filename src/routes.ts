@@ -23,6 +23,9 @@ router.get("/animes/:id", ensureAuth, animesController.show);
 
 router.get("/episodes/stream", ensureAuthViaQuery, episodesController.stream);
 
+router.get("/episodes/:id/WatchTime",ensureAuth, episodesController.getWatchTime)
+router.post("/episodes/:id/WatchTime",ensureAuth, episodesController.setWatchTime)
+
 router.get("/favorites", ensureAuth, favoriteController.index);
 router.post("/favorites", ensureAuth, favoriteController.save);
 router.delete("/favorites/:id", ensureAuth, favoriteController.delete);
