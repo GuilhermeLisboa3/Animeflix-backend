@@ -38,5 +38,16 @@ export const favoriteService = {
         animeId
       }
     })
+  },
+
+  isFavorited: async (userId:number, animeId:number) =>{
+    const favorite = await Favorite.findOne({
+      where:{
+        userId,
+        animeId
+      }
+    })
+
+    return favorite !== null ? true : false
   }
 };

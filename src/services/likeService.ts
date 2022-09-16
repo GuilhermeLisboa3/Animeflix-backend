@@ -17,4 +17,14 @@ export const likeService = {
             }
         })
     },
+
+    isLiked: async (userId:number, animeId:number)=>{
+        const like = await Like.findOne({
+            where:{
+                userId,
+                animeId
+            }
+        })
+        return like !== null ? true : false
+    }
 }
