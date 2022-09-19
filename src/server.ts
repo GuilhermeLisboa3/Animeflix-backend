@@ -3,8 +3,10 @@ import express from "express"
 import {adminJs, adminJsRouter} from "./adminjs"
 import * as dotenv from "dotenv";
 import router from './routes';
+import cors from 'cors'
 
 const app = express()
+app.use(cors())
 dotenv.config();
 
 app.use(express.json())
