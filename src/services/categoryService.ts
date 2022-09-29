@@ -11,7 +11,7 @@ export const categoryService = {
     });
 
     return {
-      cateoreis: rows,
+      categories: rows,
       page: page,
       perPage: perPage,
       count: count,
