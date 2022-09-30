@@ -33,7 +33,7 @@ Animeflix is a project, for people who like to watch anime, a site that allows y
 * Swr
 * bcrypt
 * sequelize
-* exprsss
+* express
 
 <br />
 
