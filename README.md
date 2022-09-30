@@ -19,7 +19,7 @@
 ## 💻 &nbsp; Project
 
 <br />
-Animeflix is a project, for people who like to watch anime, a site that allows you to add videos to favorites, search and also a keep watching list, a site fully developed for the user to have a good experience with anime..
+Animeflix on the admin side, where you will be responsible for putting the anime episodes on the air, the cover photo, a very safe and easy to use interface.
 <br />
 
 <br />
