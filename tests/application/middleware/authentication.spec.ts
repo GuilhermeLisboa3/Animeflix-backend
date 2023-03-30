@@ -4,10 +4,14 @@ import { UnauthorizedError } from '@/application/errors'
 
 describe('AuthenticationMiddleware ', () => {
   let sut: AuthenticationMiddleware
+  let authorization: string
+  let accessToken: string
   let authorize: jest.Mock
   let role: string
 
   beforeAll(() => {
+    accessToken = 'any_access_token'
+    authorization = `Bearer ${accessToken}`
     authorize = jest.fn().mockResolvedValue({ accountId: 'any_id' })
     role = 'user'
   })
@@ -32,5 +36,12 @@ describe('AuthenticationMiddleware ', () => {
     const httpResponse = await sut.handle({ authorization: undefined as any })
 
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
+  })
+
+  it('should call authorize with correct input', async () => {
+    await sut.handle({ authorization })
+
+    expect(authorize).toHaveBeenCalledWith({ accessToken, role })
+    expect(authorize).toHaveBeenCalledTimes(1)
   })
 })
