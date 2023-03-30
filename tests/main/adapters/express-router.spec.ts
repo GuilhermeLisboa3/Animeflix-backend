@@ -14,6 +14,7 @@ describe('Express Router', () => {
 
   beforeAll(() => {
     controller = mock<Controller>()
+    controller.handle.mockResolvedValue({ statusCode: 200, data: { data: 'any_value' } })
     req = getMockReq({ body: { anyBody: 'any_body' }, params: { id: 'any_id' }, query: { anyQuery: 'any_query' } })
     res = getMockRes().res
     next = getMockRes().next
@@ -37,5 +38,14 @@ describe('Express Router', () => {
 
     expect(controller.handle).toHaveBeenCalledWith({})
     expect(controller.handle).toHaveBeenCalledTimes(1)
+  })
+
+  it('should respond with correct statusCode and data on success', async () => {
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({ data: 'any_value' })
+    expect(res.json).toHaveBeenCalledTimes(1)
   })
 })
