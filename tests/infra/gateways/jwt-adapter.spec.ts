@@ -48,4 +48,19 @@ describe('JwtAdapter', () => {
       expect(accessToken).toBe('any_token')
     })
   })
+
+  describe('validate', () => {
+    let token: string
+
+    beforeAll(() => {
+      token = 'any_token'
+    })
+
+    it('should call verify with correct input', async () => {
+      await sut.validate({ token })
+
+      expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
+      expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
+    })
+  })
 })
