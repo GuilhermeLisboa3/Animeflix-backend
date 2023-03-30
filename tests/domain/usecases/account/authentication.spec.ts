@@ -41,6 +41,15 @@ describe('Authentication', () => {
     await expect(promise).rejects.toThrow(new AuthenticationError())
   })
 
+  it('should rethrow if LoadAccountByEmail throw', async () => {
+    const error = new Error()
+    accountRepository.loadByEmail.mockRejectedValueOnce(error)
+
+    const promise = sut(loginAccount)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call hashComparer with correct input', async () => {
     await sut(loginAccount)
 
@@ -56,11 +65,29 @@ describe('Authentication', () => {
     await expect(promise).rejects.toThrow(new AuthenticationError())
   })
 
+  it('should rethrow if hashComparer throw', async () => {
+    const error = new Error()
+    hashCompare.comparer.mockRejectedValueOnce(error)
+
+    const promise = sut(loginAccount)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call TokenGenerator with correct input', async () => {
     await sut(loginAccount)
 
     expect(token.generate).toHaveBeenCalledWith({ key: 'any_id' })
     expect(token.generate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if TokenGenerator throw', async () => {
+    const error = new Error()
+    token.generate.mockRejectedValueOnce(error)
+
+    const promise = sut(loginAccount)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return an accessToken on success', async () => {
