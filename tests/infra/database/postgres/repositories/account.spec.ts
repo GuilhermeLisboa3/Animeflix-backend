@@ -65,5 +65,11 @@ describe('AccountRepository', () => {
 
       expect(account).toEqual({ id: '1', password: 'any_password' })
     })
+
+    it('should return undefined if account not exists', async () => {
+      const account = await sut.loadByEmail('any_email')
+
+      expect(account).toBeUndefined()
+    })
   })
 })
