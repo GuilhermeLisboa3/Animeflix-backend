@@ -50,4 +50,11 @@ describe('Express Middleware', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'any_error' })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
+
+  it('should add valid data to req.locals on success', async () => {
+    await sut(req, res, next)
+
+    expect(req.locals).toEqual({ key: 'any_key' })
+    expect(next).toHaveBeenCalledTimes(1)
+  })
 })
