@@ -23,6 +23,7 @@ describe('JwtAdapter', () => {
 
     beforeAll(() => {
       key = 'any_key'
+      fakeJwt.sign.mockImplementation(() => 'any_token')
     })
 
     it('should call sign with correct input', async () => {
@@ -39,6 +40,12 @@ describe('JwtAdapter', () => {
       const promise = sut.generate({ key })
 
       await expect(promise).rejects.toThrow(error)
+    })
+
+    it('should return token on success', async () => {
+      const accessToken = await sut.generate({ key })
+
+      expect(accessToken).toBe('any_token')
     })
   })
 })
