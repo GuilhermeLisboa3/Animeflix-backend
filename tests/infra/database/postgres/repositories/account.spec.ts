@@ -72,4 +72,12 @@ describe('AccountRepository', () => {
       expect(account).toBeUndefined()
     })
   })
+
+  describe('checkRole', () => {
+    it('should return false if account does not exists', async () => {
+      const account = await sut.checkRole({ accountId: '1' })
+
+      expect(account).toBeFalsy()
+    })
+  })
 })
