@@ -15,6 +15,7 @@ describe('Authentication', () => {
     accountRepository = mock()
     accountRepository.loadByEmail.mockResolvedValue({ id: 'any_id', password: 'any_password_data' })
     hashCompare = mock()
+    hashCompare.comparer.mockResolvedValue(true)
     loginAccount = { email: 'any_email@gmail.com', password: 'any_password' }
   })
 
@@ -42,5 +43,13 @@ describe('Authentication', () => {
 
     expect(hashCompare.comparer).toHaveBeenCalledWith({ plaintext: 'any_password', digest: 'any_password_data' })
     expect(hashCompare.comparer).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return AuthenticationError if hashComparer returns false', async () => {
+    hashCompare.comparer.mockResolvedValueOnce(false)
+
+    const promise = sut(loginAccount)
+
+    await expect(promise).rejects.toThrow(new AuthenticationError())
   })
 })
