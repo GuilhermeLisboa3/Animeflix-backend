@@ -95,5 +95,13 @@ describe('AccountRepository', () => {
 
       expect(account).toBeFalsy()
     })
+
+    it('should return true if the route require role user and the account is admin', async () => {
+      await Account.create({ ...makeAccount, role: 'admin' })
+
+      const account = await sut.checkRole({ accountId: '1', role: 'user' })
+
+      expect(account).toBeTruthy()
+    })
   })
 })
