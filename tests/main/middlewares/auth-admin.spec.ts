@@ -7,7 +7,7 @@ import env from '@/main/config/env'
 import { sign } from 'jsonwebtoken'
 import request from 'supertest'
 
-describe('AuthMiddleware', () => {
+describe('AuthAdminMiddleware', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true })
   })
@@ -42,5 +42,25 @@ describe('AuthMiddleware', () => {
 
     expect(status).toBe(403)
     expect(body.error).toEqual(new ForbiddenError().message)
+  })
+
+  it('should return 200 if authorization header is valid', async () => {
+    await Account.create({
+      firstName: 'any_name',
+      lastName: 'any_last_name',
+      email: 'any_email@gmail.com',
+      password: 'any_password',
+      birth: new Date(),
+      phone: 'any_phone',
+      role: 'admin'
+    })
+    const token = sign({ key: '1' }, env.secret)
+
+    app.get('/fake_route', authAdmin, (req, res) => { res.status(200).json(req.locals) })
+
+    const { status, body } = await request(app).get('/fake_route').set({ authorization: `Bearer: ${token}` })
+
+    expect(status).toBe(200)
+    expect(body).toEqual({ accountId: '1' })
   })
 })
