@@ -1,6 +1,6 @@
 import { TokenValidator } from '@/domain/contracts/gateways'
 import { CheckAccountRole } from '@/domain/contracts/database/account'
-import { AuthenticationError } from '@/domain/errors'
+import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors'
 
 type Setup = (token: TokenValidator, accountRepository: CheckAccountRole) => Authorize
 type Input = { accessToken: string, role?: string }
@@ -13,5 +13,6 @@ export const AuthorizeUseCase: Setup = (token, accountRepository) => async ({ ac
   } catch {
     throw new AuthenticationError()
   }
-  await accountRepository.checkRole({ accountId, role })
+  const account = await accountRepository.checkRole({ accountId, role })
+  if (!account) throw new InsuficientPermissionError()
 }
