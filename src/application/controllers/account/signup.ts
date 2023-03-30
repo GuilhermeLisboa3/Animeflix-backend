@@ -1,3 +1,4 @@
+import { HttpResponse, ok } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
 import { AddAccount } from '@/domain/usecases/account'
 
@@ -6,8 +7,9 @@ type HttpRequest = { firstName: string, lastName: string, phone: string, birth: 
 export class SignUpController {
   constructor (private readonly AddAccount: AddAccount) { }
 
-  async perform (input: HttpRequest): Promise<void> {
-    await this.AddAccount(input)
+  async perform (input: HttpRequest): Promise<HttpResponse> {
+    const account = await this.AddAccount(input)
+    return ok(account)
   }
 
   buildValidators ({ firstName, lastName, email, password, birth, phone }: HttpRequest): Validator[] {
