@@ -1,4 +1,5 @@
 import { SignUpController } from '@/application/controllers/account'
+import { Controller } from '@/application/controllers'
 import { RequiredField, EmailValidator } from '@/application/validation'
 
 import MockDate from 'mockdate'
@@ -27,6 +28,10 @@ describe('SignUpController', () => {
 
   afterAll(() => {
     MockDate.reset()
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
