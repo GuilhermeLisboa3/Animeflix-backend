@@ -95,5 +95,16 @@ describe('AccountRoute', () => {
       expect(status).toBe(200)
       expect(body).toBeTruthy()
     })
+
+    it('should return 400 if any data is not supplied', async () => {
+      const { status, body: { error } } = await request(app)
+        .post('/auth/login')
+        .send({
+          email: 'any_email@gmail.com'
+        })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new RequiredFieldError('password').message)
+    })
   })
 })
