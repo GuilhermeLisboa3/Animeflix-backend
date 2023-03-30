@@ -30,4 +30,13 @@ describe('Express Middleware', () => {
     expect(middleware.handle).toHaveBeenCalledWith({ authorization: 'any_value', test: 'any_test' })
     expect(middleware.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should call handle with empty value', async () => {
+    req = getMockReq()
+
+    await sut(req, res, next)
+
+    expect(middleware.handle).toHaveBeenCalledWith({})
+    expect(middleware.handle).toHaveBeenCalledTimes(1)
+  })
 })
