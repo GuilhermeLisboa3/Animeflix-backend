@@ -36,4 +36,10 @@ describe('Composite', () => {
 
     expect(error).toEqual(validateError)
   })
+
+  it('should return undefined if all Validator returns undefined', () => {
+    const error = sut.validate()
+
+    expect(error).toEqual(validateError)
+  })
 })
