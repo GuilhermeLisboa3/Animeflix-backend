@@ -14,7 +14,6 @@ describe('AddAccount', () => {
 
   beforeAll(() => {
     accountRepository = mock()
-    accountRepository.checkByEmail.mockResolvedValue(false)
     accountRepository.create.mockResolvedValue(true)
     hash = mock()
     hashPassword = 'hash_password'
@@ -41,6 +40,15 @@ describe('AddAccount', () => {
     await expect(promise).rejects.toThrow(new FieldInUseError('email'))
   })
 
+  it('should rethrow if CheckAccountByEmail throws', async () => {
+    const error = new Error('check_error')
+    accountRepository.checkByEmail.mockRejectedValueOnce(error)
+
+    const promise = sut(account)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call HashGenerator with correct input', async () => {
     await sut(account)
 
@@ -48,11 +56,29 @@ describe('AddAccount', () => {
     expect(hash.generate).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if HashGenerator throws', async () => {
+    const error = new Error('hash_error')
+    hash.generate.mockRejectedValueOnce(error)
+
+    const promise = sut(account)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CreateAccount with correct input', async () => {
     await sut(account)
 
     expect(accountRepository.create).toHaveBeenCalledWith({ ...account, password: hashPassword })
     expect(accountRepository.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if CreateAccount throws', async () => {
+    const error = new Error('create_error')
+    accountRepository.create.mockRejectedValueOnce(error)
+
+    const promise = sut(account)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return true on success', async () => {
