@@ -3,6 +3,7 @@ import { Controller } from '@/application/controllers'
 import { RequiredField, EmailValidator } from '@/application/validation'
 
 import MockDate from 'mockdate'
+import { FieldInUseError } from '@/domain/errors'
 
 describe('SignUpController', () => {
   let sut: SignUpController
@@ -53,6 +54,17 @@ describe('SignUpController', () => {
 
     expect(AddAccount).toHaveBeenCalledWith(makeRequest)
     expect(AddAccount).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if AddAccount returns FieldInUseError', async () => {
+    AddAccount.mockRejectedValueOnce(new FieldInUseError('email'))
+
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new FieldInUseError('email')
+    })
   })
 
   it('should return 200 on success', async () => {
