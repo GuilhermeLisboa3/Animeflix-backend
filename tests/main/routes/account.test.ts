@@ -27,6 +27,22 @@ describe('AccountRoute', () => {
   })
 
   describe('POST /auth/register', () => {
+    it('should return 200 on success', async () => {
+      const { status, body } = await request(app)
+        .post('/auth/register')
+        .send({
+          firstName: 'any_name',
+          lastName: 'any_last_name',
+          email: 'any_email@gmail.com',
+          password: 'any_password',
+          birth: new Date(),
+          phone: 'any_phone'
+        })
+
+      expect(status).toBe(200)
+      expect(body).toBeTruthy()
+    })
+
     it('should return 400 if any data is not supplied', async () => {
       const { status, body: { error } } = await request(app)
         .post('/auth/register')
