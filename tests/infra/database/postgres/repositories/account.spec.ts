@@ -34,5 +34,26 @@ describe('AccountRepository', () => {
 
       expect(existAccount).toBeTruthy()
     })
+
+    it('should return false if email not exists', async () => {
+      const existAccount = await sut.checkByEmail('any_email')
+
+      expect(existAccount).toBeFalsy()
+    })
+  })
+
+  describe('create', () => {
+    it('should create account on success', async () => {
+      const existAccount = await sut.create({
+        firstName: 'any_name',
+        lastName: 'any_last_name',
+        email: 'any_email',
+        password: 'any_password',
+        birth: new Date(),
+        phone: 'any_phone'
+      })
+
+      expect(existAccount).toBeTruthy()
+    })
   })
 })
