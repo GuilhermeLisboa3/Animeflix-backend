@@ -1,5 +1,6 @@
 import { badRequest, HttpResponse, serverError } from '@/application/helpers'
 import { ValidationComposite, Validator } from '@/application/validation'
+import { FieldInUseError } from '@/domain/errors'
 
 export abstract class Controller {
   abstract perform (httpRequest: any): Promise<HttpResponse>
@@ -11,6 +12,7 @@ export abstract class Controller {
     try {
       return await this.perform(httpRequest)
     } catch (error) {
+      if (error instanceof FieldInUseError) return badRequest(error)
       return serverError(error)
     }
   }
