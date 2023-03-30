@@ -62,5 +62,14 @@ describe('JwtAdapter', () => {
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
       expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
     })
+
+    it('should rethrow if verify throw', async () => {
+      const error = new Error('jwt_error')
+      fakeJwt.verify.mockImplementationOnce(() => { throw error })
+
+      const promise = sut.validate({ token })
+
+      await expect(promise).rejects.toThrow(error)
+    })
   })
 })
