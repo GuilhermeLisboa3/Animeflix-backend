@@ -56,4 +56,14 @@ describe('AccountRepository', () => {
       expect(existAccount).toBeTruthy()
     })
   })
+
+  describe('loadByEmail', () => {
+    it('should return an account if it exists', async () => {
+      await Account.create(makeAccount)
+
+      const account = await sut.loadByEmail('any_email')
+
+      expect(account).toEqual({ id: '1', password: 'any_password' })
+    })
+  })
 })
