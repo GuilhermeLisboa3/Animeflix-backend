@@ -1,16 +1,17 @@
 import { forbidden, HttpResponse, ok, serverError, unauthorized } from '@/application/helpers'
 import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors'
 import { Authorize } from '@/domain/usecases/account'
+import { Middleware } from '@/application/middleware'
 
 type HttpRequest = { authorization: string }
 
-export class AuthenticationMiddleware {
+export class AuthenticationMiddleware implements Middleware {
   constructor (
     private readonly authorize: Authorize,
     private readonly role?: string
   ) {}
 
-  async handle ({ authorization }: HttpRequest): Promise<HttpResponse | undefined> {
+  async handle ({ authorization }: HttpRequest): Promise<HttpResponse> {
     try {
       if (!authorization) return unauthorized()
       const accessToken = authorization.split(' ')[1]
