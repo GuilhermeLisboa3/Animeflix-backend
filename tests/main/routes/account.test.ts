@@ -4,6 +4,7 @@ import { FieldInUseError } from '@/domain/errors'
 
 import request from 'supertest'
 import { RequiredFieldError } from '@/application/errors'
+import { UnauthorizedError } from '@/application/errors/http'
 
 describe('AccountRoute', () => {
   let makeAccount: { firstName: string, lastName: string, email: string, password: string, birth: Date, phone: string, role: 'user' | 'admin' }
@@ -105,6 +106,18 @@ describe('AccountRoute', () => {
 
       expect(status).toBe(400)
       expect(error).toBe(new RequiredFieldError('password').message)
+    })
+
+    it('should return 401 if account does not exists', async () => {
+      const { status, body: { error } } = await request(app)
+        .post('/auth/login')
+        .send({
+          email: 'any_email@gmail.com',
+          password: 'any_password'
+        })
+
+      expect(status).toBe(401)
+      expect(error).toBe(new UnauthorizedError().message)
     })
   })
 })
