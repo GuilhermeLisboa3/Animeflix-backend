@@ -1,4 +1,5 @@
 import { LoginController } from '@/application/controllers/account'
+import { Controller } from '@/application/controllers'
 import { EmailValidator, RequiredField } from '@/application/validation'
 
 describe('LoginController', () => {
@@ -13,6 +14,10 @@ describe('LoginController', () => {
 
   beforeEach(() => {
     sut = new LoginController(authentication)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
