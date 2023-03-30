@@ -27,4 +27,13 @@ describe('Composite', () => {
 
     expect(error).toEqual(validateError)
   })
+
+  it('should return the first error if any Validator fails', () => {
+    validate1.validate.mockReturnValue(validateError)
+    validate2.validate.mockReturnValue(new Error('any_error'))
+
+    const error = sut.validate()
+
+    expect(error).toEqual(validateError)
+  })
 })
