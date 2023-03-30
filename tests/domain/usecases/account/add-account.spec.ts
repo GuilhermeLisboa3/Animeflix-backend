@@ -1,20 +1,23 @@
 import { AddAccount, addAccountUseCase } from '@/domain/usecases/account'
-import { CheckAccountByEmail } from '@/domain/contracts/database/account'
+import { CheckAccountByEmail, CreateAccount } from '@/domain/contracts/database/account'
 import { HashGenerator } from '@/domain/contracts/gateways'
 import { FieldInUseError } from '@/domain/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('AddAccount', () => {
-  let accountRepository: MockProxy<CheckAccountByEmail>
+  let accountRepository: MockProxy<CheckAccountByEmail & CreateAccount>
   let hash: MockProxy<HashGenerator>
   let sut: AddAccount
   let account: { email: string, password: string, firstName: string, lastName: string, phone: string, birth: Date }
+  let hashPassword: string
 
   beforeAll(() => {
     accountRepository = mock()
     accountRepository.checkByEmail.mockResolvedValue(false)
     hash = mock()
+    hashPassword = 'hash_password'
+    hash.generate.mockResolvedValue(hashPassword)
     account = { email: 'any_email', password: 'any_password', firstName: 'any_first_name', lastName: 'any_last_name', phone: 'any_phone', birth: new Date() }
   })
 
@@ -42,5 +45,12 @@ describe('AddAccount', () => {
 
     expect(hash.generate).toHaveBeenCalledWith({ plaintext: 'any_password' })
     expect(hash.generate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call CreateAccount with correct input', async () => {
+    await sut(account)
+
+    expect(accountRepository.create).toHaveBeenCalledWith({ ...account, password: hashPassword })
+    expect(accountRepository.create).toHaveBeenCalledTimes(1)
   })
 })
