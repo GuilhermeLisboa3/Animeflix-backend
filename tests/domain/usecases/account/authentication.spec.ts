@@ -1,6 +1,6 @@
 import { AuthenticationUseCase, Authentication } from '@/domain/usecases/account'
 import { LoadAccountByEmail } from '@/domain/contracts/database/account'
-import { HashComparer } from '@/domain/contracts/gateways'
+import { HashComparer, TokenGenerator } from '@/domain/contracts/gateways'
 import { AuthenticationError } from '@/domain/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -8,6 +8,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 describe('Authentication', () => {
   let accountRepository: MockProxy<LoadAccountByEmail>
   let hashCompare: MockProxy<HashComparer>
+  let token: MockProxy<TokenGenerator>
   let sut: Authentication
   let loginAccount: { email: string, password: string }
 
@@ -16,11 +17,12 @@ describe('Authentication', () => {
     accountRepository.loadByEmail.mockResolvedValue({ id: 'any_id', password: 'any_password_data' })
     hashCompare = mock()
     hashCompare.comparer.mockResolvedValue(true)
+    token = mock()
     loginAccount = { email: 'any_email@gmail.com', password: 'any_password' }
   })
 
   beforeEach(() => {
-    sut = AuthenticationUseCase(accountRepository, hashCompare)
+    sut = AuthenticationUseCase(accountRepository, hashCompare, token)
   })
 
   it('should call LoadAccountByEmail with correct email', async () => {
@@ -51,5 +53,12 @@ describe('Authentication', () => {
     const promise = sut(loginAccount)
 
     await expect(promise).rejects.toThrow(new AuthenticationError())
+  })
+
+  it('should call TokenGenerator with correct input', async () => {
+    await sut(loginAccount)
+
+    expect(token.generate).toHaveBeenCalledWith({ key: 'any_id' })
+    expect(token.generate).toHaveBeenCalledTimes(1)
   })
 })
