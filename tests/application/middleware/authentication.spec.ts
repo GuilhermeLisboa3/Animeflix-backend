@@ -66,4 +66,10 @@ describe('AuthenticationMiddleware ', () => {
 
     expect(httpResponse).toEqual({ statusCode: 500, data: new ServerError() })
   })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.handle({ authorization })
+
+    expect(httpResponse).toEqual({ statusCode: 200, data: { accountId: 'any_id' } })
+  })
 })
