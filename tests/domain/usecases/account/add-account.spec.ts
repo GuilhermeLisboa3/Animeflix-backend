@@ -1,5 +1,6 @@
 import { AddAccount, addAccountUseCase } from '@/domain/usecases/account'
 import { CheckAccountByEmail } from '@/domain/contracts/database/account'
+import { FieldInUseError } from '@/domain/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
@@ -10,6 +11,7 @@ describe('AddAccount', () => {
 
   beforeAll(() => {
     accountRepository = mock()
+    accountRepository.checkByEmail.mockResolvedValue(false)
     account = { email: 'any_email', password: 'any_password', firstName: 'any_first_name', lastName: 'any_last_name', phone: 'any_phone', birth: new Date() }
   })
 
@@ -22,5 +24,13 @@ describe('AddAccount', () => {
 
     expect(accountRepository.checkByEmail).toHaveBeenCalledWith('any_email')
     expect(accountRepository.checkByEmail).toHaveBeenCalledTimes(1)
+  })
+
+  it('should throw FieldInUseError if CheckAccountByEmail return true', async () => {
+    accountRepository.checkByEmail.mockResolvedValueOnce(true)
+
+    const promise = sut(account)
+
+    await expect(promise).rejects.toThrow(new FieldInUseError('email'))
   })
 })
