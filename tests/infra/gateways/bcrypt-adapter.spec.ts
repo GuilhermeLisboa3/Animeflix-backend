@@ -14,6 +14,7 @@ describe('BcryptAdapter', () => {
   beforeAll(() => {
     fakeBcrypt = bcrypt as jest.Mocked<typeof bcrypt>
     fakeBcrypt.hash.mockImplementation(() => 'any_hash_value')
+    fakeBcrypt.compare.mockImplementation(() => true)
     salt = 12
     plaintext = 'any_value'
     digest = 'any_encrypt_password'
@@ -61,6 +62,12 @@ describe('BcryptAdapter', () => {
       const isValid = await sut.comparer({ plaintext: 'invalid_password', digest })
 
       expect(isValid).toBeFalsy()
+    })
+
+    it('should return true if the values are equal', async () => {
+      const isValid = await sut.comparer({ plaintext: 'invalid_password', digest })
+
+      expect(isValid).toBeTruthy()
     })
   })
 })
