@@ -1,9 +1,9 @@
 import { Authorize, AuthorizeUseCase } from '@/domain/usecases/account'
 import { TokenValidator } from '@/domain/contracts/gateways'
 import { CheckAccountRole } from '@/domain/contracts/database/account'
+import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
-import { AuthenticationError } from '@/domain/errors'
 
 describe('AuthorizeUseCase', () => {
   let token: MockProxy<TokenValidator>
@@ -15,6 +15,7 @@ describe('AuthorizeUseCase', () => {
     token = mock()
     token.validate.mockResolvedValue('any_id')
     accountRepository = mock()
+    accountRepository.checkRole.mockResolvedValue(true)
     makeParams = { accessToken: 'any_token', role: 'any_role' }
   })
 
@@ -42,5 +43,13 @@ describe('AuthorizeUseCase', () => {
 
     expect(accountRepository.checkRole).toHaveBeenCalledWith({ accountId: 'any_id', role: 'any_role' })
     expect(accountRepository.checkRole).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return InsuficientPermissionError if CheckAccountRole returns false', async () => {
+    accountRepository.checkRole.mockResolvedValueOnce(false)
+
+    const promise = sut(makeParams)
+
+    await expect(promise).rejects.toThrow(new InsuficientPermissionError())
   })
 })
