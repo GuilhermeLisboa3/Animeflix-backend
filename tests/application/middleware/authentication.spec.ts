@@ -1,6 +1,7 @@
 import { AuthenticationMiddleware } from '@/application/middleware'
 
 import { UnauthorizedError } from '@/application/errors'
+import { AuthenticationError } from '@/domain/errors'
 
 describe('AuthenticationMiddleware ', () => {
   let sut: AuthenticationMiddleware
@@ -43,5 +44,12 @@ describe('AuthenticationMiddleware ', () => {
 
     expect(authorize).toHaveBeenCalledWith({ accessToken, role })
     expect(authorize).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 401 if authorize return AuthenticationError', async () => {
+    authorize.mockRejectedValueOnce(new AuthenticationError())
+    const httpResponse = await sut.handle({ authorization })
+
+    expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
   })
 })
