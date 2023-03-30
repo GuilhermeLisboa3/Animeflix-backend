@@ -4,7 +4,8 @@ import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors
 
 type Setup = (token: TokenValidator, accountRepository: CheckAccountRole) => Authorize
 type Input = { accessToken: string, role?: string }
-export type Authorize = (input: Input) => Promise<void>
+type Output = { accountId: string }
+export type Authorize = (input: Input) => Promise<Output>
 
 export const AuthorizeUseCase: Setup = (token, accountRepository) => async ({ accessToken, role }) => {
   let accountId: string
@@ -15,4 +16,5 @@ export const AuthorizeUseCase: Setup = (token, accountRepository) => async ({ ac
   }
   const account = await accountRepository.checkRole({ accountId, role })
   if (!account) throw new InsuficientPermissionError()
+  return { accountId }
 }
