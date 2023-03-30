@@ -75,4 +75,25 @@ describe('AccountRoute', () => {
       expect(error).toBe(new FieldInUseError('email').message)
     })
   })
+
+  describe('POST /auth/login', () => {
+    it('should return 200 on success', async () => {
+      await request(app)
+        .post('/auth/register')
+        .send({
+          firstName: 'any_name',
+          lastName: 'any_last_name',
+          email: 'any_email@gmail.com',
+          password: 'any_password',
+          birth: new Date(),
+          phone: 'any_phone'
+        })
+      const { status, body } = await request(app)
+        .post('/auth/login')
+        .send({ email: 'any_email@gmail.com', password: 'any_password' })
+
+      expect(status).toBe(200)
+      expect(body).toBeTruthy()
+    })
+  })
 })
