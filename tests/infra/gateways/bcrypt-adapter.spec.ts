@@ -9,12 +9,14 @@ describe('BcryptAdapter', () => {
   let salt: number
   let sut: BcryptAdapter
   let plaintext: string
+  let digest: string
 
   beforeAll(() => {
     fakeBcrypt = bcrypt as jest.Mocked<typeof bcrypt>
     fakeBcrypt.hash.mockImplementation(() => 'any_hash_value')
     salt = 12
     plaintext = 'any_value'
+    digest = 'any_encrypt_password'
   })
 
   beforeEach(() => {
@@ -42,6 +44,15 @@ describe('BcryptAdapter', () => {
       const promise = sut.generate({ plaintext })
 
       await expect(promise).rejects.toThrow(error)
+    })
+  })
+
+  describe('comparer', () => {
+    it('should call compare with correct input', async () => {
+      await sut.comparer({ plaintext, digest })
+
+      expect(fakeBcrypt.compare).toHaveBeenCalledWith('any_value', 'any_encrypt_password')
+      expect(fakeBcrypt.compare).toHaveBeenCalledTimes(1)
     })
   })
 })
