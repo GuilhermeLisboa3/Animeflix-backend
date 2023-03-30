@@ -1,4 +1,4 @@
-import { forbidden, HttpResponse, unauthorized } from '@/application/helpers'
+import { forbidden, HttpResponse, serverError, unauthorized } from '@/application/helpers'
 import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors'
 import { Authorize } from '@/domain/usecases/account'
 
@@ -18,6 +18,7 @@ export class AuthenticationMiddleware {
     } catch (error) {
       if (error instanceof AuthenticationError) return unauthorized()
       if (error instanceof InsuficientPermissionError) return forbidden()
+      return serverError(error)
     }
   }
 }
