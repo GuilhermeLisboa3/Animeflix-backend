@@ -54,6 +54,7 @@ describe('JwtAdapter', () => {
 
     beforeAll(() => {
       token = 'any_token'
+      fakeJwt.verify.mockImplementation(() => ({ key: 'account_id' }))
     })
 
     it('should call verify with correct input', async () => {
@@ -70,6 +71,12 @@ describe('JwtAdapter', () => {
       const promise = sut.validate({ token })
 
       await expect(promise).rejects.toThrow(error)
+    })
+
+    it('should return id on success', async () => {
+      const accountId = await sut.validate({ token })
+
+      expect(accountId).toBe('account_id')
     })
   })
 })
