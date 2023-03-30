@@ -54,5 +54,13 @@ describe('BcryptAdapter', () => {
       expect(fakeBcrypt.compare).toHaveBeenCalledWith('any_value', 'any_encrypt_password')
       expect(fakeBcrypt.compare).toHaveBeenCalledTimes(1)
     })
+
+    it('should return false if the values are different', async () => {
+      fakeBcrypt.compare.mockImplementationOnce(() => false)
+
+      const isValid = await sut.comparer({ plaintext: 'invalid_password', digest })
+
+      expect(isValid).toBeFalsy()
+    })
   })
 })
