@@ -1,6 +1,8 @@
 import { LoginController } from '@/application/controllers/account'
 import { Controller } from '@/application/controllers'
 import { EmailValidator, RequiredField } from '@/application/validation'
+import { AuthenticationError } from '@/domain/errors'
+import { UnauthorizedError } from '@/application/errors/http'
 
 describe('LoginController', () => {
   let sut: LoginController
@@ -35,6 +37,14 @@ describe('LoginController', () => {
 
     expect(authentication).toHaveBeenCalledWith(makeRequest)
     expect(authentication).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 401 if Authentication returns AuthenticationError', async () => {
+    authentication.mockRejectedValueOnce(new AuthenticationError())
+
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
   })
 
   it('should return 200 on success', async () => {
