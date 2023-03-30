@@ -11,5 +11,7 @@ export class AuthenticationMiddleware {
 
   async handle ({ authorization }: HttpRequest): Promise<HttpResponse | undefined> {
     if (!authorization) return unauthorized()
+    const accessToken = authorization.split(' ')[1]
+    await this.authorize({ accessToken, role: this.role })
   }
 }
