@@ -7,8 +7,6 @@
     "start": "node dist/main",
     "dev": "ts-node-dev --respawn --transpile-only src/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
-    "lint": "lint .",
-    "lint:fix": "npm run lint -- --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm run test -- --watch",
     "test:unit": "npm t -- --watch -c jest-unit-config.js",
