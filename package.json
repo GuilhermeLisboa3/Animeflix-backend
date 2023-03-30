@@ -11,6 +11,8 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm run test -- --watch",
+    "test:unit": "npm t -- --watch -c jest-unit-config.js",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm run test -- --findRelatedTests",
     "test:coverage": "npm run test -- --coverage",
     "prepare": "husky install"
