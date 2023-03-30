@@ -31,5 +31,14 @@ describe('JwtAdapter', () => {
       expect(fakeJwt.sign).toHaveBeenCalledWith({ key }, secret, { expiresIn: '1d' })
       expect(fakeJwt.sign).toHaveBeenCalledTimes(1)
     })
+
+    it('should rethrow if sign throw', async () => {
+      const error = new Error('jwt_error')
+      fakeJwt.sign.mockImplementationOnce(() => { throw error })
+
+      const promise = sut.generate({ key })
+
+      await expect(promise).rejects.toThrow(error)
+    })
   })
 })
