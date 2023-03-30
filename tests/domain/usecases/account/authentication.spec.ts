@@ -18,6 +18,7 @@ describe('Authentication', () => {
     hashCompare = mock()
     hashCompare.comparer.mockResolvedValue(true)
     token = mock()
+    token.generate.mockResolvedValue('any_access_token')
     loginAccount = { email: 'any_email@gmail.com', password: 'any_password' }
   })
 
@@ -60,5 +61,11 @@ describe('Authentication', () => {
 
     expect(token.generate).toHaveBeenCalledWith({ key: 'any_id' })
     expect(token.generate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return an accessToken on success', async () => {
+    const accessToken = await sut(loginAccount)
+
+    expect(accessToken).toEqual({ accessToken: 'any_access_token' })
   })
 })
