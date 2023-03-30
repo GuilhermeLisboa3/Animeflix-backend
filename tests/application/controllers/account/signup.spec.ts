@@ -6,6 +6,7 @@ import MockDate from 'mockdate'
 describe('SignUpController', () => {
   let sut: SignUpController
   let makeRequest: { firstName: string, lastName: string, email: string, password: string, birth: Date, phone: string }
+  let AddAccount: jest.Mock
 
   beforeAll(() => {
     MockDate.set(new Date())
@@ -17,10 +18,11 @@ describe('SignUpController', () => {
       birth: new Date(),
       phone: 'any_phone'
     }
+    AddAccount = jest.fn()
   })
 
   beforeEach(() => {
-    sut = new SignUpController()
+    sut = new SignUpController(AddAccount)
   })
 
   afterAll(() => {
@@ -39,5 +41,12 @@ describe('SignUpController', () => {
       new RequiredField(new Date(), 'birth'),
       new RequiredField('any_phone', 'phone')
     ])
+  })
+
+  it('should call AddAccount with correct input', async () => {
+    await sut.perform(makeRequest)
+
+    expect(AddAccount).toHaveBeenCalledWith(makeRequest)
+    expect(AddAccount).toHaveBeenCalledTimes(1)
   })
 })
