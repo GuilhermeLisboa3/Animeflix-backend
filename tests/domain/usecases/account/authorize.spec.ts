@@ -52,4 +52,10 @@ describe('AuthorizeUseCase', () => {
 
     await expect(promise).rejects.toThrow(new InsuficientPermissionError())
   })
+
+  it('should return accountId on success', async () => {
+    const accountId = await sut(makeParams)
+
+    expect(accountId).toEqual({ accountId: 'any_id' })
+  })
 })
