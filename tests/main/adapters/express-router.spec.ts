@@ -29,4 +29,13 @@ describe('Express Router', () => {
     expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', id: 'any_id', anyQuery: 'any_query' })
     expect(controller.handle).toHaveBeenCalledTimes(1)
   })
+
+  it('should call handle with empty request', async () => {
+    const req = getMockReq()
+
+    await sut(req, res, next)
+
+    expect(controller.handle).toHaveBeenCalledWith({})
+    expect(controller.handle).toHaveBeenCalledTimes(1)
+  })
 })
