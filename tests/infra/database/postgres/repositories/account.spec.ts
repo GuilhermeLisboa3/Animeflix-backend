@@ -79,5 +79,13 @@ describe('AccountRepository', () => {
 
       expect(account).toBeFalsy()
     })
+
+    it('should return true if account exists without role', async () => {
+      await Account.create(makeAccount)
+
+      const account = await sut.checkRole({ accountId: '1' })
+
+      expect(account).toBeTruthy()
+    })
   })
 })
