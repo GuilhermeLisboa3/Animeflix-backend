@@ -53,6 +53,15 @@ describe('AuthorizeUseCase', () => {
     await expect(promise).rejects.toThrow(new InsuficientPermissionError())
   })
 
+  it('should rethrow if CheckAccountRole throw', async () => {
+    const error = new Error('infa_error')
+    accountRepository.checkRole.mockRejectedValueOnce(error)
+
+    const promise = sut(makeParams)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should return accountId on success', async () => {
     const accountId = await sut(makeParams)
 
