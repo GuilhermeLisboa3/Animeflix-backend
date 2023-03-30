@@ -4,12 +4,14 @@ import { AuthenticationError } from '@/domain/errors'
 
 type Setup = (accountRepository: LoadAccountByEmail, hashCompare: HashComparer, token: TokenGenerator) => Authentication
 type Input = { email: string, password: string }
-export type Authentication = (input: Input) => Promise<void>
+type Output = { accessToken: string }
+export type Authentication = (input: Input) => Promise<Output>
 
 export const AuthenticationUseCase: Setup = (accountRepository, hashCompare, token) => async ({ email, password }) => {
   const account = await accountRepository.loadByEmail(email)
   if (!account) throw new AuthenticationError()
   const isValid = await hashCompare.comparer({ plaintext: password, digest: account.password })
   if (!isValid) throw new AuthenticationError()
-  await token.generate({ key: account.id })
+  const accessToken = await token.generate({ key: account.id })
+  return { accessToken }
 }
