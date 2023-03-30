@@ -8,7 +8,7 @@ describe('LoginController', () => {
 
   beforeAll(() => {
     makeRequest = { email: 'any_email@gmail.com', password: 'any_password' }
-    authentication = jest.fn()
+    authentication = jest.fn().mockResolvedValue({ accesstoken: 'any_access_token' })
   })
 
   beforeEach(() => {
@@ -30,5 +30,11 @@ describe('LoginController', () => {
 
     expect(authentication).toHaveBeenCalledWith(makeRequest)
     expect(authentication).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({ statusCode: 200, data: { accesstoken: 'any_access_token' } })
   })
 })
