@@ -1,5 +1,5 @@
-import { HttpResponse, unauthorized } from '@/application/helpers'
-import { AuthenticationError } from '@/domain/errors'
+import { forbidden, HttpResponse, unauthorized } from '@/application/helpers'
+import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors'
 import { Authorize } from '@/domain/usecases/account'
 
 type HttpRequest = { authorization: string }
@@ -17,6 +17,7 @@ export class AuthenticationMiddleware {
       await this.authorize({ accessToken, role: this.role })
     } catch (error) {
       if (error instanceof AuthenticationError) return unauthorized()
+      if (error instanceof InsuficientPermissionError) return forbidden()
     }
   }
 }
