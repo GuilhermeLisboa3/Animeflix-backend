@@ -1,7 +1,7 @@
 import { AuthenticationMiddleware } from '@/application/middleware'
 
-import { UnauthorizedError } from '@/application/errors'
-import { AuthenticationError } from '@/domain/errors'
+import { ForbiddenError, UnauthorizedError } from '@/application/errors'
+import { AuthenticationError, InsuficientPermissionError } from '@/domain/errors'
 
 describe('AuthenticationMiddleware ', () => {
   let sut: AuthenticationMiddleware
@@ -51,5 +51,12 @@ describe('AuthenticationMiddleware ', () => {
     const httpResponse = await sut.handle({ authorization })
 
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
+  })
+
+  it('should return 403 if authorize return InsuficientPermissionError', async () => {
+    authorize.mockRejectedValueOnce(new InsuficientPermissionError())
+    const httpResponse = await sut.handle({ authorization })
+
+    expect(httpResponse).toEqual({ statusCode: 403, data: new ForbiddenError() })
   })
 })
