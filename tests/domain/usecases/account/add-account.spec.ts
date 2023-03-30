@@ -15,6 +15,7 @@ describe('AddAccount', () => {
   beforeAll(() => {
     accountRepository = mock()
     accountRepository.checkByEmail.mockResolvedValue(false)
+    accountRepository.create.mockResolvedValue(true)
     hash = mock()
     hashPassword = 'hash_password'
     hash.generate.mockResolvedValue(hashPassword)
@@ -52,5 +53,11 @@ describe('AddAccount', () => {
 
     expect(accountRepository.create).toHaveBeenCalledWith({ ...account, password: hashPassword })
     expect(accountRepository.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return true on success', async () => {
+    const createAccount = await sut(account)
+
+    expect(createAccount).toBeTruthy()
   })
 })
