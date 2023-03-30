@@ -9,5 +9,6 @@ export type Authentication = (input: Input) => Promise<void>
 export const AuthenticationUseCase: Setup = (accountRepository, hashCompare) => async ({ email, password }) => {
   const account = await accountRepository.loadByEmail(email)
   if (!account) throw new AuthenticationError()
-  await hashCompare.comparer({ plaintext: password, digest: account.password })
+  const isValid = await hashCompare.comparer({ plaintext: password, digest: account.password })
+  if (!isValid) throw new AuthenticationError()
 }
