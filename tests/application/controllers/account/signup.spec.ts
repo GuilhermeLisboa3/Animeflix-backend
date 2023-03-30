@@ -18,7 +18,7 @@ describe('SignUpController', () => {
       birth: new Date(),
       phone: 'any_phone'
     }
-    AddAccount = jest.fn()
+    AddAccount = jest.fn().mockResolvedValue(true)
   })
 
   beforeEach(() => {
@@ -48,5 +48,14 @@ describe('SignUpController', () => {
 
     expect(AddAccount).toHaveBeenCalledWith(makeRequest)
     expect(AddAccount).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: true
+    })
   })
 })
