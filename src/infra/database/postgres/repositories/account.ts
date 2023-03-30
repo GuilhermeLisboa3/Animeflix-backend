@@ -1,7 +1,8 @@
-import { CheckAccountByEmail, CreateAccount, LoadAccountByEmail } from '@/domain/contracts/database/account'
+import { CheckAccountByEmail, CheckAccountRole, CreateAccount, LoadAccountByEmail } from '@/domain/contracts/database/account'
 import { Account } from '@/infra/database/postgres/entities'
+import { Op } from 'sequelize'
 
-export class AccountRepository implements CheckAccountByEmail, CreateAccount, LoadAccountByEmail {
+export class AccountRepository implements CheckAccountByEmail, CreateAccount, LoadAccountByEmail, CheckAccountRole {
   async checkByEmail (email: string): Promise<boolean> {
     const existAccount = await Account.findOne({ where: { email } })
     return existAccount !== null
@@ -15,5 +16,10 @@ export class AccountRepository implements CheckAccountByEmail, CreateAccount, Lo
   async loadByEmail (email: string): Promise<LoadAccountByEmail.Output> {
     const account = await Account.findOne({ attributes: ['id', 'password'], where: { email } })
     return account !== null ? { id: account.id.toString(), password: account.password } : undefined
+  }
+
+  async checkRole ({ accountId, role }: CheckAccountRole.Input): Promise<CheckAccountRole.Output> {
+    const account = await Account.findOne({ where: { id: accountId, [Op.or]: [{ role: role ?? 'user' }, { role: 'admin' }] } })
+    return account !== null
   }
 }
