@@ -1,8 +1,8 @@
 import { LoadAccountById } from '@/domain/contracts/database/account'
-import { HashComparer } from '@/domain/contracts/gateways'
+import { HashComparer, HashGenerator } from '@/domain/contracts/gateways'
 import { CompareFieldsError } from '@/domain/errors'
 
-type Setup = (accountRepository: LoadAccountById, hash: HashComparer) => UpdateAccount
+type Setup = (accountRepository: LoadAccountById, hash: HashComparer & HashGenerator) => UpdateAccount
 type Input = { accountId: string, currentPassword?: string, newPassword?: string, firstName?: string, lastName?: string, phone?: string, birth?: Date, email?: string }
 export type UpdateAccount = (input: Input) => Promise<void>
 
@@ -12,6 +12,7 @@ export const UpdateAccountUseCase: Setup = (accountRepository, hash) => async ({
     if (account) {
       const isValid = await hash.comparer({ plaintext: currentPassword, digest: account.password })
       if (!isValid) throw new CompareFieldsError('currentPassword', 'password')
+      await hash.generate({ plaintext: newPassword })
     }
   }
 }
