@@ -1,5 +1,5 @@
 import { AddAnimeUseCase, AddAnime } from '@/domain/usecases/anime'
-import { CheckAnime } from '@/domain/contracts/database/anime'
+import { CheckAnime, CreateAnime } from '@/domain/contracts/database/anime'
 import { UUIDGenerator, UploadFile } from '@/domain/contracts/gateways'
 import { CheckCategoryById } from '@/domain/contracts/database/category'
 
@@ -7,7 +7,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 describe('AddAnime', () => {
-  let animeRepository: MockProxy<CheckAnime>
+  let animeRepository: MockProxy<CheckAnime & CreateAnime>
   let categoryRepository: MockProxy<CheckCategoryById>
   let uuid: MockProxy<UUIDGenerator>
   let fileStorage: MockProxy<UploadFile>
@@ -22,6 +22,7 @@ describe('AddAnime', () => {
     uuid = mock()
     uuid.generate.mockReturnValue('any_key')
     fileStorage = mock()
+    fileStorage.upload.mockResolvedValue('any_url')
     anime = { name: 'Any_name', categoryId: 1, file: { buffer: Buffer.from('any'), mimeType: 'image/png' }, synopsis: 'any_synopsis' }
   })
 
@@ -71,5 +72,12 @@ describe('AddAnime', () => {
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any'), fileName: 'any_key.png' })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call CreateAnime with correct input', async () => {
+    await sut(anime)
+
+    expect(animeRepository.create).toHaveBeenCalledWith({ name: 'any_name', categoryId: 1, synopsis: 'any_synopsis', thumbnailUrl: 'any_url' })
+    expect(animeRepository.create).toHaveBeenCalledTimes(1)
   })
 })
