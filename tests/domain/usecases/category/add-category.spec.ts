@@ -40,4 +40,10 @@ describe('AddCategory', () => {
     expect(categoryRepository.create).toHaveBeenCalledWith({ name: 'any_name', position: 1 })
     expect(categoryRepository.create).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(category)
+
+    expect(result).toBeUndefined()
+  })
 })
