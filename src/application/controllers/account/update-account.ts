@@ -1,3 +1,4 @@
+import { Controller } from '@/application/controllers'
 import { HttpResponse, noContent } from '@/application/helpers'
 import { UpdateAccount } from '@/domain/usecases/account'
 
@@ -10,8 +11,8 @@ type HttpRequest = {
   email?: string
 }
 
-export class UpdateAccountController {
-  constructor (private readonly updateAccount: UpdateAccount) {}
+export class UpdateAccountController extends Controller {
+  constructor (private readonly updateAccount: UpdateAccount) { super() }
 
   async perform (input: HttpRequest): Promise<HttpResponse> {
     await this.updateAccount(input)
