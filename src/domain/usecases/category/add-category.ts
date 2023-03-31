@@ -1,7 +1,7 @@
-import { CheckCategory } from '@/domain/contracts/database/category'
+import { CheckCategory, CreateCategory } from '@/domain/contracts/database/category'
 import { FieldInUseError } from '@/domain/errors'
 
-type Setup = (categoryRepository: CheckCategory) => AddCategory
+type Setup = (categoryRepository: CheckCategory & CreateCategory) => AddCategory
 type Input = { name: string, position: number }
 export type AddCategory = (input: Input) => Promise<void>
 
@@ -9,4 +9,5 @@ export const AddCategoryUseCase: Setup = (categoryRepository) => async ({ name, 
   const nameLowerCase = name.toLocaleLowerCase()
   const categoryExists = await categoryRepository.check({ name: nameLowerCase, position })
   if (categoryExists) throw new FieldInUseError('name or position')
+  await categoryRepository.create({ name: nameLowerCase, position })
 }
