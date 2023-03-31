@@ -34,11 +34,29 @@ describe('DeleteCategory', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('category'))
   })
 
+  it('should rethrow if LoadCategoryById throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(idCategory)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteCategoryById with correct input', async () => {
     await sut(idCategory)
 
     expect(categoryRepository.delete).toHaveBeenCalledWith(idCategory)
     expect(categoryRepository.delete).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if DeleteCategoryById throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.delete.mockRejectedValueOnce(error)
+
+    const promise = sut(idCategory)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
