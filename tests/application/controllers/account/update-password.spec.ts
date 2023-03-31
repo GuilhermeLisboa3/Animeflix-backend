@@ -1,4 +1,5 @@
 import { UpdatePasswordController } from '@/application/controllers/account'
+import { Controller } from '@/application/controllers'
 import { RequiredField } from '@/application/validation'
 
 describe('UpdatePasswordController', () => {
@@ -13,6 +14,10 @@ describe('UpdatePasswordController', () => {
 
   beforeEach(() => {
     sut = new UpdatePasswordController(UpdateAccount)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
