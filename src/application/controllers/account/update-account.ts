@@ -1,3 +1,4 @@
+import { HttpResponse, noContent } from '@/application/helpers'
 import { UpdateAccount } from '@/domain/usecases/account'
 
 type HttpRequest = {
@@ -12,7 +13,8 @@ type HttpRequest = {
 export class UpdateAccountController {
   constructor (private readonly updateAccount: UpdateAccount) {}
 
-  async perform (input: HttpRequest): Promise<void> {
+  async perform (input: HttpRequest): Promise<HttpResponse> {
     await this.updateAccount(input)
+    return noContent()
   }
 }
