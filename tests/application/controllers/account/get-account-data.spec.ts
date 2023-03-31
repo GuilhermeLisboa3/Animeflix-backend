@@ -1,4 +1,5 @@
 import { GetAccountDataController } from '@/application/controllers/account'
+import { Controller } from '@/application/controllers'
 
 describe('GetAccountDataController', () => {
   let GetAccountData: jest.Mock
@@ -22,6 +23,10 @@ describe('GetAccountDataController', () => {
 
   beforeEach(() => {
     sut = new GetAccountDataController(GetAccountData)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call GetAccountData with correct input', async () => {
