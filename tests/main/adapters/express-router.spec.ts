@@ -15,7 +15,7 @@ describe('Express Router', () => {
   beforeAll(() => {
     controller = mock<Controller>()
     controller.handle.mockResolvedValue({ statusCode: 200, data: { data: 'any_value' } })
-    req = getMockReq({ body: { anyBody: 'any_body' }, params: { id: 'any_id' }, query: { anyQuery: 'any_query' } })
+    req = getMockReq({ body: { anyBody: 'any_body' }, params: { id: 'any_id' }, query: { anyQuery: 'any_query' }, locals: { anyLocals: 'any_locals' } })
     res = getMockRes().res
     next = getMockRes().next
   })
@@ -27,7 +27,7 @@ describe('Express Router', () => {
   it('should call handle with correct request', async () => {
     await sut(req, res, next)
 
-    expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', id: 'any_id', anyQuery: 'any_query' })
+    expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', id: 'any_id', anyQuery: 'any_query', anyLocals: 'any_locals' })
     expect(controller.handle).toHaveBeenCalledTimes(1)
   })
 

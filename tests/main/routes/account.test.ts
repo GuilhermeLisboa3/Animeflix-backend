@@ -1,13 +1,16 @@
 import { app } from '@/main/config/app'
+import env from '@/main/config/env'
 import { sequelize, Account } from '@/infra/database/postgres/entities'
 import { FieldInUseError } from '@/domain/errors'
-
-import request from 'supertest'
 import { RequiredFieldError } from '@/application/errors'
 import { UnauthorizedError } from '@/application/errors/http'
 
+import request from 'supertest'
+import { sign } from 'jsonwebtoken'
+
 describe('AccountRoute', () => {
   let makeAccount: { firstName: string, lastName: string, email: string, password: string, birth: Date, phone: string, role: 'user' | 'admin' }
+  let token: string
 
   beforeAll(async () => {
     makeAccount = {
@@ -19,6 +22,7 @@ describe('AccountRoute', () => {
       phone: 'any_phone',
       role: 'user'
     }
+    token = sign({ key: '1' }, env.secret)
   })
   beforeEach(async () => {
     await sequelize.sync({ force: true })
@@ -118,6 +122,21 @@ describe('AccountRoute', () => {
 
       expect(status).toBe(401)
       expect(error).toBe(new UnauthorizedError().message)
+    })
+  })
+
+  describe('PUT /users/current', () => {
+    it('should return 204 on success', async () => {
+      await Account.create(makeAccount)
+
+      const { status } = await request(app)
+        .put('/users/current')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ email: 'any_email2@gmail.com', firstName: 'any_name2' })
+
+      expect(status).toBe(204)
+      const account = await Account.findOne({ where: { id: 1 } })
+      expect(account).toMatchObject({ email: 'any_email2@gmail.com', firstName: 'any_name2' })
     })
   })
 })
