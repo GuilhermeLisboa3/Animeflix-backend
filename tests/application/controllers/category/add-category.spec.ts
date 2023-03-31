@@ -1,6 +1,7 @@
 import { AddCategoryController } from '@/application/controllers/category'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { FieldInUseError } from '@/domain/errors'
 
 describe('AddCategoryController', () => {
   let sut: AddCategoryController
@@ -34,6 +35,17 @@ describe('AddCategoryController', () => {
 
     expect(AddCategory).toHaveBeenCalledWith(makeRequest)
     expect(AddCategory).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if AddCategory returns FieldInUseError', async () => {
+    AddCategory.mockRejectedValueOnce(new FieldInUseError('name or position'))
+
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new FieldInUseError('name or position')
+    })
   })
 
   it('should return 204 on success', async () => {
