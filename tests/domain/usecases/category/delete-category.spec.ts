@@ -1,11 +1,11 @@
 import { NotFoundError } from '@/domain/errors'
 import { DeleteCategoryUseCase, DeleteCategory } from '@/domain/usecases/category'
-import { LoadCategoryById } from '@/domain/contracts/database/category'
+import { LoadCategoryById, DeleteCategoryById } from '@/domain/contracts/database/category'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('DeleteCategory', () => {
-  let categoryRepository: MockProxy<LoadCategoryById>
+  let categoryRepository: MockProxy<LoadCategoryById & DeleteCategoryById>
   let idCategory: { id: string }
   let sut: DeleteCategory
 
@@ -32,5 +32,12 @@ describe('DeleteCategory', () => {
     const promise = sut(idCategory)
 
     await expect(promise).rejects.toThrow(new NotFoundError('category'))
+  })
+
+  it('should call DeleteCategoryById with correct input', async () => {
+    await sut(idCategory)
+
+    expect(categoryRepository.delete).toHaveBeenCalledWith(idCategory)
+    expect(categoryRepository.delete).toHaveBeenCalledTimes(1)
   })
 })
