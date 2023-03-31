@@ -1,4 +1,5 @@
 import { ListCategoryController } from '@/application/controllers/category'
+import { Controller } from '@/application/controllers'
 
 describe('ListCategoryController', () => {
   let sut: ListCategoryController
@@ -12,6 +13,10 @@ describe('ListCategoryController', () => {
 
   beforeEach(() => {
     sut = new ListCategoryController(ListCategory)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call ListCategory with correct input', async () => {
