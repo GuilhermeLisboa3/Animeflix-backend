@@ -110,5 +110,14 @@ describe('CategoryRoute', () => {
       expect(status).toBe(200)
       expect(body).toEqual({ id: '1', name: 'any_name', position: 1 })
     })
+
+    it('should return 400 if category not exists', async () => {
+      const { status, body: { error } } = await request(app)
+        .get(`/categories/${1}`)
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new NotFoundError('category').message)
+    })
   })
 })
