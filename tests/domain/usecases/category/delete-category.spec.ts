@@ -1,3 +1,4 @@
+import { NotFoundError } from '@/domain/errors'
 import { DeleteCategoryUseCase, DeleteCategory } from '@/domain/usecases/category'
 import { LoadCategoryById } from '@/domain/contracts/database/category'
 
@@ -10,6 +11,7 @@ describe('DeleteCategory', () => {
 
   beforeAll(() => {
     categoryRepository = mock()
+    categoryRepository.loadById.mockResolvedValue({ id: 'any_id', name: 'any_name', position: 1 })
     idCategory = { id: '1' }
   })
 
@@ -22,5 +24,13 @@ describe('DeleteCategory', () => {
 
     expect(categoryRepository.loadById).toHaveBeenCalledWith(idCategory)
     expect(categoryRepository.loadById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return NotFoundError if LoadCategoryById returns undefined', async () => {
+    categoryRepository.loadById.mockResolvedValueOnce(undefined)
+
+    const promise = sut(idCategory)
+
+    await expect(promise).rejects.toThrow(new NotFoundError('category'))
   })
 })
