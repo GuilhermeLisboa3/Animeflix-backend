@@ -1,7 +1,7 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
 import { sequelize, Account } from '@/infra/database/postgres/entities'
-import { FieldInUseError } from '@/domain/errors'
+import { CompareFieldsError, FieldInUseError } from '@/domain/errors'
 import { RequiredFieldError } from '@/application/errors'
 import { UnauthorizedError } from '@/application/errors/http'
 
@@ -164,6 +164,18 @@ describe('AccountRoute', () => {
 
       expect(status).toBe(400)
       expect(error).toBe(new RequiredFieldError('newPassword').message)
+    })
+
+    it('should return 400 if currentPassword is invalid', async () => {
+      await Account.create(makeAccount)
+
+      const { status, body: { error } } = await request(app)
+        .put('/users/current/password')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ currentPassword: 'invalid_password', newPassword: 'new_password' })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new CompareFieldsError('currentPassword', 'password').message)
     })
   })
 })
