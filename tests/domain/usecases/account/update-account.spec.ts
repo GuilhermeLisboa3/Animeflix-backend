@@ -59,4 +59,10 @@ describe('Update Account', () => {
     expect(accountRepository.update).toHaveBeenCalledWith({ id: 'any_id', password: 'hash_password' })
     expect(accountRepository.update).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const response = await sut(makeAccount)
+
+    expect(response).toBeUndefined()
+  })
 })
