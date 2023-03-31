@@ -74,5 +74,13 @@ describe('AwsS3FileStorage', () => {
       expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
       expect(promiseSpy).toHaveBeenCalledTimes(1)
     })
+
+    it('should format url and call deleteObject', async () => {
+      await sut.delete({ fileName: 'https://any_bucket.s3.amazonaws.com/any_picture.png' })
+
+      expect(deleteObjectSpy).toHaveBeenCalledWith({ Bucket: bucket, Key: 'any_picture.png' })
+      expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
+      expect(promiseSpy).toHaveBeenCalledTimes(1)
+    })
   })
 })
