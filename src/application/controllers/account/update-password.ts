@@ -1,3 +1,4 @@
+import { Controller } from '@/application/controllers'
 import { HttpResponse, noContent } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
 import { UpdateAccount } from '@/domain/usecases/account'
@@ -8,8 +9,8 @@ type HttpRequest = {
   newPassword: string
 }
 
-export class UpdatePasswordController {
-  constructor (private readonly updateAccount: UpdateAccount) {}
+export class UpdatePasswordController extends Controller {
+  constructor (private readonly updateAccount: UpdateAccount) { super() }
 
   async perform (input: HttpRequest): Promise<HttpResponse> {
     await this.updateAccount(input)
