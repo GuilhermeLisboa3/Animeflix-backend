@@ -56,4 +56,22 @@ describe('CategoryRoute', () => {
       expect(error).toBe(new FieldInUseError('name or position').message)
     })
   })
+
+  describe('GET /categories', () => {
+    it('should return 200 on success', async () => {
+      await Category.create({ name: 'any_name', position: 1 })
+
+      const { status, body } = await request(app)
+        .get('/categories')
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+      expect(body).toEqual({
+        categories: [{ id: 1, name: 'any_name', position: 1 }],
+        page: 1,
+        perPage: 10,
+        count: 1
+      })
+    })
+  })
 })
