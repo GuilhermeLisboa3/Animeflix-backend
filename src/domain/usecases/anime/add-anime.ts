@@ -1,6 +1,6 @@
 import { CheckAnime } from '@/domain/contracts/database/anime'
 import { CheckCategoryById } from '@/domain/contracts/database/category'
-import { FieldInUseError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 type Setup = (animeRepository: CheckAnime, categoryRepository: CheckCategoryById) => AddAnime
 type Input = { name: string, categoryId: number, file?: { buffer: Buffer, mimeType: string }, synopsis: string, featured?: boolean }
@@ -10,5 +10,6 @@ export const AddAnimeUseCase: Setup = (animeRepository, categoryRepository) => a
   const nameLowerCase = name.toLocaleLowerCase()
   const animeExists = await animeRepository.check({ name: nameLowerCase })
   if (animeExists) throw new FieldInUseError('name')
-  await categoryRepository.checkById({ id: categoryId })
+  const categoryExists = await categoryRepository.checkById({ id: categoryId })
+  if (!categoryExists) throw new NotFoundError('categoryId')
 }
