@@ -1,4 +1,5 @@
 import { GetCategoryController } from '@/application/controllers/category'
+import { Controller } from '@/application/controllers'
 
 describe('GetCategoryController', () => {
   let sut: GetCategoryController
@@ -12,6 +13,10 @@ describe('GetCategoryController', () => {
 
   beforeEach(() => {
     sut = new GetCategoryController(LoadCategory)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call LoadCategory with correct input', async () => {
