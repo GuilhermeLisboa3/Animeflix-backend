@@ -1,5 +1,5 @@
 import { LoadAccountById } from '@/domain/contracts/database/account'
-import { HashComparer } from '@/domain/contracts/gateways'
+import { HashComparer, HashGenerator } from '@/domain/contracts/gateways'
 import { CompareFieldsError } from '@/domain/errors'
 import { UpdateAccountUseCase, UpdateAccount } from '@/domain/usecases/account'
 
@@ -8,7 +8,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 describe('Update Account', () => {
   let accountRepository: MockProxy<LoadAccountById>
   let sut: UpdateAccount
-  let hash: MockProxy<HashComparer>
+  let hash: MockProxy<HashComparer & HashGenerator>
   let makeAccount: { accountId: string, currentPassword: string, newPassword: string }
 
   beforeAll(() => {
@@ -43,5 +43,12 @@ describe('Update Account', () => {
     const promise = sut(makeAccount)
 
     await expect(promise).rejects.toThrow(new CompareFieldsError('currentPassword', 'password'))
+  })
+
+  it('should call HashGenerator with correct input', async () => {
+    await sut(makeAccount)
+
+    expect(hash.generate).toHaveBeenCalledWith({ plaintext: 'new_password' })
+    expect(hash.generate).toHaveBeenCalledTimes(1)
   })
 })
