@@ -1,4 +1,5 @@
 import { UpdateAccountController } from '@/application/controllers/account'
+import { Controller } from '@/application/controllers'
 
 describe('UpdateAccountController', () => {
   let sut: UpdateAccountController
@@ -12,6 +13,10 @@ describe('UpdateAccountController', () => {
 
   beforeEach(() => {
     sut = new UpdateAccountController(UpdateAccount)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call UpdateAccount with correct input', async () => {
