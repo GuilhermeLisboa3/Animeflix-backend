@@ -34,11 +34,29 @@ describe('AddCategory', () => {
     await expect(promise).rejects.toThrow(new FieldInUseError('name or position'))
   })
 
+  it('should rethrow if CheckCategory throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.check.mockRejectedValueOnce(error)
+
+    const promise = sut(category)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CreateCategory with correct input', async () => {
     await sut(category)
 
     expect(categoryRepository.create).toHaveBeenCalledWith({ name: 'any_name', position: 1 })
     expect(categoryRepository.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if CreateCategory throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.create.mockRejectedValueOnce(error)
+
+    const promise = sut(category)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
