@@ -21,4 +21,10 @@ describe('UUIDAdapter', () => {
     expect(uuidV4).toHaveBeenCalledWith()
     expect(uuidV4).toHaveBeenCalledTimes(1)
   })
+
+  it('should return uuid', () => {
+    const uuid = sut.generate()
+
+    expect(uuid).toBe('any_uuid')
+  })
 })
