@@ -32,4 +32,12 @@ describe('CategoryRepository', () => {
       expect(existAccount).toBeFalsy()
     })
   })
+
+  describe('create', () => {
+    it('should create category on success', async () => {
+      const category = await sut.create({ name: 'any_category', position: 1 })
+
+      expect(category).toBeTruthy()
+    })
+  })
 })
