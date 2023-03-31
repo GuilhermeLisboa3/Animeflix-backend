@@ -1,6 +1,7 @@
 import { Controller } from '@/application/controllers'
 import { DeleteCategoryController } from '@/application/controllers/category'
 import { RequiredField } from '@/application/validation'
+import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteCategoryController', () => {
   let sut: DeleteCategoryController
@@ -33,6 +34,17 @@ describe('DeleteCategoryController', () => {
 
     expect(DeleteCategory).toHaveBeenCalledWith(makeRequest)
     expect(DeleteCategory).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if DeleteCategory returns NotFoundError', async () => {
+    DeleteCategory.mockRejectedValueOnce(new NotFoundError('category'))
+
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('category')
+    })
   })
 
   it('should return 204 on success', async () => {
