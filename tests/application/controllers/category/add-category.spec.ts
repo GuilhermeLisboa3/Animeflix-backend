@@ -1,5 +1,6 @@
 import { AddCategoryController } from '@/application/controllers/category'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('AddCategoryController', () => {
   let sut: AddCategoryController
@@ -13,6 +14,10 @@ describe('AddCategoryController', () => {
 
   beforeEach(() => {
     sut = new AddCategoryController(AddCategory)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
