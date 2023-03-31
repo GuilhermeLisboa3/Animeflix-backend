@@ -1,11 +1,14 @@
 import { AccountRepository } from '@/infra/database/postgres/repositories'
 import { Account, sequelize } from '@/infra/database/postgres/entities'
 
+import MockDate from 'mockdate'
+
 describe('AccountRepository', () => {
   let sut: AccountRepository
   let makeAccount: { firstName: string, lastName: string, email: string, password: string, birth: Date, phone: string, role: 'user' | 'admin' }
 
   beforeAll(async () => {
+    MockDate.set(new Date())
     makeAccount = {
       firstName: 'any_name',
       lastName: 'any_last_name',
@@ -24,6 +27,7 @@ describe('AccountRepository', () => {
 
   afterAll(async () => {
     await sequelize.close()
+    MockDate.reset()
   })
 
   describe('checkByEmail', () => {
@@ -102,6 +106,26 @@ describe('AccountRepository', () => {
       const account = await sut.checkRole({ accountId: '1', role: 'user' })
 
       expect(account).toBeTruthy()
+    })
+  })
+
+  describe('loadById', () => {
+    it('should return account on success', async () => {
+      await Account.create(makeAccount)
+
+      const account = await sut.loadById({ id: '1' })
+
+      expect(account).toMatchObject({
+        firstName: 'any_name',
+        lastName: 'any_last_name',
+        email: 'any_email',
+        password: 'any_password',
+        birth: new Date(),
+        phone: 'any_phone',
+        role: 'user',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
     })
   })
 })
