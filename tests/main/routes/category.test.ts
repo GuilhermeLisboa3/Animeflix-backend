@@ -5,7 +5,7 @@ import { sequelize, Account, Category } from '@/infra/database/postgres/entities
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
 import { RequiredFieldError } from '@/application/errors'
-import { FieldInUseError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 describe('CategoryRoute', () => {
   let token: string
@@ -85,6 +85,17 @@ describe('CategoryRoute', () => {
         .set({ authorization: `Bearer: ${token}` })
 
       expect(status).toBe(204)
+    })
+
+    it('should return 400 if category not exists', async () => {
+      const id = 1
+
+      const { status, body: { error } } = await request(app)
+        .delete(`/category/${id}`)
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new NotFoundError('category').message)
     })
   })
 })
