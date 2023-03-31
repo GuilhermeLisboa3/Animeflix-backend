@@ -2,6 +2,7 @@ import { AddAnimeUseCase, AddAnime } from '@/domain/usecases/anime'
 import { CheckAnime } from '@/domain/contracts/database/anime'
 
 import { mock, MockProxy } from 'jest-mock-extended'
+import { FieldInUseError } from '@/domain/errors'
 
 describe('AddAnime', () => {
   let animeRepository: MockProxy<CheckAnime>
@@ -10,6 +11,7 @@ describe('AddAnime', () => {
 
   beforeAll(() => {
     animeRepository = mock()
+    animeRepository.check.mockResolvedValue(false)
     anime = { name: 'Any_name', categoryId: 1, file: { buffer: Buffer.from('any'), mimeType: 'image/png' }, synopsis: 'any_synopsis' }
   })
 
@@ -22,5 +24,13 @@ describe('AddAnime', () => {
 
     expect(animeRepository.check).toHaveBeenCalledWith({ name: 'any_name' })
     expect(animeRepository.check).toHaveBeenCalledTimes(1)
+  })
+
+  it('should throw FieldInUseError if CheckAnime return true', async () => {
+    animeRepository.check.mockResolvedValueOnce(true)
+
+    const promise = sut(anime)
+
+    await expect(promise).rejects.toThrow(new FieldInUseError('name'))
   })
 })
