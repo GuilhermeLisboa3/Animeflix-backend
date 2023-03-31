@@ -4,13 +4,15 @@ import { RequiredField } from '@/application/validation'
 describe('DeleteCategoryController', () => {
   let sut: DeleteCategoryController
   let makeRequest: { id: string }
+  let DeleteCategory: jest.Mock
 
   beforeAll(() => {
+    DeleteCategory = jest.fn()
     makeRequest = { id: '1' }
   })
 
   beforeEach(() => {
-    sut = new DeleteCategoryController()
+    sut = new DeleteCategoryController(DeleteCategory)
   })
 
   it('should build Validators correctly', async () => {
@@ -19,5 +21,12 @@ describe('DeleteCategoryController', () => {
     expect(validators).toEqual([
       new RequiredField('1', 'id')
     ])
+  })
+
+  it('should call DeleteCategory with correct input', async () => {
+    await sut.perform(makeRequest)
+
+    expect(DeleteCategory).toHaveBeenCalledWith(makeRequest)
+    expect(DeleteCategory).toHaveBeenCalledTimes(1)
   })
 })
