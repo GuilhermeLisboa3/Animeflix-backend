@@ -153,5 +153,17 @@ describe('AccountRoute', () => {
 
       expect(status).toBe(204)
     })
+
+    it('should return 400 if any data is not supplied', async () => {
+      await Account.create(makeAccount)
+
+      const { status, body: { error } } = await request(app)
+        .put('/users/current/password')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ currentPassword: 'any_password' })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new RequiredFieldError('newPassword').message)
+    })
   })
 })
