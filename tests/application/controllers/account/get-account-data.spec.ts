@@ -4,10 +4,20 @@ describe('GetAccountDataController', () => {
   let GetAccountData: jest.Mock
   let sut: GetAccountDataController
   let accountId: string
+  let account: object
 
   beforeAll(() => {
     accountId = 'any_account_id'
-    GetAccountData = jest.fn()
+    account = {
+      firstName: 'any_name',
+      lastName: 'any_last_name',
+      email: 'any_email',
+      password: 'account_password',
+      birth: new Date(),
+      phone: 'any_phone',
+      role: 'user'
+    }
+    GetAccountData = jest.fn().mockResolvedValue(account)
   })
 
   beforeEach(() => {
@@ -19,5 +29,11 @@ describe('GetAccountDataController', () => {
 
     expect(GetAccountData).toHaveBeenCalledWith({ id: accountId })
     expect(GetAccountData).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform({ accountId })
+
+    expect(httpResponse).toEqual({ statusCode: 200, data: account })
   })
 })
