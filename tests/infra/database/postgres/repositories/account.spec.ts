@@ -134,4 +134,29 @@ describe('AccountRepository', () => {
       expect(account).toBeUndefined()
     })
   })
+
+  describe('update', () => {
+    it('should update account on success', async () => {
+      await Account.create(makeAccount)
+
+      await sut.update({
+        id: '1',
+        firstName: 'any_name2',
+        lastName: 'any_last_name2',
+        email: 'any_email2',
+        password: 'any_password2',
+        phone: 'any_phone2'
+      })
+
+      const account = await Account.findOne({ where: { id: 1 } })
+
+      expect(account).toMatchObject({
+        firstName: 'any_name2',
+        lastName: 'any_last_name2',
+        email: 'any_email2',
+        password: 'any_password2',
+        phone: 'any_phone2'
+      })
+    })
+  })
 })
