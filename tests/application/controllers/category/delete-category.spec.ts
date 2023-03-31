@@ -1,3 +1,4 @@
+import { Controller } from '@/application/controllers'
 import { DeleteCategoryController } from '@/application/controllers/category'
 import { RequiredField } from '@/application/validation'
 
@@ -13,6 +14,10 @@ describe('DeleteCategoryController', () => {
 
   beforeEach(() => {
     sut = new DeleteCategoryController(DeleteCategory)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
