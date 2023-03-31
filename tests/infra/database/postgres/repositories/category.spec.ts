@@ -71,4 +71,14 @@ describe('CategoryRepository', () => {
       expect(category).toBeUndefined()
     })
   })
+
+  describe('delete', () => {
+    it('should delete category on success', async () => {
+      await Category.create({ name: 'any_category', position: 1 })
+
+      const category = await sut.delete({ id: '1' })
+
+      expect(category).toBeUndefined()
+    })
+  })
 })
