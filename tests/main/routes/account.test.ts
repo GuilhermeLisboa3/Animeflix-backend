@@ -178,4 +178,16 @@ describe('AccountRoute', () => {
       expect(error).toBe(new CompareFieldsError('currentPassword', 'password').message)
     })
   })
+
+  describe('GET /users/current', () => {
+    it('should return 200 on success', async () => {
+      await Account.create(makeAccount)
+
+      const { status } = await request(app)
+        .get('/users/current')
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+    })
+  })
 })

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/main",
-    "dev": "ts-node-dev --respawn --transpile-only src/main",
+    "start": "node dotenv/config dist/main",
+    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/main/server.ts",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm run test -- --watch",
