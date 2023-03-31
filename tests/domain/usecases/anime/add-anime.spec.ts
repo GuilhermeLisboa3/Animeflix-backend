@@ -3,7 +3,7 @@ import { CheckAnime } from '@/domain/contracts/database/anime'
 import { CheckCategoryById } from '@/domain/contracts/database/category'
 
 import { mock, MockProxy } from 'jest-mock-extended'
-import { FieldInUseError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 describe('AddAnime', () => {
   let animeRepository: MockProxy<CheckAnime>
@@ -15,6 +15,7 @@ describe('AddAnime', () => {
     animeRepository = mock()
     animeRepository.check.mockResolvedValue(false)
     categoryRepository = mock()
+    categoryRepository.checkById.mockResolvedValue(true)
     anime = { name: 'Any_name', categoryId: 1, file: { buffer: Buffer.from('any'), mimeType: 'image/png' }, synopsis: 'any_synopsis' }
   })
 
@@ -42,5 +43,13 @@ describe('AddAnime', () => {
 
     expect(categoryRepository.checkById).toHaveBeenCalledWith({ id: 1 })
     expect(categoryRepository.checkById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return NotFoundError if CheckCategoryById returns false', async () => {
+    categoryRepository.checkById.mockResolvedValueOnce(false)
+
+    const promise = sut(anime)
+
+    await expect(promise).rejects.toThrow(new NotFoundError('categoryId'))
   })
 })
