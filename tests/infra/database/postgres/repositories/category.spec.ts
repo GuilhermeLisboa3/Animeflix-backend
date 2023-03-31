@@ -40,4 +40,19 @@ describe('CategoryRepository', () => {
       expect(category).toBeTruthy()
     })
   })
+
+  describe('list', () => {
+    it('should return list categories on success', async () => {
+      await Category.create({ name: 'any_category', position: 1 })
+
+      const listCategories = await sut.list({ page: 1, perPage: 10 })
+
+      expect(listCategories).toMatchObject({
+        categories: [{ id: 1, name: 'any_category', position: 1 }],
+        page: 1,
+        perPage: 10,
+        count: 1
+      })
+    })
+  })
 })
