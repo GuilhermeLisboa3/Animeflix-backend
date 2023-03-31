@@ -40,4 +40,10 @@ describe('DeleteCategory', () => {
     expect(categoryRepository.delete).toHaveBeenCalledWith(idCategory)
     expect(categoryRepository.delete).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(idCategory)
+
+    expect(result).toBeUndefined()
+  })
 })
