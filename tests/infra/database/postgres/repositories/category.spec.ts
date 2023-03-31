@@ -55,4 +55,14 @@ describe('CategoryRepository', () => {
       })
     })
   })
+
+  describe('loadById', () => {
+    it('should return category on success', async () => {
+      await Category.create({ name: 'any_category', position: 1 })
+
+      const category = await sut.loadById({ id: '1' })
+
+      expect(category).toMatchObject({ id: '1', name: 'any_category', position: 1 })
+    })
+  })
 })
