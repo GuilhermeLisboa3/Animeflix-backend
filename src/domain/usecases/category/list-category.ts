@@ -3,9 +3,10 @@ import { PaginationParams } from '@/domain/entities'
 
 type Setup = (categoryRepository: ListAllCategories) => ListCategory
 type Input = { page?: string, perPage?: string }
-export type ListCategory = (input: Input) => Promise<void>
+type Output = { categories: Array<{ id: string, name: string, position: number }>, page: number, perPage: number, count: number }
+export type ListCategory = (input: Input) => Promise<Output>
 
 export const ListCategoryUseCase: Setup = (categoryRepository) => async ({ page, perPage }) => {
   const { pageNumber, perPageNumber } = new PaginationParams(page, perPage)
-  await categoryRepository.list({ page: pageNumber, perPage: perPageNumber })
+  return await categoryRepository.list({ page: pageNumber, perPage: perPageNumber })
 }
