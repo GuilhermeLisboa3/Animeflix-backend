@@ -7,7 +7,7 @@ describe('ListCategoryController', () => {
 
   beforeAll(() => {
     makeRequest = { page: '1', perPage: '10' }
-    ListCategory = jest.fn()
+    ListCategory = jest.fn().mockResolvedValue({ categories: [], page: 1, perPage: 10, count: 0 })
   })
 
   beforeEach(() => {
@@ -19,5 +19,19 @@ describe('ListCategoryController', () => {
 
     expect(ListCategory).toHaveBeenCalledWith(makeRequest)
     expect(ListCategory).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: {
+        categories: [],
+        page: 1,
+        perPage: 10,
+        count: 0
+      }
+    })
   })
 })
