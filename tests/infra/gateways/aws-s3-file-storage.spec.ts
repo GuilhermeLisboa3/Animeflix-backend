@@ -82,5 +82,11 @@ describe('AwsS3FileStorage', () => {
       expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
       expect(promiseSpy).toHaveBeenCalledTimes(1)
     })
+
+    it('should return undefined on success', async () => {
+      const result = await sut.delete({ fileName })
+
+      expect(result).toBeUndefined()
+    })
   })
 })
