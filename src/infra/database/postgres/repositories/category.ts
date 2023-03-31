@@ -1,7 +1,7 @@
-import { CheckCategory, CreateCategory } from '@/domain/contracts/database/category'
+import { CheckCategory, CreateCategory, ListAllCategories } from '@/domain/contracts/database/category'
 import { Category } from '@/infra/database/postgres/entities'
 
-export class CategoryRepository implements CheckCategory, CreateCategory {
+export class CategoryRepository implements CheckCategory, CreateCategory, ListAllCategories {
   async check ({ name, position }: CheckCategory.Input): Promise<CheckCategory.Output> {
     const existAccount = await Category.findOne({ where: { name, position } })
     return existAccount !== null
@@ -10,5 +10,22 @@ export class CategoryRepository implements CheckCategory, CreateCategory {
   async create ({ name, position }: CreateCategory.Input): Promise<CreateCategory.Output> {
     const createCategory = await Category.create({ name, position })
     return createCategory !== null
+  }
+
+  async list ({ page, perPage }: ListAllCategories.Input): Promise<ListAllCategories.Output> {
+    const offset = (page - 1) * perPage
+    const { count, rows } = await Category.findAndCountAll({
+      attributes: ['id', 'name', 'position'],
+      order: [['position', 'ASC']],
+      limit: perPage,
+      offset
+    })
+
+    return {
+      categories: rows,
+      page: page,
+      perPage: perPage,
+      count: count
+    }
   }
 }
