@@ -1,10 +1,11 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
-import { sequelize, Account } from '@/infra/database/postgres/entities'
+import { sequelize, Account, Category } from '@/infra/database/postgres/entities'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
 import { RequiredFieldError } from '@/application/errors'
+import { FieldInUseError } from '@/domain/errors'
 
 describe('CategoryRoute', () => {
   let token: string
@@ -42,6 +43,17 @@ describe('CategoryRoute', () => {
 
       expect(status).toBe(400)
       expect(error).toBe(new RequiredFieldError('position').message)
+    })
+
+    it('should return 400 if category already exists', async () => {
+      await Category.create({ name: 'any_name', position: 1 })
+      const { status, body: { error } } = await request(app)
+        .post('/category')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ name: 'any_name', position: 1 })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new FieldInUseError('name or position').message)
     })
   })
 })
