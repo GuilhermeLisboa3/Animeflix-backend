@@ -1,10 +1,10 @@
-import { CheckAnime } from '@/domain/contracts/database/anime'
+import { CheckAnime, CreateAnime } from '@/domain/contracts/database/anime'
 import { CheckCategoryById } from '@/domain/contracts/database/category'
 import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
 import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 type Setup = (
-  animeRepository: CheckAnime,
+  animeRepository: CheckAnime & CreateAnime,
   categoryRepository: CheckCategoryById,
   uuid: UUIDGenerator,
   fileStorage: UploadFile
@@ -19,5 +19,7 @@ export const AddAnimeUseCase: Setup = (animeRepository, categoryRepository, uuid
   const categoryExists = await categoryRepository.checkById({ id: categoryId })
   if (!categoryExists) throw new NotFoundError('categoryId')
   const key = uuid.generate()
-  if (file) await fileStorage.upload({ file: file.buffer, fileName: `${key}.${file.mimeType.split('/')[1]}` })
+  let picture: string | undefined
+  if (file) picture = await fileStorage.upload({ file: file.buffer, fileName: `${key}.${file.mimeType.split('/')[1]}` })
+  await animeRepository.create({ name: nameLowerCase, synopsis, featured, thumbnailUrl: picture, categoryId })
 }
