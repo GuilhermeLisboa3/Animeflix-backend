@@ -92,4 +92,10 @@ describe('AddAnime', () => {
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(anime)
+
+    expect(result).toBeUndefined()
+  })
 })
