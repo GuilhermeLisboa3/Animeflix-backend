@@ -25,5 +25,11 @@ describe('CategoryRepository', () => {
 
       expect(existCategory).toBeTruthy()
     })
+
+    it('should return false if category not exists', async () => {
+      const existAccount = await sut.check({ name: 'any_category', position: 1 })
+
+      expect(existAccount).toBeFalsy()
+    })
   })
 })
