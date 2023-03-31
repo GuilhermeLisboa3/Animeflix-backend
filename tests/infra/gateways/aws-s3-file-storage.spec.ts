@@ -48,6 +48,15 @@ describe('AwsS3FileStorage', () => {
       expect(promiseSpy).toHaveBeenCalledTimes(1)
     })
 
+    it('should rethrow if putObject throw', async () => {
+      const error = new Error('error')
+      promiseSpy.mockRejectedValueOnce(error)
+
+      const promise = sut.upload({ file, fileName })
+
+      await expect(promise).rejects.toThrow(error)
+    })
+
     it('should return url on success', async () => {
       const url = await sut.upload({ file, fileName: 'any name' })
 
@@ -81,6 +90,15 @@ describe('AwsS3FileStorage', () => {
       expect(deleteObjectSpy).toHaveBeenCalledWith({ Bucket: bucket, Key: 'any_picture.png' })
       expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
       expect(promiseSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('should rethrow if deleteObject throw', async () => {
+      const error = new Error('error')
+      promiseSpy.mockRejectedValueOnce(error)
+
+      const promise = sut.delete({ fileName })
+
+      await expect(promise).rejects.toThrow(error)
     })
 
     it('should return undefined on success', async () => {
