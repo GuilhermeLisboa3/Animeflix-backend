@@ -25,5 +25,6 @@ export const AddAnimeUseCase: Setup = (animeRepository, categoryRepository, uuid
     await animeRepository.create({ name: nameLowerCase, synopsis, featured, thumbnailUrl: picture, categoryId })
   } catch (error) {
     if (file) await fileStorage.delete({ fileName: `${key}.${file.mimeType.split('/')[1]}` })
+    throw error
   }
 }
