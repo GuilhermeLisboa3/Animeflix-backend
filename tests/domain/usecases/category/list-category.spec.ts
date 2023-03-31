@@ -31,6 +31,15 @@ describe('ListCategory', () => {
     expect(categoryRepository.list).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if ListAllCategories throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.list.mockRejectedValueOnce(error)
+
+    const promise = sut(pagination)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should return list category on success', async () => {
     const listCategories = await sut(pagination)
 
