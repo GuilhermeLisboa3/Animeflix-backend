@@ -64,5 +64,11 @@ describe('CategoryRepository', () => {
 
       expect(category).toMatchObject({ id: '1', name: 'any_category', position: 1 })
     })
+
+    it('should return undefined if category not exists', async () => {
+      const category = await sut.loadById({ id: '1' })
+
+      expect(category).toBeUndefined()
+    })
   })
 })
