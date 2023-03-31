@@ -7,4 +7,11 @@ describe('PaginationParams', () => {
     expect(sut.pageNumber).toBe(1)
     expect(sut.perPageNumber).toBe(10)
   })
+
+  it('should return the given page and perPage number', () => {
+    const sut = new PaginationParams('2', '6')
+
+    expect(sut.pageNumber).toBe(2)
+    expect(sut.perPageNumber).toBe(6)
+  })
 })
