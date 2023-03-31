@@ -7,6 +7,7 @@ import { UnauthorizedError } from '@/application/errors/http'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
+import { hash } from 'bcrypt'
 
 describe('AccountRoute', () => {
   let makeAccount: { firstName: string, lastName: string, email: string, password: string, birth: Date, phone: string, role: 'user' | 'admin' }
@@ -137,6 +138,20 @@ describe('AccountRoute', () => {
       expect(status).toBe(204)
       const account = await Account.findOne({ where: { id: 1 } })
       expect(account).toMatchObject({ email: 'any_email2@gmail.com', firstName: 'any_name2' })
+    })
+  })
+
+  describe('PUT /users/current/password', () => {
+    it('should return 204 on success', async () => {
+      const hashPassword = await hash('any_password', 12)
+      await Account.create({ ...makeAccount, password: hashPassword })
+
+      const { status } = await request(app)
+        .put('/users/current/password')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ currentPassword: 'any_password', newPassword: 'new_password' })
+
+      expect(status).toBe(204)
     })
   })
 })
