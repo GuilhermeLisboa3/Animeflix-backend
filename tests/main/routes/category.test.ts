@@ -74,4 +74,17 @@ describe('CategoryRoute', () => {
       })
     })
   })
+
+  describe('DELETE /category/:id', () => {
+    it('should return 204 on success', async () => {
+      await Category.create({ name: 'any_name', position: 1 })
+      const id = 1
+
+      const { status } = await request(app)
+        .delete(`/category/${id}`)
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(204)
+    })
+  })
 })
