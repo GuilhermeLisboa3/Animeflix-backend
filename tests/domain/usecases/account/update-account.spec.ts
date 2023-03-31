@@ -31,6 +31,15 @@ describe('Update Account', () => {
     expect(accountRepository.loadById).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if loadAccountById throw', async () => {
+    const error = new Error('any_error')
+    accountRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAccount)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call HashComparer with correct input', async () => {
     await sut(makeAccount)
 
@@ -53,11 +62,29 @@ describe('Update Account', () => {
     expect(hash.generate).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if HashGenerator throws', async () => {
+    const error = new Error('hash_error')
+    hash.generate.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAccount)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call UpdateAccount with correct input', async () => {
     await sut(makeAccount)
 
     expect(accountRepository.update).toHaveBeenCalledWith({ id: 'any_id', password: 'hash_password' })
     expect(accountRepository.update).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if UpdateAccount throws', async () => {
+    const error = new Error('update_error')
+    accountRepository.update.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAccount)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
