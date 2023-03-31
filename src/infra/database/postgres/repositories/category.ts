@@ -1,4 +1,4 @@
-import { CheckCategory, CreateCategory, ListAllCategories } from '@/domain/contracts/database/category'
+import { CheckCategory, CreateCategory, ListAllCategories, LoadCategoryById } from '@/domain/contracts/database/category'
 import { Category } from '@/infra/database/postgres/entities'
 
 export class CategoryRepository implements CheckCategory, CreateCategory, ListAllCategories {
@@ -21,11 +21,12 @@ export class CategoryRepository implements CheckCategory, CreateCategory, ListAl
       offset
     })
 
-    return {
-      categories: rows,
-      page: page,
-      perPage: perPage,
-      count: count
-    }
+    return { categories: rows, page: page, perPage: perPage, count: count }
+  }
+
+  async loadById ({ id }: LoadCategoryById.Input): Promise<LoadCategoryById.Output> {
+    const category = await Category.findByPk(id)
+    if (!category) return undefined
+    return { id: category.id.toString(), name: category.name, position: category.position }
   }
 }
