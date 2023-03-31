@@ -7,7 +7,7 @@ describe('GetCategoryController', () => {
 
   beforeAll(() => {
     makeRequest = { id: '1' }
-    LoadCategory = jest.fn()
+    LoadCategory = jest.fn().mockResolvedValue({ id: '1', name: 'any_category', position: 1 })
   })
 
   beforeEach(() => {
@@ -19,5 +19,14 @@ describe('GetCategoryController', () => {
 
     expect(LoadCategory).toHaveBeenCalledWith(makeRequest)
     expect(LoadCategory).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { id: '1', name: 'any_category', position: 1 }
+    })
   })
 })
