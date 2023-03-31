@@ -14,6 +14,7 @@ describe('ListCategory', () => {
   beforeAll(() => {
     pagination = { page: '1', perPage: '10' }
     categoryRepository = mock()
+    categoryRepository.list.mockResolvedValue({ categories: [], page: 1, perPage: 10, count: 0 })
   })
 
   beforeEach(() => {
@@ -28,5 +29,11 @@ describe('ListCategory', () => {
 
     expect(categoryRepository.list).toHaveBeenCalledWith({ page: 1, perPage: 10 })
     expect(categoryRepository.list).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return list category on success', async () => {
+    const listCategories = await sut(pagination)
+
+    expect(listCategories).toEqual({ categories: [], page: 1, perPage: 10, count: 0 })
   })
 })
