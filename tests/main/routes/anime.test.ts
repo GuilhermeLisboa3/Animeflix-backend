@@ -5,6 +5,7 @@ import { sequelize, Account, Category } from '@/infra/database/postgres/entities
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
 import MockDate from 'mockdate'
+import { RequiredFieldError } from '@/application/errors'
 
 describe('AnimeRoute', () => {
   let token: string
@@ -38,6 +39,16 @@ describe('AnimeRoute', () => {
 
       expect(status).toBe(204)
       expect(body).toBeTruthy()
+    })
+
+    it('should return 400 if any data is not supplied', async () => {
+      const { status, body: { error } } = await request(app)
+        .post('/anime')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ name: 'any_anime', categoryId: 1 })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new RequiredFieldError('synopsis').message)
     })
   })
 })
