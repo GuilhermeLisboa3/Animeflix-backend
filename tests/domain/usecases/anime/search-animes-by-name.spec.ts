@@ -14,6 +14,7 @@ describe('SearchAnimesByNameUseCase', () => {
   beforeAll(() => {
     makeParams = { page: '1', perPage: '10', name: 'any_name' }
     animeRepository = mock()
+    animeRepository.listByName.mockResolvedValue({ animes: [], page: 1, perPage: 10, count: 0 })
   })
 
   beforeEach(() => {
@@ -28,5 +29,11 @@ describe('SearchAnimesByNameUseCase', () => {
 
     expect(animeRepository.listByName).toHaveBeenCalledWith({ page: 1, perPage: 10, name: 'any_name' })
     expect(animeRepository.listByName).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return list anime on success', async () => {
+    const listCategories = await sut(makeParams)
+
+    expect(listCategories).toEqual({ animes: [], page: 1, perPage: 10, count: 0 })
   })
 })
