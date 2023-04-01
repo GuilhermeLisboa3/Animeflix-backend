@@ -1,5 +1,6 @@
 import { DeleteAnimeController } from '@/application/controllers/anime'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('DeleteAnimeController', () => {
   let sut: DeleteAnimeController
@@ -13,6 +14,10 @@ describe('DeleteAnimeController', () => {
 
   beforeEach(() => {
     sut = new DeleteAnimeController(DeleteAnime)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
