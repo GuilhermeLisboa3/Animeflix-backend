@@ -1,5 +1,6 @@
 import { UpdateAnimeController } from '@/application/controllers/anime'
 import { RequiredField, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('UpdateAnimeController', () => {
   let sut: UpdateAnimeController
@@ -15,6 +16,10 @@ describe('UpdateAnimeController', () => {
 
   beforeEach(() => {
     sut = new UpdateAnimeController(UpdateAnime)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
