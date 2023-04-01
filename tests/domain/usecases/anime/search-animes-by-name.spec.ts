@@ -31,6 +31,15 @@ describe('SearchAnimesByNameUseCase', () => {
     expect(animeRepository.listByName).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if ListAnimeByName throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.listByName.mockRejectedValueOnce(error)
+
+    const promise = sut(makeParams)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should return list anime on success', async () => {
     const listCategories = await sut(makeParams)
 
