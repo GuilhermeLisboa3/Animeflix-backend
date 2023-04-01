@@ -16,6 +16,7 @@ export const UpdateAnimeUseCase: Setup = (animeRepository, fileStorage, uuid, ca
     await fileStorage.upload({ file: file.buffer, fileName: `${key}.${file.mimeType.split('/')[1]}` })
   }
   if (categoryId) {
-    await categoryRepository.checkById({ id: categoryId })
+    const category = await categoryRepository.checkById({ id: categoryId })
+    if (!category) throw new NotFoundError('categoryId')
   }
 }
