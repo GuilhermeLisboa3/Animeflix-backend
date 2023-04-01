@@ -6,7 +6,7 @@ import { Router } from 'express'
 
 export default (route: Router): void => {
   route.post('/anime', authAdmin, multerAdapter, adapt(makeAddAnimeController()))
-  route.get('/anime/:id', auth, adapt(makeGetAnimeByIdController()))
+  route.get('/animes/:id', auth, adapt(makeGetAnimeByIdController()))
   route.delete('/anime/:id', authAdmin, adapt(makeDeleteAnimeController()))
   route.put('/anime/:id', authAdmin, multerAdapter, adapt(makeUpdateAnimeController()))
 }

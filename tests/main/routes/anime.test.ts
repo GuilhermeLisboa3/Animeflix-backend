@@ -96,4 +96,21 @@ describe('AnimeRoute', () => {
       expect(status).toBe(204)
     })
   })
+
+  describe('GET /animes/:id', () => {
+    it('should return 200 on success', async () => {
+      await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
+      const { status, body } = await request(app)
+        .get(`/animes/${1}`)
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+      expect(body).toEqual({
+        name: 'any_anime',
+        id: 1,
+        synopsis: 'any_synopsis',
+        thumbnailUrl: 'any_thumbnailUrl'
+      })
+    })
+  })
 })
