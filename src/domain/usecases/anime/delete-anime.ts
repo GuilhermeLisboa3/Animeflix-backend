@@ -1,8 +1,8 @@
-import { LoadAnimeById } from '@/domain/contracts/database/anime'
+import { LoadAnimeById, DeleteAnimeById } from '@/domain/contracts/database/anime'
 import { DeleteFile } from '@/domain/contracts/gateways'
 import { NotFoundError } from '@/domain/errors'
 
-type Setup = (animeRepository: LoadAnimeById, fileStorage: DeleteFile) => DeleteAnime
+type Setup = (animeRepository: LoadAnimeById & DeleteAnimeById, fileStorage: DeleteFile) => DeleteAnime
 type Input = { id: string }
 export type DeleteAnime = (input: Input) => Promise<void>
 
@@ -12,4 +12,5 @@ export const DeleteAnimeUseCase: Setup = (animeRepository, fileStorage) => async
   if (anime.thumbnailUrl !== null) {
     await fileStorage.delete({ fileName: anime.thumbnailUrl })
   }
+  await animeRepository.deleteById({ id })
 }
