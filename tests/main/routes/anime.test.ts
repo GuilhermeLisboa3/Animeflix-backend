@@ -73,4 +73,15 @@ describe('AnimeRoute', () => {
       expect(error).toBe(new NotFoundError('categoryId').message)
     })
   })
+
+  describe('DELETE /anime/:id', () => {
+    it('should return 204 on success', async () => {
+      await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis' })
+      const { status } = await request(app)
+        .delete(`/anime/${1}`)
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(204)
+    })
+  })
 })
