@@ -9,4 +9,28 @@ describe('AllowedMimeTypeValidation', () => {
 
     expect(error).toEqual(new InvalidMimeTypeError(['png']))
   })
+
+  it('should return undefined if value is valid', () => {
+    const sut = new AllowedMimeTypeValidation(['png'], 'image/png')
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
+
+  it('should return undefined if value is valid', () => {
+    const sut = new AllowedMimeTypeValidation(['jpg'], 'image/jpg')
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
+
+  it('should return undefined if value is valid', () => {
+    const sut = new AllowedMimeTypeValidation(['jpg'], 'image/jpeg')
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
 })
