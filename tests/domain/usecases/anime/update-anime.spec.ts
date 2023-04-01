@@ -1,5 +1,6 @@
 import { UpdateAnimeUseCase, UpdateAnime } from '@/domain/usecases/anime'
 import { LoadAnimeById } from '@/domain/contracts/database/anime'
+import { CheckCategoryById } from '@/domain/contracts/database/category'
 import { DeleteFile, UUIDGenerator, UploadFile } from '@/domain/contracts/gateways'
 import { NotFoundError } from '@/domain/errors'
 
@@ -9,6 +10,7 @@ describe('UpdateAnimeUseCase', () => {
   let animeRepository: MockProxy<LoadAnimeById>
   let fileStorage: MockProxy<DeleteFile & UploadFile>
   let uuid: MockProxy<UUIDGenerator>
+  let categoryRepository: MockProxy<CheckCategoryById>
   let makeAnime: { id: string, file?: { buffer: Buffer, mimeType: string }, categoryId?: number }
   let sut: UpdateAnime
 
@@ -19,10 +21,11 @@ describe('UpdateAnimeUseCase', () => {
     fileStorage = mock()
     uuid = mock()
     uuid.generate.mockReturnValue('any_key')
+    categoryRepository = mock()
   })
 
   beforeEach(() => {
-    sut = UpdateAnimeUseCase(animeRepository, fileStorage, uuid)
+    sut = UpdateAnimeUseCase(animeRepository, fileStorage, uuid, categoryRepository)
   })
 
   it('should call LoadAnimeById with correct input', async () => {
@@ -59,5 +62,12 @@ describe('UpdateAnimeUseCase', () => {
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any'), fileName: 'any_key.png' })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call CheckCategoryId with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(categoryRepository.checkById).toHaveBeenCalledWith({ id: 1 })
+    expect(categoryRepository.checkById).toHaveBeenCalledTimes(1)
   })
 })
