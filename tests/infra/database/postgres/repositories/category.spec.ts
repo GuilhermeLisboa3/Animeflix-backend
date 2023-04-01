@@ -90,5 +90,11 @@ describe('CategoryRepository', () => {
 
       expect(existCategory).toBeTruthy()
     })
+
+    it('should return false if category not exists', async () => {
+      const existCategory = await sut.checkById({ id: 1 })
+
+      expect(existCategory).toBeFalsy()
+    })
   })
 })
