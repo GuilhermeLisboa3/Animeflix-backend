@@ -1,5 +1,6 @@
 import { GetAnimeByIdController } from '@/application/controllers/anime'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('GetAnimeByIdController', () => {
   let sut: GetAnimeByIdController
@@ -13,6 +14,10 @@ describe('GetAnimeByIdController', () => {
 
   beforeEach(() => {
     sut = new GetAnimeByIdController(GetAnimeById)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
