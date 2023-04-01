@@ -1,4 +1,4 @@
-import { RequiredField, Validator, EmailValidator } from '@/application/validation'
+import { RequiredField, Validator, EmailValidator, AllowedMimeTypeValidation, Extension, MaxFileSizeValidation } from '@/application/validation'
 
 export class ValidationBuilder {
   private constructor (
@@ -18,6 +18,12 @@ export class ValidationBuilder {
 
   email (): ValidationBuilder {
     this.validations.push(new EmailValidator(this.value, this.fieldName))
+    return this
+  }
+
+  image ({ AllowedMimeTypes, maxSizeInMb }: { AllowedMimeTypes: Extension[], maxSizeInMb: number }): ValidationBuilder {
+    if (this.value?.mimeType) this.validations.push(new AllowedMimeTypeValidation(AllowedMimeTypes, this.value.mimeType))
+    if (this.value?.buffer) this.validations.push(new MaxFileSizeValidation(maxSizeInMb, this.value.buffer))
     return this
   }
 
