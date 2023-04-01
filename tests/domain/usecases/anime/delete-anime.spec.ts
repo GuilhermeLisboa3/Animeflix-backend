@@ -1,12 +1,12 @@
 import { DeleteAnimeUseCase, DeleteAnime } from '@/domain/usecases/anime'
-import { LoadAnimeById } from '@/domain/contracts/database/anime'
+import { LoadAnimeById, DeleteAnimeById } from '@/domain/contracts/database/anime'
 import { DeleteFile } from '@/domain/contracts/gateways'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteAnimeUseCase', () => {
-  let animeRepository: MockProxy<LoadAnimeById>
+  let animeRepository: MockProxy<LoadAnimeById & DeleteAnimeById>
   let fileStorage: MockProxy<DeleteFile>
   let makeAnime: { id: string }
   let sut: DeleteAnime
@@ -42,5 +42,12 @@ describe('DeleteAnimeUseCase', () => {
 
     expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: 'any_value' })
     expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call DeleteAnimeById with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(animeRepository.deleteById).toHaveBeenCalledWith(makeAnime)
+    expect(animeRepository.deleteById).toHaveBeenCalledTimes(1)
   })
 })
