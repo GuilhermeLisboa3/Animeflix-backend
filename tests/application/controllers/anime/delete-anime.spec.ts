@@ -1,6 +1,7 @@
 import { DeleteAnimeController } from '@/application/controllers/anime'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteAnimeController', () => {
   let sut: DeleteAnimeController
@@ -33,6 +34,16 @@ describe('DeleteAnimeController', () => {
 
     expect(DeleteAnime).toHaveBeenCalledWith({ id: '1' })
     expect(DeleteAnime).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if DeleteAnime returns NotFoundError', async () => {
+    DeleteAnime.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 204 on success', async () => {
