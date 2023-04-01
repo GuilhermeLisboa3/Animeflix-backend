@@ -31,5 +31,11 @@ describe('AnimeRepository', () => {
 
       expect(existAnime).toBeTruthy()
     })
+
+    it('should return false if anime not exists', async () => {
+      const existAnime = await sut.check({ name: 'any_name' })
+
+      expect(existAnime).toBeFalsy()
+    })
   })
 })
