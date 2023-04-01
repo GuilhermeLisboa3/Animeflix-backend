@@ -45,11 +45,29 @@ describe('UpdateAnimeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
   })
 
+  it('should rethrow if LoadAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteFile with correct input', async () => {
     await sut(makeAnime)
 
     expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: 'any_value' })
     expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if DeleteFile throw', async () => {
+    const error = new Error('infa_error')
+    fileStorage.delete.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should call UUIDGenerator with correct input', async () => {
@@ -59,11 +77,29 @@ describe('UpdateAnimeUseCase', () => {
     expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if UUIDGenerator throw', async () => {
+    const error = new Error('infa_error')
+    uuid.generate.mockImplementationOnce(() => { throw error })
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call UploadFile with correct input', async () => {
     await sut(makeAnime)
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any'), fileName: 'any_key.png' })
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if UploadFile throw', async () => {
+    const error = new Error('infa_error')
+    fileStorage.upload.mockImplementationOnce(() => { throw error })
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should call CheckCategoryId with correct input', async () => {
@@ -81,11 +117,29 @@ describe('UpdateAnimeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('categoryId'))
   })
 
+  it('should rethrow if CheckCategoryId throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.checkById.mockImplementationOnce(() => { throw error })
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call UpdateAnime with correct input', async () => {
     await sut(makeAnime)
 
     expect(animeRepository.update).toHaveBeenCalledWith({ id: '1', thumbnailUrl: 'any_url', categoryId: 1 })
     expect(animeRepository.update).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if UpdateAnime throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.update.mockImplementationOnce(() => { throw error })
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
