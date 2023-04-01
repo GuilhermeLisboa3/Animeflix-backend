@@ -22,6 +22,7 @@ describe('UpdateAnimeUseCase', () => {
     uuid = mock()
     uuid.generate.mockReturnValue('any_key')
     categoryRepository = mock()
+    categoryRepository.checkById.mockResolvedValue(true)
   })
 
   beforeEach(() => {
@@ -69,5 +70,13 @@ describe('UpdateAnimeUseCase', () => {
 
     expect(categoryRepository.checkById).toHaveBeenCalledWith({ id: 1 })
     expect(categoryRepository.checkById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return NotFoundError if CheckCategoryById returns false', async () => {
+    categoryRepository.checkById.mockResolvedValueOnce(false)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(new NotFoundError('categoryId'))
   })
 })
