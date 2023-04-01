@@ -55,5 +55,11 @@ describe('AnimeRepository', () => {
 
       expect(anime).toMatchObject({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: null })
     })
+
+    it('should return undefined if anime not exists', async () => {
+      const anime = await sut.loadById({ id: '1' })
+
+      expect(anime).toBeUndefined()
+    })
   })
 })
