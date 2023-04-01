@@ -6,7 +6,7 @@ import request from 'supertest'
 import { sign } from 'jsonwebtoken'
 import MockDate from 'mockdate'
 import { RequiredFieldError } from '@/application/errors'
-import { FieldInUseError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 describe('AnimeRoute', () => {
   let token: string
@@ -61,6 +61,16 @@ describe('AnimeRoute', () => {
 
       expect(status).toBe(400)
       expect(error).toBe(new FieldInUseError('name').message)
+    })
+
+    it('should return 400 if category not exists', async () => {
+      const { status, body: { error } } = await request(app)
+        .post('/anime')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ name: 'any_anime', categoryId: 2, synopsis: 'any_synopsis' })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new NotFoundError('categoryId').message)
     })
   })
 })
