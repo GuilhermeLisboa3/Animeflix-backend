@@ -76,4 +76,19 @@ describe('AnimeRepository', () => {
       expect(anime).toBeNull()
     })
   })
+
+  describe('update', () => {
+    it('should return undefined on success', async () => {
+      await Anime.create(makeAnime)
+      await Category.create({ name: 'any_name2', position: 2 })
+
+      const updateAnime = await sut.update({ id: '1', name: 'any_name2', categoryId: 2, synopsis: 'any_synopsis2' })
+
+      expect(updateAnime).toBeUndefined()
+
+      const anime = await Anime.findOne({ where: { id: '1' } })
+
+      expect(anime).toMatchObject({ id: 1, name: 'any_name2', categoryId: 2, synopsis: 'any_synopsis2' })
+    })
+  })
 })
