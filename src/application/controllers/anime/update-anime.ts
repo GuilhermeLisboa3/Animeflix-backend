@@ -1,3 +1,4 @@
+import { Controller } from '@/application/controllers'
 import { HttpResponse, noContent } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
 import { UpdateAnime } from '@/domain/usecases/anime'
@@ -11,8 +12,8 @@ type HttpRequest = {
   featured?: boolean
 }
 
-export class UpdateAnimeController {
-  constructor (private readonly updateAnime: UpdateAnime) {}
+export class UpdateAnimeController extends Controller {
+  constructor (private readonly updateAnime: UpdateAnime) { super() }
 
   async perform (input: HttpRequest): Promise<HttpResponse> {
     await this.updateAnime(input)
