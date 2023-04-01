@@ -38,4 +38,12 @@ describe('AnimeRepository', () => {
       expect(existAnime).toBeFalsy()
     })
   })
+
+  describe('create', () => {
+    it('should return true if the anime is successfully created', async () => {
+      const anime = await sut.create(makeAnime)
+
+      expect(anime).toBeTruthy()
+    })
+  })
 })
