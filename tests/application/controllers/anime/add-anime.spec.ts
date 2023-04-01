@@ -1,7 +1,7 @@
 import { Controller } from '@/application/controllers'
 import { AddAnimeController } from '@/application/controllers/anime'
 import { RequiredField, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
-import { FieldInUseError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 describe('AddAnimeController', () => {
   let sut: AddAnimeController
@@ -49,6 +49,16 @@ describe('AddAnimeController', () => {
     expect(httpResponse).toEqual({
       statusCode: 400,
       data: new FieldInUseError('name')
+    })
+  })
+
+  it('should return 400 if AddAnime returns NotFoundError', async () => {
+    AddAnime.mockRejectedValueOnce(new NotFoundError('categoryId'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('categoryId')
     })
   })
 
