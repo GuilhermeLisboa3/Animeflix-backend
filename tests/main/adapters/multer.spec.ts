@@ -20,6 +20,7 @@ describe('MulterAdapter', () => {
   beforeAll(() => {
     uploadSpy = jest.fn().mockImplementation((req, res, next) => {
       req.file = { buffer: Buffer.from('any_buffer'), mimetype: 'any_type' }
+      next()
     })
     singleSpy = jest.fn().mockImplementation(() => uploadSpy)
     multerSpy = jest.fn().mockImplementation(() => ({ single: singleSpy }))
@@ -67,5 +68,17 @@ describe('MulterAdapter', () => {
     sut(req, res, next)
 
     expect(req.locals).toEqual({ anyLocals: 'any_locals' })
+  })
+
+  it('should add file to req.locals', () => {
+    sut(req, res, next)
+
+    expect(req.locals).toEqual({
+      anyLocals: 'any_locals',
+      file: {
+        buffer: req.file?.buffer,
+        mimeType: req.file?.mimetype
+      }
+    })
   })
 })
