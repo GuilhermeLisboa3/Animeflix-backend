@@ -1,4 +1,4 @@
-import { RequiredField, ValidationBuilder, EmailValidator } from '@/application/validation'
+import { RequiredField, ValidationBuilder, EmailValidator, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
 
 describe('Builder', () => {
   it('should return RequiredField', () => {
@@ -15,6 +15,16 @@ describe('Builder', () => {
     expect(validators).toEqual([
       new RequiredField('any_email', 'email'),
       new EmailValidator('any_email', 'email')
+    ])
+  })
+
+  it('should return a Image validation if image() is call', () => {
+    const file = { buffer: Buffer.from('any_value'), mimeType: 'image/png' }
+    const validators = ValidationBuilder.of(file, 'any_field_name').image({ AllowedMimeTypes: ['jpg'], maxSizeInMb: 5 }).build()
+
+    expect(validators).toEqual([
+      new AllowedMimeTypeValidation(['jpg'], file.mimeType),
+      new MaxFileSizeValidation(5, file.buffer)
     ])
   })
 })
