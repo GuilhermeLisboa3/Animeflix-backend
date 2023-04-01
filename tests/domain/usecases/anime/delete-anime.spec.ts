@@ -50,4 +50,10 @@ describe('DeleteAnimeUseCase', () => {
     expect(animeRepository.deleteById).toHaveBeenCalledWith(makeAnime)
     expect(animeRepository.deleteById).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeAnime)
+
+    expect(result).toBeUndefined()
+  })
 })
