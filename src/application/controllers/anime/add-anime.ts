@@ -1,4 +1,5 @@
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
+import { AddAnime } from '@/domain/usecases/anime'
 
 type HttpRequest = {
   name: string
@@ -9,6 +10,12 @@ type HttpRequest = {
 }
 
 export class AddAnimeController {
+  constructor (private readonly addAnime: AddAnime) {}
+
+  async perform (input: HttpRequest): Promise<void> {
+    await this.addAnime(input)
+  }
+
   buildValidators ({ name, categoryId, synopsis, featured, file }: HttpRequest): Validator[] {
     return [
       ...builder.of(name, 'name').required().build(),
