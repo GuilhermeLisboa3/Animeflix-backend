@@ -62,4 +62,18 @@ describe('AnimeRepository', () => {
       expect(anime).toBeUndefined()
     })
   })
+
+  describe('delete', () => {
+    it('should return undefined on success', async () => {
+      await Anime.create(makeAnime)
+
+      const deleteAnime = await sut.deleteById({ id: '1' })
+
+      expect(deleteAnime).toBeUndefined()
+
+      const anime = await Anime.findOne({ where: { id: '1' } })
+
+      expect(anime).toBeNull()
+    })
+  })
 })
