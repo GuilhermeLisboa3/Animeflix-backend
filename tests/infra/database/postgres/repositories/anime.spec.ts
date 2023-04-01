@@ -46,4 +46,14 @@ describe('AnimeRepository', () => {
       expect(anime).toBeTruthy()
     })
   })
+
+  describe('loadById', () => {
+    it('should return anime on success', async () => {
+      await Anime.create(makeAnime)
+
+      const anime = await sut.loadById({ id: '1' })
+
+      expect(anime).toMatchObject({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: null })
+    })
+  })
 })
