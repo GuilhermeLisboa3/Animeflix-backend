@@ -1,6 +1,7 @@
 import { GetAnimeByIdController } from '@/application/controllers/anime'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('GetAnimeByIdController', () => {
   let sut: GetAnimeByIdController
@@ -33,6 +34,16 @@ describe('GetAnimeByIdController', () => {
 
     expect(GetAnimeById).toHaveBeenCalledWith({ id: '1' })
     expect(GetAnimeById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if GetAnimeById returns NotFoundError', async () => {
+    GetAnimeById.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 200 on success', async () => {
