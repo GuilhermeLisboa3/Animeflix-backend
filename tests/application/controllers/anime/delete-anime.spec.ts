@@ -29,4 +29,13 @@ describe('DeleteAnimeController', () => {
     expect(DeleteAnime).toHaveBeenCalledWith({ id: '1' })
     expect(DeleteAnime).toHaveBeenCalledTimes(1)
   })
+
+  it('should return 204 on success', async () => {
+    const result = await sut.perform(makeRequest)
+
+    expect(result).toEqual({
+      statusCode: 204,
+      data: null
+    })
+  })
 })
