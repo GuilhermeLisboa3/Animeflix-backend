@@ -1,7 +1,8 @@
-import { CheckAnime, CreateAnime, DeleteAnimeById, LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
+import { CheckAnime, CreateAnime, DeleteAnimeById, ListAnimeByName, LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
 import { Anime } from '@/infra/database/postgres/entities'
+import { Op } from 'sequelize'
 
-export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, DeleteAnimeById, UpdateAnimeRepository {
+export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, DeleteAnimeById, UpdateAnimeRepository, ListAnimeByName {
   async check ({ name }: CheckAnime.Input): Promise<CheckAnime.Output> {
     const existAnime = await Anime.findOne({ where: { name } })
     return existAnime !== null
@@ -24,5 +25,16 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
   async update ({ id, categoryId, featured, name, synopsis, thumbnailUrl }: UpdateAnimeRepository.Input): Promise<void> {
     const attributes = { categoryId, featured, name, synopsis, thumbnailUrl }
     await Anime.update(attributes, { where: { id } })
+  }
+
+  async listByName ({ name, page, perPage }: ListAnimeByName.Input): Promise<ListAnimeByName.Output> {
+    const offset = (page - 1) * perPage
+    const { count, rows } = await Anime.findAndCountAll({
+      attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+      where: { name: { [Op.iLike]: `%${name}%` } },
+      limit: perPage,
+      offset
+    })
+    return { animes: rows, page, perPage, count }
   }
 }
