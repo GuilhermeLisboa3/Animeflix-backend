@@ -33,4 +33,15 @@ describe('GetAnimeById', () => {
 
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
   })
+
+  it('should return anime on success', async () => {
+    const anime = await sut(makeAnime)
+
+    expect(anime).toEqual({
+      id: 1,
+      name: 'any_name',
+      synopsis: 'any_synopsis',
+      thumbnailUrl: 'any_thumbnailUrl'
+    })
+  })
 })
