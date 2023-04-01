@@ -34,6 +34,15 @@ describe('GetAnimeById', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
   })
 
+  it('should rethrow if LoadAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should return anime on success', async () => {
     const anime = await sut(makeAnime)
 
