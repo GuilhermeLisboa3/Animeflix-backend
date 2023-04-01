@@ -84,4 +84,16 @@ describe('AnimeRoute', () => {
       expect(status).toBe(204)
     })
   })
+
+  describe('PUT /anime/:id', () => {
+    it('should return 204 on success', async () => {
+      await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
+      const { status } = await request(app)
+        .put(`/anime/${1}`)
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ name: 'any_anime2', synopsis: 'any_synopsis2' })
+
+      expect(status).toBe(204)
+    })
+  })
 })
