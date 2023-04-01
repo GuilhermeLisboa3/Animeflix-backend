@@ -1,6 +1,7 @@
 import { Controller } from '@/application/controllers'
 import { AddAnimeController } from '@/application/controllers/anime'
 import { RequiredField, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
+import { FieldInUseError } from '@/domain/errors'
 
 describe('AddAnimeController', () => {
   let sut: AddAnimeController
@@ -39,6 +40,16 @@ describe('AddAnimeController', () => {
 
     expect(AddAnime).toHaveBeenCalledWith(makeRequest)
     expect(AddAnime).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if AddAnime returns FieldInUseError', async () => {
+    AddAnime.mockRejectedValueOnce(new FieldInUseError('name'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new FieldInUseError('name')
+    })
   })
 
   it('should return 204 on success', async () => {
