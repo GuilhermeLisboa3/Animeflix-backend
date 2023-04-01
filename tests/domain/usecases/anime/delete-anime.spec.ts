@@ -37,6 +37,15 @@ describe('DeleteAnimeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
   })
 
+  it('should rethrow if LoadAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteFile with correct input', async () => {
     await sut(makeAnime)
 
@@ -44,11 +53,29 @@ describe('DeleteAnimeUseCase', () => {
     expect(fileStorage.delete).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if DeleteFile throw', async () => {
+    const error = new Error('infa_error')
+    fileStorage.delete.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteAnimeById with correct input', async () => {
     await sut(makeAnime)
 
     expect(animeRepository.deleteById).toHaveBeenCalledWith(makeAnime)
     expect(animeRepository.deleteById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if DeleteAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.deleteById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeAnime)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
