@@ -1,13 +1,13 @@
 import { UpdateAnimeUseCase, UpdateAnime } from '@/domain/usecases/anime'
 import { LoadAnimeById } from '@/domain/contracts/database/anime'
-import { DeleteFile, UUIDGenerator } from '@/domain/contracts/gateways'
+import { DeleteFile, UUIDGenerator, UploadFile } from '@/domain/contracts/gateways'
 import { NotFoundError } from '@/domain/errors'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 
 describe('UpdateAnimeUseCase', () => {
   let animeRepository: MockProxy<LoadAnimeById>
-  let fileStorage: MockProxy<DeleteFile>
+  let fileStorage: MockProxy<DeleteFile & UploadFile>
   let uuid: MockProxy<UUIDGenerator>
   let makeAnime: { id: string, file?: { buffer: Buffer, mimeType: string }, categoryId?: number }
   let sut: UpdateAnime
@@ -18,6 +18,7 @@ describe('UpdateAnimeUseCase', () => {
     animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value' })
     fileStorage = mock()
     uuid = mock()
+    uuid.generate.mockReturnValue('any_key')
   })
 
   beforeEach(() => {
@@ -51,5 +52,12 @@ describe('UpdateAnimeUseCase', () => {
 
     expect(uuid.generate).toHaveBeenCalledWith()
     expect(uuid.generate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call UploadFile with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any'), fileName: 'any_key.png' })
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 })
