@@ -1,7 +1,7 @@
-import { CheckCategory, CreateCategory, DeleteCategoryById, ListAllCategories, LoadCategoryById } from '@/domain/contracts/database/category'
+import { CheckCategory, CreateCategory, DeleteCategoryById, ListAllCategories, LoadCategoryById, CheckCategoryById } from '@/domain/contracts/database/category'
 import { Category } from '@/infra/database/postgres/entities'
 
-export class CategoryRepository implements CheckCategory, CreateCategory, ListAllCategories, DeleteCategoryById {
+export class CategoryRepository implements CheckCategory, CreateCategory, ListAllCategories, DeleteCategoryById, CheckCategoryById {
   async check ({ name, position }: CheckCategory.Input): Promise<CheckCategory.Output> {
     const existAccount = await Category.findOne({ where: { name, position } })
     return existAccount !== null
@@ -32,5 +32,10 @@ export class CategoryRepository implements CheckCategory, CreateCategory, ListAl
 
   async delete ({ id }: DeleteCategoryById.Input): Promise<void> {
     await Category.destroy({ where: { id } })
+  }
+
+  async checkById ({ id }: CheckCategoryById.Input): Promise<CheckCategoryById.Output> {
+    const existAccount = await Category.findOne({ where: { id } })
+    return existAccount !== null
   }
 }
