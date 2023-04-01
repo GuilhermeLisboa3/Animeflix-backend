@@ -1,6 +1,7 @@
 import { UpdateAnimeController } from '@/application/controllers/anime'
 import { RequiredField, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('UpdateAnimeController', () => {
   let sut: UpdateAnimeController
@@ -37,6 +38,16 @@ describe('UpdateAnimeController', () => {
 
     expect(UpdateAnime).toHaveBeenCalledWith(makeRequest)
     expect(UpdateAnime).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if UpdateAnime returns NotFoundError', async () => {
+    UpdateAnime.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 204 on success', async () => {
