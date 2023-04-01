@@ -87,4 +87,10 @@ describe('UpdateAnimeUseCase', () => {
     expect(animeRepository.update).toHaveBeenCalledWith({ id: '1', thumbnailUrl: 'any_url', categoryId: 1 })
     expect(animeRepository.update).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeAnime)
+
+    expect(result).toBeUndefined()
+  })
 })
