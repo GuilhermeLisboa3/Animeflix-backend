@@ -1,11 +1,13 @@
 import { UpdateAnimeUseCase, UpdateAnime } from '@/domain/usecases/anime'
 import { LoadAnimeById } from '@/domain/contracts/database/anime'
+import { DeleteFile } from '@/domain/contracts/gateways'
+import { NotFoundError } from '@/domain/errors'
 
 import { MockProxy, mock } from 'jest-mock-extended'
-import { NotFoundError } from '@/domain/errors'
 
 describe('UpdateAnimeUseCase', () => {
   let animeRepository: MockProxy<LoadAnimeById>
+  let fileStorage: MockProxy<DeleteFile>
   let makeAnime: { id: string, file?: { buffer: Buffer, mimeType: string }, categoryId?: number }
   let sut: UpdateAnime
 
@@ -13,10 +15,11 @@ describe('UpdateAnimeUseCase', () => {
     makeAnime = { id: '1', file: { buffer: Buffer.from('any'), mimeType: 'image/png' }, categoryId: 1 }
     animeRepository = mock()
     animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value' })
+    fileStorage = mock()
   })
 
   beforeEach(() => {
-    sut = UpdateAnimeUseCase(animeRepository)
+    sut = UpdateAnimeUseCase(animeRepository, fileStorage)
   })
 
   it('should call LoadAnimeById with correct input', async () => {
@@ -32,5 +35,12 @@ describe('UpdateAnimeUseCase', () => {
     const promise = sut(makeAnime)
 
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
+  })
+
+  it('should call DeleteFile with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: 'any_value' })
+    expect(fileStorage.delete).toHaveBeenCalledTimes(1)
   })
 })
