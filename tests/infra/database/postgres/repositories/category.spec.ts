@@ -81,4 +81,14 @@ describe('CategoryRepository', () => {
       expect(category).toBeUndefined()
     })
   })
+
+  describe('checkById', () => {
+    it('should return true if category exists', async () => {
+      await Category.create({ name: 'any_category', position: 1 })
+
+      const existCategory = await sut.checkById({ id: 1 })
+
+      expect(existCategory).toBeTruthy()
+    })
+  })
 })
