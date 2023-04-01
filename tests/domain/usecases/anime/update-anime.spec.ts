@@ -1,5 +1,5 @@
 import { UpdateAnimeUseCase, UpdateAnime } from '@/domain/usecases/anime'
-import { LoadAnimeById } from '@/domain/contracts/database/anime'
+import { LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
 import { CheckCategoryById } from '@/domain/contracts/database/category'
 import { DeleteFile, UUIDGenerator, UploadFile } from '@/domain/contracts/gateways'
 import { NotFoundError } from '@/domain/errors'
@@ -7,7 +7,7 @@ import { NotFoundError } from '@/domain/errors'
 import { MockProxy, mock } from 'jest-mock-extended'
 
 describe('UpdateAnimeUseCase', () => {
-  let animeRepository: MockProxy<LoadAnimeById>
+  let animeRepository: MockProxy<LoadAnimeById & UpdateAnimeRepository>
   let fileStorage: MockProxy<DeleteFile & UploadFile>
   let uuid: MockProxy<UUIDGenerator>
   let categoryRepository: MockProxy<CheckCategoryById>
@@ -19,6 +19,7 @@ describe('UpdateAnimeUseCase', () => {
     animeRepository = mock()
     animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value' })
     fileStorage = mock()
+    fileStorage.upload.mockResolvedValue('any_url')
     uuid = mock()
     uuid.generate.mockReturnValue('any_key')
     categoryRepository = mock()
@@ -78,5 +79,12 @@ describe('UpdateAnimeUseCase', () => {
     const promise = sut(makeAnime)
 
     await expect(promise).rejects.toThrow(new NotFoundError('categoryId'))
+  })
+
+  it('should call UpdateAnime with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(animeRepository.update).toHaveBeenCalledWith({ id: '1', thumbnailUrl: 'any_url', categoryId: 1 })
+    expect(animeRepository.update).toHaveBeenCalledTimes(1)
   })
 })
