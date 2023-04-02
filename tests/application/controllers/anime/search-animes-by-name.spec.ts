@@ -1,5 +1,6 @@
 import { SearchAnimesByNameController } from '@/application/controllers/anime'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('SearchAnimesByNameController', () => {
   let sut: SearchAnimesByNameController
@@ -13,6 +14,10 @@ describe('SearchAnimesByNameController', () => {
 
   beforeEach(() => {
     sut = new SearchAnimesByNameController(ListAnimeByName)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
