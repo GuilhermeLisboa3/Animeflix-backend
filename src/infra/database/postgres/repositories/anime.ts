@@ -1,8 +1,8 @@
-import { CheckAnime, CreateAnime, DeleteAnimeById, ListAnimeByName, LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
+import { CheckAnime, CreateAnime, DeleteAnimeById, ListAnimeByFeatured, ListAnimeByName, LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
 import { Anime } from '@/infra/database/postgres/entities'
-import { Op } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 
-export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, DeleteAnimeById, UpdateAnimeRepository, ListAnimeByName {
+export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, DeleteAnimeById, UpdateAnimeRepository, ListAnimeByName, ListAnimeByFeatured {
   async check ({ name }: CheckAnime.Input): Promise<CheckAnime.Output> {
     const existAnime = await Anime.findOne({ where: { name } })
     return existAnime !== null
@@ -36,5 +36,17 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
       offset
     })
     return { animes: rows, page, perPage, count }
+  }
+
+  async listByFeatured (): Promise<ListAnimeByFeatured.Output> {
+    const listAnime = await Anime.findAll({
+      order: Sequelize.literal('random()'),
+      attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+      where: {
+        featured: true
+      },
+      limit: 5
+    })
+    return listAnime.slice(0, 3)
   }
 }
