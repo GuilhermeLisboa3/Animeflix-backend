@@ -113,4 +113,22 @@ describe('AnimeRoute', () => {
       })
     })
   })
+
+  describe('GET /animes/search', () => {
+    it('should return 200 on success', async () => {
+      await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', featured: true })
+      const { status, body } = await request(app)
+        .get('/animes/search')
+        .set({ authorization: `Bearer: ${token}` })
+        .query({ name: 'any' })
+
+      expect(status).toBe(200)
+      expect(body).toEqual({
+        animes: [{ id: 1, name: 'any_anime', synopsis: 'any_synopsis', thumbnailUrl: null }],
+        page: 1,
+        perPage: 10,
+        count: 1
+      })
+    })
+  })
 })
