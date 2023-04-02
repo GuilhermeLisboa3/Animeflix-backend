@@ -91,4 +91,19 @@ describe('AnimeRepository', () => {
       expect(anime).toMatchObject({ id: 1, name: 'any_name2', categoryId: 2, synopsis: 'any_synopsis2' })
     })
   })
+
+  describe('listByName', () => {
+    it('should return list anime on success', async () => {
+      await Anime.create(makeAnime)
+
+      const listAnimes = await sut.listByName({ page: 1, perPage: 10, name: 'any' })
+
+      expect(listAnimes).toMatchObject({
+        animes: [{ name: 'any_name', id: 1, synopsis: 'any_synopsis', thumbnailUrl: null }],
+        page: 1,
+        perPage: 10,
+        count: 1
+      })
+    })
+  })
 })
