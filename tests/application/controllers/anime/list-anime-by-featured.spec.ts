@@ -1,4 +1,5 @@
 import { ListAnimeByFeaturedController } from '@/application/controllers/anime'
+import { Controller } from '@/application/controllers'
 
 describe('ListAnimeByFeaturedController', () => {
   let sut: ListAnimeByFeaturedController
@@ -10,6 +11,10 @@ describe('ListAnimeByFeaturedController', () => {
 
   beforeEach(() => {
     sut = new ListAnimeByFeaturedController(ListAnimeByFeatured)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call ListAnimeByFeatured with correct input', async () => {
