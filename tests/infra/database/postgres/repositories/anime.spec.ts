@@ -106,4 +106,18 @@ describe('AnimeRepository', () => {
       })
     })
   })
+
+  describe('listByFeatured', () => {
+    it('should return a list of featured animes', async () => {
+      await Anime.create({ ...makeAnime, featured: true, thumbnailUrl: 'any_thumbnail' })
+      await Anime.create({ name: 'any_name2', categoryId: 1, synopsis: 'any_synopsis', featured: false })
+
+      const listAnimeFeatured = await sut.listByFeatured()
+      const listAnime = listAnimeFeatured.sort(() => 0.5 - Math.random())
+
+      expect(listAnime).toMatchObject([
+        { id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnail' }
+      ])
+    })
+  })
 })
