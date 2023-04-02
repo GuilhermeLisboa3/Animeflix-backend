@@ -8,7 +8,7 @@ describe('SearchAnimesByNameController', () => {
 
   beforeAll(() => {
     makeRequest = { name: 'any_name' }
-    ListAnimeByName = jest.fn()
+    ListAnimeByName = jest.fn().mockResolvedValue({ animes: [], page: 1, perPage: 10, count: 0 })
   })
 
   beforeEach(() => {
@@ -28,5 +28,14 @@ describe('SearchAnimesByNameController', () => {
 
     expect(ListAnimeByName).toHaveBeenCalledWith({ name: 'any_name' })
     expect(ListAnimeByName).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { animes: [], page: 1, perPage: 10, count: 0 }
+    })
   })
 })
