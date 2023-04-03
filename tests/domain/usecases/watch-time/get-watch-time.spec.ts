@@ -42,6 +42,15 @@ describe('GetWatchTimeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('accountId'))
   })
 
+  it('should rethrow if CheckAccountById throw', async () => {
+    const error = new Error('infa_error')
+    accountRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeWatchTime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CheckEpisodeById with correct input', async () => {
     await sut(makeWatchTime)
 
@@ -57,11 +66,29 @@ describe('GetWatchTimeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('episodeId'))
   })
 
+  it('should rethrow if CheckEpisodeById throw', async () => {
+    const error = new Error('infa_error')
+    episodeRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeWatchTime)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call LoadWatchTime with correct input', async () => {
     await sut(makeWatchTime)
 
     expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '1' })
     expect(watchTimeRepository.load).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if LoadWatchTime throw', async () => {
+    const error = new Error('infa_error')
+    watchTimeRepository.load.mockRejectedValueOnce(error)
+
+    const promise = sut(makeWatchTime)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return seconds on success', async () => {
