@@ -168,5 +168,11 @@ describe('AccountRepository', () => {
 
       expect(existAccount).toBeTruthy()
     })
+
+    it('should return false if account not exists', async () => {
+      const existAccount = await sut.checkById({ id: 1 })
+
+      expect(existAccount).toBeFalsy()
+    })
   })
 })
