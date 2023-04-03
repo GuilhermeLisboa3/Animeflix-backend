@@ -10,7 +10,7 @@ export class AllowedMimeTypeValidation implements Validator {
   ) {}
 
   validate (): Error | undefined {
-    if (!this.isPng() && !this.isJpg() && !this.isMp4()) return new InvalidMimeTypeError(this.allowed)
+    if (!this.isPng() && !this.isJpg()) return new InvalidMimeTypeError(this.allowed)
   }
 
   private isPng (): boolean {
@@ -19,9 +19,5 @@ export class AllowedMimeTypeValidation implements Validator {
 
   private isJpg (): boolean {
     return this.allowed.includes('jpg') && /image\/jpe?g/.test(this.mimeType)
-  }
-
-  private isMp4 (): boolean {
-    return this.allowed.includes('mp4') && this.mimeType === 'video/mp4'
   }
 }
