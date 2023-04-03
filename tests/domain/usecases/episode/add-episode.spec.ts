@@ -4,10 +4,12 @@ import { CheckEpisodeByOrder } from '@/domain/contracts/database/episode'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 import { FieldInUseError, NotFoundError } from '@/domain/errors'
+import { UUIDGenerator } from '@/domain/contracts/gateways'
 
 describe('AddEpisodeUseCase', () => {
   let animeRepository: MockProxy<CheckAnimeById>
   let episodeRepository: MockProxy<CheckEpisodeByOrder>
+  let uuid: MockProxy<UUIDGenerator>
   let makeEpisode: { animeId: number, order: number, name: string, synopsis: string, file?: { buffer: Buffer, mimeType: string } }
   let sut: AddEpisode
 
@@ -17,10 +19,11 @@ describe('AddEpisodeUseCase', () => {
     animeRepository.checkById.mockResolvedValue(true)
     episodeRepository = mock()
     episodeRepository.checkByOrder.mockResolvedValue(false)
+    uuid = mock()
   })
 
   beforeEach(() => {
-    sut = AddEpisodeUseCase(animeRepository, episodeRepository)
+    sut = AddEpisodeUseCase(animeRepository, episodeRepository, uuid)
   })
 
   it('should call CheckAnimeById with correct input', async () => {
@@ -51,5 +54,12 @@ describe('AddEpisodeUseCase', () => {
     const promise = sut(makeEpisode)
 
     await expect(promise).rejects.toThrow(new FieldInUseError('order'))
+  })
+
+  it('should call UUIDGenerator with correct input', async () => {
+    await sut(makeEpisode)
+
+    expect(uuid.generate).toHaveBeenCalledWith()
+    expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 })
