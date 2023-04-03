@@ -102,4 +102,10 @@ describe('UpdateEpisodeUseCase', () => {
     expect(episodeRepository.update).toHaveBeenCalledWith({ id: '1', animeId: 1, videoUrl: 'any_url', order: 1 })
     expect(episodeRepository.update).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeEpisode)
+
+    expect(result).toBeUndefined()
+  })
 })
