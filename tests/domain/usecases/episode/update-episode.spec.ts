@@ -2,7 +2,7 @@ import { UpdateEpisodeUseCase, UpdateEpisode } from '@/domain/usecases/episode'
 import { LoadEpisodeById, CheckEpisodeByOrder } from '@/domain/contracts/database/episode'
 
 import { MockProxy, mock } from 'jest-mock-extended'
-import { NotFoundError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 describe('UpdateEpisodeUseCase', () => {
   let episodeRepository: MockProxy<LoadEpisodeById & CheckEpisodeByOrder>
@@ -39,5 +39,13 @@ describe('UpdateEpisodeUseCase', () => {
 
     expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1 })
     expect(episodeRepository.checkByOrder).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return FieldInUseError if CheckEpisodeByOrder returns true', async () => {
+    episodeRepository.checkByOrder.mockResolvedValueOnce(true)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(new FieldInUseError('order'))
   })
 })
