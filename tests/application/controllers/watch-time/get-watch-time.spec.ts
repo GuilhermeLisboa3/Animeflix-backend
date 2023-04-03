@@ -1,6 +1,7 @@
 import { GetWatchTimeController } from '@/application/controllers/watch-time'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('GetWatchTimeController', () => {
   let makeRequest: { accountId: string, id: string}
@@ -33,6 +34,16 @@ describe('GetWatchTimeController', () => {
 
     expect(GetWatchTime).toHaveBeenCalledWith({ accountId: '1', episodeId: '1' })
     expect(GetWatchTime).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if AddWatchTime returns NotFoundError', async () => {
+    GetWatchTime.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 200 on success', async () => {
