@@ -5,14 +5,16 @@ describe('AddEpisodeController', () => {
   let sut: AddEpisodeController
   let file: { buffer: Buffer, mimeType: string }
   let makeRequest: { name: string, animeId: number, file?: { buffer: Buffer, mimeType: string }, synopsis: string, order: number }
+  let AddEpisode: jest.Mock
 
   beforeAll(() => {
     file = { buffer: Buffer.from('any'), mimeType: 'video/mp4' }
     makeRequest = { name: 'any_name', animeId: 1, file, synopsis: 'any_synopsis', order: 1 }
+    AddEpisode = jest.fn()
   })
 
   beforeEach(() => {
-    sut = new AddEpisodeController()
+    sut = new AddEpisodeController(AddEpisode)
   })
 
   it('should build Validators correctly', async () => {
@@ -26,5 +28,12 @@ describe('AddEpisodeController', () => {
       new AllowedMimeTypeValidation(['mp4'], 'video/mp4'),
       new MaxFileSizeValidation(100, Buffer.from('any'))
     ])
+  })
+
+  it('should call AddEpisode with correct input', async () => {
+    await sut.perform(makeRequest)
+
+    expect(AddEpisode).toHaveBeenCalledWith(makeRequest)
+    expect(AddEpisode).toHaveBeenCalledTimes(1)
   })
 })
