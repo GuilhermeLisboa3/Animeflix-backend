@@ -27,6 +27,14 @@ describe('AllowedMimeTypeValidation', () => {
   })
 
   it('should return undefined if value is valid', () => {
+    const sut = new AllowedMimeTypeValidation(['mp4'], 'video/mp4')
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
+
+  it('should return undefined if value is valid', () => {
     const sut = new AllowedMimeTypeValidation(['jpg'], 'image/jpeg')
 
     const error = sut.validate()
