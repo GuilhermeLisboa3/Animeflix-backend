@@ -1,6 +1,7 @@
 import { GetWatchTimeUseCase, GetWatchTime } from '@/domain/usecases/watch-time'
 import { CheckAccountById } from '@/domain/contracts/database/account'
 import { CheckEpisodeById } from '@/domain/contracts/database/episode'
+import { LoadWatchTime } from '@/domain/contracts/database/watch-time'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
@@ -8,6 +9,7 @@ import { NotFoundError } from '@/domain/errors'
 describe('GetWatchTimeUseCase', () => {
   let accountRepository: MockProxy<CheckAccountById>
   let episodeRepository: MockProxy<CheckEpisodeById>
+  let watchTimeRepository: MockProxy<LoadWatchTime>
   let makeWatchTime: { accountId: string, episodeId: string }
   let sut: GetWatchTime
 
@@ -17,10 +19,11 @@ describe('GetWatchTimeUseCase', () => {
     makeWatchTime = { accountId: '1', episodeId: '1' }
     episodeRepository = mock()
     episodeRepository.checkById.mockResolvedValue(true)
+    watchTimeRepository = mock()
   })
 
   beforeEach(() => {
-    sut = GetWatchTimeUseCase(accountRepository, episodeRepository)
+    sut = GetWatchTimeUseCase(accountRepository, episodeRepository, watchTimeRepository)
   })
 
   it('should call CheckAccountById with correct input', async () => {
@@ -51,5 +54,12 @@ describe('GetWatchTimeUseCase', () => {
     const promise = sut(makeWatchTime)
 
     await expect(promise).rejects.toThrow(new NotFoundError('episodeId'))
+  })
+
+  it('should call LoadWatchTime with correct input', async () => {
+    await sut(makeWatchTime)
+
+    expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '1' })
+    expect(watchTimeRepository.load).toHaveBeenCalledTimes(1)
   })
 })
