@@ -1,7 +1,7 @@
-import { CheckEpisodeByOrder, CreateEpisode, DeleteEpisodeById, LoadEpisode, LoadEpisodeById, UpdateEpisodeRepository, LoadEpisodeByAnimeId } from '@/domain/contracts/database/episode'
+import { CheckEpisodeByOrder, CheckEpisodeById, CreateEpisode, DeleteEpisodeById, LoadEpisode, LoadEpisodeById, UpdateEpisodeRepository, LoadEpisodeByAnimeId } from '@/domain/contracts/database/episode'
 import { Episode } from '@/infra/database/postgres/entities'
 
-export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, LoadEpisodeById, UpdateEpisodeRepository, DeleteEpisodeById, LoadEpisode, LoadEpisodeByAnimeId {
+export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, LoadEpisodeById, UpdateEpisodeRepository, DeleteEpisodeById, LoadEpisode, LoadEpisodeByAnimeId, CheckEpisodeById {
   async checkByOrder ({ order }: CheckEpisodeByOrder.Input): Promise<CheckEpisodeByOrder.Output> {
     const existEpisode = await Episode.findOne({ where: { order } })
     return existEpisode !== null
@@ -36,5 +36,10 @@ export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, Lo
   async loadByAnimeId ({ animeId }: LoadEpisodeByAnimeId.Input): Promise<LoadEpisodeByAnimeId.Output> {
     const episode = await Episode.findAll({ attributes: ['id', 'name', 'videoUrl', 'synopsis', 'secondsLong', 'order', ['video_url', 'videoUrl']], where: { animeId } })
     return episode
+  }
+
+  async checkById ({ id }: CheckEpisodeById.Input): Promise<CheckEpisodeById.Output> {
+    const existEpisode = await Episode.findOne({ where: { id } })
+    return existEpisode !== null
   }
 }
