@@ -62,4 +62,10 @@ describe('AddWatchTimeUseCase', () => {
     expect(watchTimeRepository.save).toHaveBeenCalledWith({ userId: 1, episodeId: 1, seconds: 1 })
     expect(watchTimeRepository.save).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeWatchTime)
+
+    expect(result).toBeUndefined()
+  })
 })
