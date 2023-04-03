@@ -1,11 +1,11 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
 import { sequelize, Account, Category, Anime, Episode } from '@/infra/database/postgres/entities'
+import { RequiredFieldError } from '@/application/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
-import { RequiredFieldError } from '@/application/errors'
-import { FieldInUseError } from '@/domain/errors'
 
 describe('EpisodeRoute', () => {
   let token: string
@@ -51,6 +51,7 @@ describe('EpisodeRoute', () => {
       expect(status).toBe(400)
       expect(error).toBe(new RequiredFieldError('order').message)
     })
+
     it('should return 400 if episode already exists', async () => {
       await Episode.create({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis', order: 1 })
       const { status, body: { error } } = await request(app)
@@ -60,6 +61,16 @@ describe('EpisodeRoute', () => {
 
       expect(status).toBe(400)
       expect(error).toBe(new FieldInUseError('order').message)
+    })
+
+    it('should return 400 if animeId not exists', async () => {
+      const { status, body: { error } } = await request(app)
+        .post('/episode')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ name: 'any_anime', animeId: 2, synopsis: 'any_synopsis', order: 1 })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new NotFoundError('animeId').message)
     })
   })
 })
