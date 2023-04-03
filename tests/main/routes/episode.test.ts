@@ -73,4 +73,16 @@ describe('EpisodeRoute', () => {
       expect(error).toBe(new NotFoundError('animeId').message)
     })
   })
+
+  describe('PUT /episode/:id', () => {
+    it('should return 204 on success', async () => {
+      await Episode.create({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_video' })
+      const { status } = await request(app)
+        .put(`/episode/${1}`)
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ id: '1', name: 'any_name2' })
+
+      expect(status).toBe(204)
+    })
+  })
 })
