@@ -20,6 +20,7 @@ export const UpdateEpisodeUseCase: Setup = (episodeRepository, fileStorage, uuid
     await fileStorage.upload({ file: file.buffer, fileName: `${key}.${file.mimeType.split('/')[1]}` })
   }
   if (animeId) {
-    await animeRepository.checkById({ id: animeId })
+    const existsAnime = await animeRepository.checkById({ id: animeId })
+    if (!existsAnime) throw new NotFoundError('animeId')
   }
 }
