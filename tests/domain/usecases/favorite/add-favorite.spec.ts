@@ -62,4 +62,10 @@ describe('AddFavoriteUseCase', () => {
     expect(favoriteRepository.create).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
     expect(favoriteRepository.create).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeFavorite)
+
+    expect(result).toBeUndefined()
+  })
 })
