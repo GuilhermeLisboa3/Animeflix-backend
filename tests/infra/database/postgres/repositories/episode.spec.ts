@@ -115,4 +115,14 @@ describe('EpisodeRepository', () => {
       expect(episodes).toMatchObject([{ id: 1, name: 'any_name', synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', secondsLong: null }])
     })
   })
+
+  describe('checkById', () => {
+    it('should return true if episode exists', async () => {
+      await Episode.create(makeEpisode)
+
+      const existEpisode = await sut.checkById({ id: '1' })
+
+      expect(existEpisode).toBeTruthy()
+    })
+  })
 })
