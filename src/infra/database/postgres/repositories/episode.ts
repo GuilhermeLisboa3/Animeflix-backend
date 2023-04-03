@@ -1,7 +1,7 @@
-import { CheckEpisodeByOrder, CreateEpisode, LoadEpisodeById, UpdateEpisodeRepository } from '@/domain/contracts/database/episode'
+import { CheckEpisodeByOrder, CreateEpisode, DeleteEpisodeById, LoadEpisodeById, UpdateEpisodeRepository } from '@/domain/contracts/database/episode'
 import { Episode } from '@/infra/database/postgres/entities'
 
-export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, LoadEpisodeById, UpdateEpisodeRepository {
+export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, LoadEpisodeById, UpdateEpisodeRepository, DeleteEpisodeById {
   async checkByOrder ({ order }: CheckEpisodeByOrder.Input): Promise<CheckEpisodeByOrder.Output> {
     const existEpisode = await Episode.findOne({ where: { order } })
     return existEpisode !== null
@@ -20,5 +20,9 @@ export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, Lo
   async update ({ id, animeId, name, order, secondsLong, synopsis, videoUrl }: UpdateEpisodeRepository.Input): Promise<void> {
     const attributes = { animeId, name, order, secondsLong, synopsis, videoUrl }
     await Episode.update(attributes, { where: { id } })
+  }
+
+  async deleteById ({ id }: DeleteEpisodeById.Input): Promise<void> {
+    await Episode.destroy({ where: { id } })
   }
 }
