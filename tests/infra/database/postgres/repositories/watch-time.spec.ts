@@ -39,4 +39,14 @@ describe('WatchTimeRepository', () => {
       expect(updateSeconds?.seconds).toBe(10)
     })
   })
+
+  describe('load', () => {
+    it('should return seconds on success', async () => {
+      await WatchTime.create(makeWatchTime)
+
+      const seconds = await sut.load({ userId: '1', episodeId: '1' })
+
+      expect(seconds).toEqual({ seconds: 100 })
+    })
+  })
 })
