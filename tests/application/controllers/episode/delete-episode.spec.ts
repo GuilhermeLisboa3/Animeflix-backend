@@ -20,4 +20,13 @@ describe('DeleteEpisodeController', () => {
     expect(DeleteEpisode).toHaveBeenCalledWith({ episodeId: '1' })
     expect(DeleteEpisode).toHaveBeenCalledTimes(1)
   })
+
+  it('should return 204 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 204,
+      data: null
+    })
+  })
 })
