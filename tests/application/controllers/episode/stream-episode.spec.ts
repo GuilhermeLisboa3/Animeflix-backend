@@ -1,5 +1,6 @@
 import { StreamEpisodeController } from '@/application/controllers/episode'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('StreamEpisodeController', () => {
   let sut: StreamEpisodeController
@@ -13,6 +14,10 @@ describe('StreamEpisodeController', () => {
 
   beforeEach(() => {
     sut = new StreamEpisodeController(StreamEpisode)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
