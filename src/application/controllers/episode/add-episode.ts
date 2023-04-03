@@ -1,3 +1,4 @@
+import { Controller } from '@/application/controllers'
 import { HttpResponse, noContent } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
 import { AddEpisode } from '@/domain/usecases/episode'
@@ -11,15 +12,15 @@ type HttpRequest = {
   secondsLong?: number
 }
 
-export class AddEpisodeController {
-  constructor (private readonly addEpisode: AddEpisode) {}
+export class AddEpisodeController extends Controller {
+  constructor (private readonly addEpisode: AddEpisode) { super() }
 
   async perform ({ name, animeId, order, synopsis, file, secondsLong }: HttpRequest): Promise<HttpResponse> {
     await this.addEpisode({ name, animeId, order, synopsis, file, secondsLong })
     return noContent()
   }
 
-  buildValidators ({ animeId, name, order, synopsis, file }: HttpRequest): Validator[] {
+  override buildValidators ({ animeId, name, order, synopsis, file }: HttpRequest): Validator[] {
     return [
       ...builder.of(name, 'name').required().build(),
       ...builder.of(animeId, 'animeId').required().build(),
