@@ -96,5 +96,13 @@ describe('EpisodeRepository', () => {
 
       expect(videoUrl).toBe('any_value')
     })
+
+    it('should return undefined if episode not exists', async () => {
+      await Episode.create({ ...makeEpisode, videoUrl: undefined })
+
+      const videoUrl = await sut.load({ animeId: '1', order: '1' })
+
+      expect(videoUrl).toBeUndefined()
+    })
   })
 })
