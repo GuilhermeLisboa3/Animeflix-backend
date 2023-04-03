@@ -9,5 +9,6 @@ export type GetWatchTime = (input: Input) => Promise<void>
 export const GetWatchTimeUseCase: Setup = (accountRepository, episodeRepository) => async ({ accountId, episodeId }) => {
   const existAccount = await accountRepository.checkById({ id: Number(accountId) })
   if (!existAccount) throw new NotFoundError('accountId')
-  await episodeRepository.checkById({ id: episodeId })
+  const existEpisode = await episodeRepository.checkById({ id: episodeId })
+  if (!existEpisode) throw new NotFoundError('episodeId')
 }
