@@ -17,7 +17,7 @@ export class UpdatePasswordController extends Controller {
     return noContent()
   }
 
-  buildValidators ({ currentPassword, newPassword }: HttpRequest): Validator[] {
+  override buildValidators ({ currentPassword, newPassword }: HttpRequest): Validator[] {
     return [
       ...builder.of(currentPassword, 'currentPassword').required().build(),
       ...builder.of(newPassword, 'newPassword').required().build()

@@ -16,7 +16,7 @@ export class AddCategoryController extends Controller {
     return noContent()
   }
 
-  buildValidators ({ name, position }: HttpRequest): Validator[] {
+  override buildValidators ({ name, position }: HttpRequest): Validator[] {
     return [
       ...builder.of(name, 'name').required().build(),
       ...builder.of(position, 'position').required().build()

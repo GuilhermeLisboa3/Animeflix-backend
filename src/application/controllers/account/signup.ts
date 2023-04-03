@@ -13,7 +13,7 @@ export class SignUpController extends Controller {
     return ok(account)
   }
 
-  buildValidators ({ firstName, lastName, email, password, birth, phone }: HttpRequest): Validator[] {
+  override buildValidators ({ firstName, lastName, email, password, birth, phone }: HttpRequest): Validator[] {
     return [
       ...builder.of(firstName, 'firstName').required().build(),
       ...builder.of(lastName, 'lastName').required().build(),

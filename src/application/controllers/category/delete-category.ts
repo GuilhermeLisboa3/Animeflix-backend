@@ -15,7 +15,7 @@ export class DeleteCategoryController extends Controller {
     return noContent()
   }
 
-  buildValidators ({ id }: HttpRequest): Validator[] {
+  override buildValidators ({ id }: HttpRequest): Validator[] {
     return [
       ...builder.of(id, 'id').required().build()
     ]

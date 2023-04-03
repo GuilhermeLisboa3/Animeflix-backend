@@ -13,7 +13,7 @@ export class LoginController extends Controller {
     return ok(accessToken)
   }
 
-  buildValidators ({ email, password }: HttpRequest): Validator[] {
+  override buildValidators ({ email, password }: HttpRequest): Validator[] {
     return [
       ...build.of(email, 'email').required().email().build(),
       ...build.of(password, 'password').required().build()

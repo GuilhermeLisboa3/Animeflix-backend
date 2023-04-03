@@ -20,7 +20,7 @@ export class UpdateAnimeController extends Controller {
     return noContent()
   }
 
-  buildValidators ({ id, file }: HttpRequest): Validator[] {
+  override buildValidators ({ id, file }: HttpRequest): Validator[] {
     return [
       ...builder.of(id, 'id').required().build(),
       ...builder.of(file, 'file').image({ AllowedMimeTypes: ['jpg', 'png'], maxSizeInMb: 6 }).build()

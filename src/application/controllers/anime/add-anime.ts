@@ -19,7 +19,7 @@ export class AddAnimeController extends Controller {
     return noContent()
   }
 
-  buildValidators ({ name, categoryId, synopsis, featured, file }: HttpRequest): Validator[] {
+  override buildValidators ({ name, categoryId, synopsis, featured, file }: HttpRequest): Validator[] {
     return [
       ...builder.of(name, 'name').required().build(),
       ...builder.of(categoryId, 'categoryId').required().build(),

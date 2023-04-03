@@ -13,7 +13,7 @@ export class SearchAnimesByNameController extends Controller {
     return ok(animes)
   }
 
-  buildValidators ({ name }: HttpRequest): Validator[] {
+  override buildValidators ({ name }: HttpRequest): Validator[] {
     return [
       ...builder.of(name, 'name').required().build()
     ]
