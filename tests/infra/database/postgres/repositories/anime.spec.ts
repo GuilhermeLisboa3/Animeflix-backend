@@ -134,4 +134,14 @@ describe('AnimeRepository', () => {
       ])
     })
   })
+
+  describe('checkById', () => {
+    it('should return true if anime exists', async () => {
+      await Anime.create(makeAnime)
+
+      const existAnime = await sut.checkById({ id: 1 })
+
+      expect(existAnime).toBeTruthy()
+    })
+  })
 })
