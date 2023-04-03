@@ -73,4 +73,18 @@ describe('EpisodeRepository', () => {
       expect(episode).toMatchObject({ name: 'any_name2' })
     })
   })
+
+  describe('delete', () => {
+    it('should return undefined if delete episode on success', async () => {
+      await Episode.create(makeEpisode)
+
+      const deleteEpisode = await sut.deleteById({ id: '1' })
+
+      expect(deleteEpisode).toBeUndefined()
+
+      const episode = await Episode.findOne({ where: { id: '1' } })
+
+      expect(episode).toBeNull()
+    })
+  })
 })
