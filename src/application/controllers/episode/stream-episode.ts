@@ -1,3 +1,4 @@
+import { HttpResponse, ok } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
 import { StreamEpisode } from '@/domain/usecases/episode'
 
@@ -9,8 +10,9 @@ type HttpRequest = {
 export class StreamEpisodeController {
   constructor (private readonly streamEpisode: StreamEpisode) {}
 
-  async perform ({ animeId, order }: HttpRequest): Promise<void> {
-    await this.streamEpisode({ animeId, order })
+  async perform ({ animeId, order }: HttpRequest): Promise<HttpResponse> {
+    const videoUrl = await this.streamEpisode({ animeId, order })
+    return ok(videoUrl)
   }
 
   buildValidators ({ animeId, order }: HttpRequest): Validator[] {
