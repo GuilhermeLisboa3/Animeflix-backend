@@ -1,6 +1,6 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
-import { sequelize, Account, Category, Anime, Episode } from '@/infra/database/postgres/entities'
+import { sequelize, Account, Category, Anime, Episode, WatchTime } from '@/infra/database/postgres/entities'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
@@ -30,6 +30,18 @@ describe('AccountRoute', () => {
         .send({ seconds: 1 })
 
       expect(status).toBe(204)
+    })
+  })
+
+  describe('GET /episodes/:id/WatchTime', () => {
+    it('should return 200 on success', async () => {
+      await WatchTime.create({ userId: 1, episodeId: 1, seconds: 10 })
+      const { status, body } = await request(app)
+        .get(`/episodes/${1}/WatchTime`)
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+      expect(body).toEqual({ seconds: 10 })
     })
   })
 })
