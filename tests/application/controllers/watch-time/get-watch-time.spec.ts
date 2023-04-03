@@ -8,7 +8,7 @@ describe('GetWatchTimeController', () => {
 
   beforeAll(() => {
     makeRequest = { accountId: '1', id: '1' }
-    GetWatchTime = jest.fn()
+    GetWatchTime = jest.fn().mockResolvedValue({ seconds: 10 })
   })
 
   beforeEach(() => {
@@ -28,5 +28,14 @@ describe('GetWatchTimeController', () => {
 
     expect(GetWatchTime).toHaveBeenCalledWith({ accountId: '1', episodeId: '1' })
     expect(GetWatchTime).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { seconds: 10 }
+    })
   })
 })
