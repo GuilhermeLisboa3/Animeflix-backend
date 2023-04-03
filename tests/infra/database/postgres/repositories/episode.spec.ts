@@ -52,5 +52,11 @@ describe('EpisodeRepository', () => {
 
       expect(episode).toMatchObject({ videoUrl: 'any_value' })
     })
+
+    it('should return undefined if episode not exists', async () => {
+      const episode = await sut.loadById({ id: '1' })
+
+      expect(episode).toBeUndefined()
+    })
   })
 })
