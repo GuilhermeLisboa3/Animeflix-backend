@@ -87,4 +87,14 @@ describe('EpisodeRepository', () => {
       expect(episode).toBeNull()
     })
   })
+
+  describe('load', () => {
+    it('should return videoUrl on success', async () => {
+      await Episode.create(makeEpisode)
+
+      const videoUrl = await sut.load({ animeId: '1', order: '1' })
+
+      expect(videoUrl).toBe('any_value')
+    })
+  })
 })
