@@ -16,6 +16,7 @@ describe('GetWatchTimeUseCase', () => {
     accountRepository.checkById.mockResolvedValue(true)
     makeWatchTime = { accountId: '1', episodeId: '1' }
     episodeRepository = mock()
+    episodeRepository.checkById.mockResolvedValue(true)
   })
 
   beforeEach(() => {
@@ -42,5 +43,13 @@ describe('GetWatchTimeUseCase', () => {
 
     expect(episodeRepository.checkById).toHaveBeenCalledWith({ id: '1' })
     expect(episodeRepository.checkById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return NotFoundError if CheckEpisodeById returns false', async () => {
+    episodeRepository.checkById.mockResolvedValueOnce(false)
+
+    const promise = sut(makeWatchTime)
+
+    await expect(promise).rejects.toThrow(new NotFoundError('episodeId'))
   })
 })
