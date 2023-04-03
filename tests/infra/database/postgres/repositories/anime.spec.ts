@@ -120,4 +120,18 @@ describe('AnimeRepository', () => {
       ])
     })
   })
+
+  describe('listNewest', () => {
+    it('should return list of newest animes', async () => {
+      await Anime.create(makeAnime)
+      await Anime.create({ name: 'any_name2', categoryId: 1, synopsis: 'any_synopsis', featured: true, thumbnailUrl: 'any_thumbnail' })
+
+      const listAnimeNewest = await sut.listNewest()
+
+      expect(listAnimeNewest).toMatchObject([
+        { id: 1, name: 'any_name', categoryId: 1, synopsis: 'any_synopsis', featured: false, thumbnailUrl: null, createdAt: new Date(), updatedAt: new Date() },
+        { id: 2, name: 'any_name2', categoryId: 1, synopsis: 'any_synopsis', featured: true, thumbnailUrl: 'any_thumbnail', createdAt: new Date(), updatedAt: new Date() }
+      ])
+    })
+  })
 })
