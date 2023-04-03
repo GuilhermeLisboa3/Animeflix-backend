@@ -4,6 +4,7 @@ import { sequelize, Account, Category, Anime } from '@/infra/database/postgres/e
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
+import { RequiredFieldError } from '@/application/errors'
 
 describe('EpisodeRoute', () => {
   let token: string
@@ -38,6 +39,16 @@ describe('EpisodeRoute', () => {
 
       expect(status).toBe(204)
       expect(body).toBeTruthy()
+    })
+
+    it('should return 400 if any data is not supplied', async () => {
+      const { status, body: { error } } = await request(app)
+        .post('/episode')
+        .set({ authorization: `Bearer: ${token}` })
+        .send({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis' })
+
+      expect(status).toBe(400)
+      expect(error).toBe(new RequiredFieldError('order').message)
     })
   })
 })
