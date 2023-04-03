@@ -1,5 +1,6 @@
 import { DeleteEpisodeController } from '@/application/controllers/episode'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteEpisodeController', () => {
   let sut: DeleteEpisodeController
@@ -24,6 +25,16 @@ describe('DeleteEpisodeController', () => {
 
     expect(DeleteEpisode).toHaveBeenCalledWith({ episodeId: '1' })
     expect(DeleteEpisode).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if DeleteEpisode returns NotFoundError', async () => {
+    DeleteEpisode.mockRejectedValueOnce(new NotFoundError('episodeId'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('episodeId')
+    })
   })
 
   it('should return 204 on success', async () => {
