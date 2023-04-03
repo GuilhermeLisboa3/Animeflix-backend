@@ -1,3 +1,4 @@
+import { Controller } from '@/application/controllers'
 import { HttpResponse, ok } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
 import { StreamEpisode } from '@/domain/usecases/episode'
@@ -7,8 +8,8 @@ type HttpRequest = {
   order: string
 }
 
-export class StreamEpisodeController {
-  constructor (private readonly streamEpisode: StreamEpisode) {}
+export class StreamEpisodeController extends Controller {
+  constructor (private readonly streamEpisode: StreamEpisode) { super() }
 
   async perform ({ animeId, order }: HttpRequest): Promise<HttpResponse> {
     const videoUrl = await this.streamEpisode({ animeId, order })
