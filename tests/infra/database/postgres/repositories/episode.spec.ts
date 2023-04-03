@@ -35,4 +35,12 @@ describe('EpisodeRepository', () => {
       expect(existEpisode).toBeFalsy()
     })
   })
+
+  describe('create', () => {
+    it('should return true if the episode is successfully created', async () => {
+      const Episode = await sut.create(makeEpisode)
+
+      expect(Episode).toBeTruthy()
+    })
+  })
 })
