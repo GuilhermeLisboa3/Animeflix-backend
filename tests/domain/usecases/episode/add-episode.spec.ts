@@ -4,12 +4,13 @@ import { CheckEpisodeByOrder } from '@/domain/contracts/database/episode'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 import { FieldInUseError, NotFoundError } from '@/domain/errors'
-import { UUIDGenerator } from '@/domain/contracts/gateways'
+import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
 
 describe('AddEpisodeUseCase', () => {
   let animeRepository: MockProxy<CheckAnimeById>
   let episodeRepository: MockProxy<CheckEpisodeByOrder>
   let uuid: MockProxy<UUIDGenerator>
+  let fileStorage: MockProxy<UploadFile>
   let makeEpisode: { animeId: number, order: number, name: string, synopsis: string, file?: { buffer: Buffer, mimeType: string } }
   let sut: AddEpisode
 
@@ -20,10 +21,12 @@ describe('AddEpisodeUseCase', () => {
     episodeRepository = mock()
     episodeRepository.checkByOrder.mockResolvedValue(false)
     uuid = mock()
+    uuid.generate.mockReturnValue('any_key')
+    fileStorage = mock()
   })
 
   beforeEach(() => {
-    sut = AddEpisodeUseCase(animeRepository, episodeRepository, uuid)
+    sut = AddEpisodeUseCase(animeRepository, episodeRepository, uuid, fileStorage)
   })
 
   it('should call CheckAnimeById with correct input', async () => {
@@ -61,5 +64,12 @@ describe('AddEpisodeUseCase', () => {
 
     expect(uuid.generate).toHaveBeenCalledWith()
     expect(uuid.generate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call UploadFile with correct input', async () => {
+    await sut(makeEpisode)
+
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any'), fileName: 'any_key.mp4' })
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 })
