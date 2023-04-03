@@ -1,5 +1,6 @@
 import { AddWatchTimeController } from '@/application/controllers/watch-time'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('AddWatchTimeController', () => {
   let makeRequest: { accountId: string, id: string, seconds: number }
@@ -13,6 +14,10 @@ describe('AddWatchTimeController', () => {
 
   beforeEach(() => {
     sut = new AddWatchTimeController(AddWatchTime)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
