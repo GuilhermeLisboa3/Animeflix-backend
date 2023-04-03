@@ -1,11 +1,13 @@
 import { CheckAccountById } from '@/domain/contracts/database/account'
+import { CheckEpisodeById } from '@/domain/contracts/database/episode'
 import { NotFoundError } from '@/domain/errors'
 
-type Setup = (accountRepository: CheckAccountById) => GetWatchTime
+type Setup = (accountRepository: CheckAccountById, episodeRepository: CheckEpisodeById) => GetWatchTime
 type Input = { accountId: string, episodeId: string }
 export type GetWatchTime = (input: Input) => Promise<void>
 
-export const GetWatchTimeUseCase: Setup = (accountRepository) => async ({ accountId, episodeId }) => {
+export const GetWatchTimeUseCase: Setup = (accountRepository, episodeRepository) => async ({ accountId, episodeId }) => {
   const existAccount = await accountRepository.checkById({ id: Number(accountId) })
   if (!existAccount) throw new NotFoundError('accountId')
+  await episodeRepository.checkById({ id: episodeId })
 }
