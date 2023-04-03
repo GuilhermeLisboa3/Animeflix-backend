@@ -43,4 +43,14 @@ describe('EpisodeRepository', () => {
       expect(Episode).toBeTruthy()
     })
   })
+
+  describe('loadById', () => {
+    it('should return episode on success', async () => {
+      await Episode.create(makeEpisode)
+
+      const episode = await sut.loadById({ id: '1' })
+
+      expect(episode).toMatchObject({ videoUrl: 'any_value' })
+    })
+  })
 })
