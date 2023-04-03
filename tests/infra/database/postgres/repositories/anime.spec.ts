@@ -143,5 +143,11 @@ describe('AnimeRepository', () => {
 
       expect(existAnime).toBeTruthy()
     })
+
+    it('should return false if anime not exists', async () => {
+      const existAnime = await sut.checkById({ id: 1 })
+
+      expect(existAnime).toBeFalsy()
+    })
   })
 })
