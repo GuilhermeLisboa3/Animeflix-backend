@@ -1,6 +1,7 @@
 import { UpdateEpisodeController } from '@/application/controllers/episode'
 import { RequiredField, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('UpdateEpisodeController', () => {
   let sut: UpdateEpisodeController
@@ -37,6 +38,16 @@ describe('UpdateEpisodeController', () => {
 
     expect(UpdateEpisode).toHaveBeenCalledWith(makeRequest)
     expect(UpdateEpisode).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if UpdateEpisode returns NotFoundError', async () => {
+    UpdateEpisode.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 204 on success', async () => {
