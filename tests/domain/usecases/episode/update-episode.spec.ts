@@ -1,11 +1,11 @@
 import { UpdateEpisodeUseCase, UpdateEpisode } from '@/domain/usecases/episode'
-import { LoadEpisodeById } from '@/domain/contracts/database/episode'
+import { LoadEpisodeById, CheckEpisodeByOrder } from '@/domain/contracts/database/episode'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
 
 describe('UpdateEpisodeUseCase', () => {
-  let episodeRepository: MockProxy<LoadEpisodeById>
+  let episodeRepository: MockProxy<LoadEpisodeById & CheckEpisodeByOrder>
   let makeEpisode: { id: string, file?: { buffer: Buffer, mimeType: string }, animeId?: number, order?: number }
   let sut: UpdateEpisode
 
@@ -32,5 +32,12 @@ describe('UpdateEpisodeUseCase', () => {
     const promise = sut(makeEpisode)
 
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
+  })
+
+  it('should call CheckEpisodeByOrder with correct input', async () => {
+    await sut(makeEpisode)
+
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1 })
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledTimes(1)
   })
 })
