@@ -37,6 +37,15 @@ describe('DeleteEpisodeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('episodeId'))
   })
 
+  it('should rethrow if LoadEpisodeById throw', async () => {
+    const error = new Error('infa_error')
+    episodeRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteFile with correct input', async () => {
     await sut(makeEpisode)
 
@@ -44,11 +53,29 @@ describe('DeleteEpisodeUseCase', () => {
     expect(fileStorage.delete).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if DeleteFile throw', async () => {
+    const error = new Error('infa_error')
+    fileStorage.delete.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteEpisodeById with correct input', async () => {
     await sut(makeEpisode)
 
     expect(episodeRepository.deleteById).toHaveBeenCalledWith({ id: '1' })
     expect(episodeRepository.deleteById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if DeleteEpisodeById throw', async () => {
+    const error = new Error('infa_error')
+    episodeRepository.deleteById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
