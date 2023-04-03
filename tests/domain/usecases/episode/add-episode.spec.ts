@@ -92,4 +92,10 @@ describe('AddEpisodeUseCase', () => {
       expect(fileStorage.delete).toHaveBeenCalledTimes(1)
     })
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeEpisode)
+
+    expect(result).toBeUndefined()
+  })
 })
