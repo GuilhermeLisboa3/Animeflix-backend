@@ -1,6 +1,6 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
-import { sequelize, Account, Category, Anime } from '@/infra/database/postgres/entities'
+import { sequelize, Account, Category, Anime, Episode } from '@/infra/database/postgres/entities'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
@@ -100,6 +100,7 @@ describe('AnimeRoute', () => {
   describe('GET /animes/:id', () => {
     it('should return 200 on success', async () => {
       await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
+      await Episode.create({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_video' })
       const { status, body } = await request(app)
         .get(`/animes/${1}`)
         .set({ authorization: `Bearer: ${token}` })
@@ -109,7 +110,8 @@ describe('AnimeRoute', () => {
         name: 'any_anime',
         id: 1,
         synopsis: 'any_synopsis',
-        thumbnailUrl: 'any_thumbnailUrl'
+        thumbnailUrl: 'any_thumbnailUrl',
+        episodes: [{ id: 1, name: 'any_anime', synopsis: 'any_synopsis', order: 1, videoUrl: 'any_video', secondsLong: null }]
       })
     })
   })

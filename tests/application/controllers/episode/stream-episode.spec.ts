@@ -1,6 +1,7 @@
 import { StreamEpisodeController } from '@/application/controllers/episode'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('StreamEpisodeController', () => {
   let sut: StreamEpisodeController
@@ -34,6 +35,16 @@ describe('StreamEpisodeController', () => {
 
     expect(StreamEpisode).toHaveBeenCalledWith(makeRequest)
     expect(StreamEpisode).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if StreamEpisode return undefined', async () => {
+    StreamEpisode.mockResolvedValueOnce(undefined)
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('animeId or order')
+    })
   })
 
   it('should return 200 on success', async () => {

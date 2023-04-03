@@ -1,6 +1,7 @@
 import { Controller } from '@/application/controllers'
-import { HttpResponse, ok } from '@/application/helpers'
+import { HttpResponse, badRequest, ok } from '@/application/helpers'
 import { Validator, ValidationBuilder as builder } from '@/application/validation'
+import { NotFoundError } from '@/domain/errors'
 import { StreamEpisode } from '@/domain/usecases/episode'
 
 type HttpRequest = {
@@ -13,6 +14,7 @@ export class StreamEpisodeController extends Controller {
 
   async perform ({ animeId, order }: HttpRequest): Promise<HttpResponse> {
     const videoUrl = await this.streamEpisode({ animeId, order })
+    if (videoUrl === undefined) return badRequest(new NotFoundError('animeId or order'))
     return ok(videoUrl)
   }
 
