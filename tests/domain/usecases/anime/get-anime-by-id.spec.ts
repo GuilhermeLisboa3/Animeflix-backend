@@ -1,11 +1,13 @@
 import { GetAnimeByIdUseCase, GetAnimeById } from '@/domain/usecases/anime'
 import { LoadAnimeById } from '@/domain/contracts/database/anime'
+import { LoadEpisodeByAnimeId } from '@/domain/contracts/database/episode'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
 
 describe('GetAnimeById', () => {
   let animeRepository: MockProxy<LoadAnimeById>
+  let episodeRepository: MockProxy<LoadEpisodeByAnimeId>
   let makeAnime: { id: string }
   let sut: GetAnimeById
 
@@ -13,10 +15,11 @@ describe('GetAnimeById', () => {
     makeAnime = { id: '1' }
     animeRepository = mock()
     animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
+    episodeRepository = mock()
   })
 
   beforeEach(() => {
-    sut = GetAnimeByIdUseCase(animeRepository)
+    sut = GetAnimeByIdUseCase(animeRepository, episodeRepository)
   })
 
   it('should call LoadAnimeById with correct input', async () => {
@@ -41,6 +44,13 @@ describe('GetAnimeById', () => {
     const promise = sut(makeAnime)
 
     await expect(promise).rejects.toThrow(error)
+  })
+
+  it('should call LoadEpisodeByAnimeId with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(episodeRepository.loadByAnimeId).toHaveBeenCalledWith({ animeId: '1' })
+    expect(episodeRepository.loadByAnimeId).toHaveBeenCalledTimes(1)
   })
 
   it('should return anime on success', async () => {
