@@ -1,5 +1,5 @@
 import { LoadEpisodeById, CheckEpisodeByOrder } from '@/domain/contracts/database/episode'
-import { NotFoundError } from '@/domain/errors'
+import { FieldInUseError, NotFoundError } from '@/domain/errors'
 
 type Setup = (episodeRepository: LoadEpisodeById & CheckEpisodeByOrder) => UpdateEpisode
 type Input = { id: string, animeId?: number, name?: string, synopsis?: string, secondsLong?: number, order?: number, file?: { buffer: Buffer, mimeType: string } }
@@ -9,6 +9,7 @@ export const UpdateEpisodeUseCase: Setup = (episodeRepository) => async ({ id, a
   const animeExists = await episodeRepository.loadById({ id })
   if (!animeExists) throw new NotFoundError('id')
   if (order) {
-    await episodeRepository.checkByOrder({ order })
+    const existsEpisode = await episodeRepository.checkByOrder({ order })
+    if (existsEpisode) throw new FieldInUseError('order')
   }
 }
