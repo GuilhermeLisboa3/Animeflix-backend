@@ -159,4 +159,14 @@ describe('AccountRepository', () => {
       })
     })
   })
+
+  describe('checkById', () => {
+    it('should return true if account exists', async () => {
+      await Account.create(makeAccount)
+
+      const existAccount = await sut.checkById({ id: 1 })
+
+      expect(existAccount).toBeTruthy()
+    })
+  })
 })
