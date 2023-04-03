@@ -1,4 +1,5 @@
 import { ListAnimeNewestController } from '@/application/controllers/anime'
+import { Controller } from '@/application/controllers'
 
 describe('ListAnimeNewestController', () => {
   let sut: ListAnimeNewestController
@@ -10,6 +11,10 @@ describe('ListAnimeNewestController', () => {
 
   beforeEach(() => {
     sut = new ListAnimeNewestController(ListAnimeNewest)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call ListAnimeNewest with correct input', async () => {
