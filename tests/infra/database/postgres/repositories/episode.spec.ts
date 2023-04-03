@@ -28,5 +28,11 @@ describe('EpisodeRepository', () => {
 
       expect(existEpisode).toBeTruthy()
     })
+
+    it('should return false if episode not exists', async () => {
+      const existEpisode = await sut.checkByOrder({ order: 1 })
+
+      expect(existEpisode).toBeFalsy()
+    })
   })
 })
