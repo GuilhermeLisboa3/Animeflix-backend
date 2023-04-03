@@ -4,13 +4,13 @@ import { CheckEpisodeByOrder, CreateEpisode } from '@/domain/contracts/database/
 
 import { mock, MockProxy } from 'jest-mock-extended'
 import { FieldInUseError, NotFoundError } from '@/domain/errors'
-import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
+import { DeleteFile, UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
 
 describe('AddEpisodeUseCase', () => {
   let animeRepository: MockProxy<CheckAnimeById>
   let episodeRepository: MockProxy<CheckEpisodeByOrder & CreateEpisode>
   let uuid: MockProxy<UUIDGenerator>
-  let fileStorage: MockProxy<UploadFile>
+  let fileStorage: MockProxy<UploadFile & DeleteFile>
   let makeEpisode: { animeId: number, order: number, name: string, synopsis: string, file?: { buffer: Buffer, mimeType: string } }
   let sut: AddEpisode
 
@@ -79,5 +79,17 @@ describe('AddEpisodeUseCase', () => {
 
     expect(episodeRepository.create).toHaveBeenCalledWith({ name: 'any_name', animeId: 1, synopsis: 'any_synopsis', videoUrl: 'any_url', order: 1 })
     expect(episodeRepository.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call DeleteFile when file exists and CreateAnime throws', async () => {
+    const error = new Error()
+    episodeRepository.create.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    promise.catch(() => {
+      expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: 'any_key.mp4' })
+      expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+    })
   })
 })
