@@ -36,4 +36,13 @@ describe('AddEpisodeController', () => {
     expect(AddEpisode).toHaveBeenCalledWith(makeRequest)
     expect(AddEpisode).toHaveBeenCalledTimes(1)
   })
+
+  it('should return 204 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 204,
+      data: null
+    })
+  })
 })
