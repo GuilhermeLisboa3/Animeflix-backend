@@ -1,8 +1,8 @@
-import { CheckAnime, CreateAnime, DeleteAnimeById, ListAnimeByFeatured, ListAnimeByName, LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
+import { CheckAnime, CreateAnime, DeleteAnimeById, ListAnimeByFeatured, ListAnimeByName, ListAnimeNewest, LoadAnimeById, UpdateAnimeRepository } from '@/domain/contracts/database/anime'
 import { Anime } from '@/infra/database/postgres/entities'
 import { Op, Sequelize } from 'sequelize'
 
-export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, DeleteAnimeById, UpdateAnimeRepository, ListAnimeByName, ListAnimeByFeatured {
+export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, DeleteAnimeById, UpdateAnimeRepository, ListAnimeByName, ListAnimeByFeatured, ListAnimeNewest {
   async check ({ name }: CheckAnime.Input): Promise<CheckAnime.Output> {
     const existAnime = await Anime.findOne({ where: { name } })
     return existAnime !== null
@@ -48,5 +48,13 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
       limit: 5
     })
     return listAnime.slice(0, 3)
+  }
+
+  async listNewest (): Promise<ListAnimeNewest.Output> {
+    const listAnime = await Anime.findAll({
+      limit: 10,
+      order: [['created_at', 'DESC']]
+    })
+    return listAnime
   }
 }
