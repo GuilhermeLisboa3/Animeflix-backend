@@ -1,5 +1,5 @@
 import { WatchTimeRepository } from '@/infra/database/postgres/repositories'
-import { Anime, Category, sequelize, Account, Episode } from '@/infra/database/postgres/entities'
+import { Anime, Category, sequelize, Account, Episode, WatchTime } from '@/infra/database/postgres/entities'
 
 describe('WatchTimeRepository', () => {
   let sut: WatchTimeRepository
@@ -27,6 +27,16 @@ describe('WatchTimeRepository', () => {
       const seconds = await sut.save(makeWatchTime)
 
       expect(seconds).toBeUndefined()
+    })
+
+    it('should should update seconds if it already exists', async () => {
+      await WatchTime.create(makeWatchTime)
+
+      await sut.save({ userId: 1, episodeId: 1, seconds: 10 })
+
+      const updateSeconds = await WatchTime.findOne({ where: { userId: 1, episodeId: 1 } })
+
+      expect(updateSeconds?.seconds).toBe(10)
     })
   })
 })
