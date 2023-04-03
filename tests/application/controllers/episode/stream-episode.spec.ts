@@ -8,7 +8,7 @@ describe('StreamEpisodeController', () => {
 
   beforeAll(() => {
     makeRequest = { animeId: '1', order: '1' }
-    StreamEpisode = jest.fn()
+    StreamEpisode = jest.fn().mockResolvedValue('any_value')
   })
 
   beforeEach(() => {
@@ -29,5 +29,14 @@ describe('StreamEpisodeController', () => {
 
     expect(StreamEpisode).toHaveBeenCalledWith(makeRequest)
     expect(StreamEpisode).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: 'any_value'
+    })
   })
 })
