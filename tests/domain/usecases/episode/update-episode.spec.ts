@@ -45,6 +45,15 @@ describe('UpdateEpisodeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('id'))
   })
 
+  it('should rethrow if LoadEpisodeById throw', async () => {
+    const error = new Error('infa_error')
+    episodeRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CheckEpisodeByOrder with correct input', async () => {
     await sut(makeEpisode)
 
@@ -60,11 +69,29 @@ describe('UpdateEpisodeUseCase', () => {
     await expect(promise).rejects.toThrow(new FieldInUseError('order'))
   })
 
+  it('should rethrow if CheckEpisodeByOrder throw', async () => {
+    const error = new Error('infa_error')
+    episodeRepository.checkByOrder.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteFile with correct input', async () => {
     await sut(makeEpisode)
 
     expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: 'any_value' })
     expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if DeleteFile throw', async () => {
+    const error = new Error('infa_error')
+    fileStorage.delete.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should call UUIDGenerator with correct input', async () => {
@@ -74,6 +101,15 @@ describe('UpdateEpisodeUseCase', () => {
     expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if UUIDGenerator throw', async () => {
+    const error = new Error('infa_error')
+    uuid.generate.mockImplementationOnce(() => { throw error })
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call UploadFile with correct input', async () => {
     await sut(makeEpisode)
 
@@ -81,11 +117,29 @@ describe('UpdateEpisodeUseCase', () => {
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
   })
 
+  it('should rethrow if UploadFile throw', async () => {
+    const error = new Error('infa_error')
+    fileStorage.upload.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CheckAnimeById with correct input', async () => {
     await sut(makeEpisode)
 
     expect(animeRepository.checkById).toHaveBeenCalledWith({ id: 1 })
     expect(animeRepository.checkById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if CheckAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return NotFoundError if CheckAnimeById returns false', async () => {
@@ -101,6 +155,15 @@ describe('UpdateEpisodeUseCase', () => {
 
     expect(episodeRepository.update).toHaveBeenCalledWith({ id: '1', animeId: 1, videoUrl: 'any_url', order: 1 })
     expect(episodeRepository.update).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if UpdateEpisodeRepository throw', async () => {
+    const error = new Error('infa_error')
+    episodeRepository.update.mockRejectedValueOnce(error)
+
+    const promise = sut(makeEpisode)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
