@@ -20,6 +20,7 @@ describe('GetWatchTimeUseCase', () => {
     episodeRepository = mock()
     episodeRepository.checkById.mockResolvedValue(true)
     watchTimeRepository = mock()
+    watchTimeRepository.load.mockResolvedValue({ seconds: 10 })
   })
 
   beforeEach(() => {
@@ -61,5 +62,11 @@ describe('GetWatchTimeUseCase', () => {
 
     expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '1' })
     expect(watchTimeRepository.load).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return seconds on success', async () => {
+    const result = await sut(makeWatchTime)
+
+    expect(result).toEqual({ seconds: 10 })
   })
 })
