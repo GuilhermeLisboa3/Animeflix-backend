@@ -59,4 +59,18 @@ describe('EpisodeRepository', () => {
       expect(episode).toBeUndefined()
     })
   })
+
+  describe('update', () => {
+    it('should return undefined if update episode on success', async () => {
+      await Episode.create(makeEpisode)
+
+      const updateEpisode = await sut.update({ id: '1', name: 'any_name2' })
+
+      expect(updateEpisode).toBeUndefined()
+
+      const episode = await Episode.findOne({ where: { id: '1' } })
+
+      expect(episode).toMatchObject({ name: 'any_name2' })
+    })
+  })
 })
