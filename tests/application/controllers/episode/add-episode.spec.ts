@@ -1,5 +1,6 @@
 import { AddEpisodeController } from '@/application/controllers/episode'
 import { RequiredField, AllowedMimeTypeValidation, MaxFileSizeValidation } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('AddEpisodeController', () => {
   let sut: AddEpisodeController
@@ -15,6 +16,10 @@ describe('AddEpisodeController', () => {
 
   beforeEach(() => {
     sut = new AddEpisodeController(AddEpisode)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
