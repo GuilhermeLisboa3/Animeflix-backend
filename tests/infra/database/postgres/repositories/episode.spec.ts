@@ -105,4 +105,14 @@ describe('EpisodeRepository', () => {
       expect(videoUrl).toBeUndefined()
     })
   })
+
+  describe('loadAnimeById', () => {
+    it('should return list episodes', async () => {
+      await Episode.create(makeEpisode)
+
+      const episodes = await sut.loadByAnimeId({ animeId: '1' })
+
+      expect(episodes).toMatchObject([{ id: 1, name: 'any_name', synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', secondsLong: null }])
+    })
+  })
 })
