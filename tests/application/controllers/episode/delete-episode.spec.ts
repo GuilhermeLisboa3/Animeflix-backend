@@ -1,4 +1,5 @@
 import { DeleteEpisodeController } from '@/application/controllers/episode'
+import { Controller } from '@/application/controllers'
 
 describe('DeleteEpisodeController', () => {
   let sut: DeleteEpisodeController
@@ -12,6 +13,10 @@ describe('DeleteEpisodeController', () => {
 
   beforeEach(() => {
     sut = new DeleteEpisodeController(DeleteEpisode)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call DeleteEpisode with correct input', async () => {
