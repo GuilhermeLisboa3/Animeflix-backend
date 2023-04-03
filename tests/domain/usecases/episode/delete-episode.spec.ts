@@ -1,12 +1,12 @@
 import { DeleteEpisodeUseCase, DeleteEpisode } from '@/domain/usecases/episode'
-import { LoadEpisodeById } from '@/domain/contracts/database/episode'
+import { LoadEpisodeById, DeleteEpisodeById } from '@/domain/contracts/database/episode'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
 import { DeleteFile } from '@/domain/contracts/gateways'
 
 describe('DeleteEpisodeUseCase', () => {
-  let episodeRepository: MockProxy<LoadEpisodeById>
+  let episodeRepository: MockProxy<LoadEpisodeById & DeleteEpisodeById>
   let fileStorage: MockProxy<DeleteFile>
   let makeEpisode: { episodeId: string }
   let sut: DeleteEpisode
@@ -42,5 +42,12 @@ describe('DeleteEpisodeUseCase', () => {
 
     expect(fileStorage.delete).toHaveBeenCalledWith({ fileName: 'any_value' })
     expect(fileStorage.delete).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call DeleteEpisodeById with correct input', async () => {
+    await sut(makeEpisode)
+
+    expect(episodeRepository.deleteById).toHaveBeenCalledWith({ id: '1' })
+    expect(episodeRepository.deleteById).toHaveBeenCalledTimes(1)
   })
 })
