@@ -143,4 +143,17 @@ describe('AnimeRoute', () => {
       expect(body).toEqual([{ id: 1, name: 'any_anime', synopsis: 'any_synopsis', thumbnailUrl: null }])
     })
   })
+
+  describe('GET /animes/newest', () => {
+    it('should return 200 on success', async () => {
+      await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', featured: true })
+      const { status, body } = await request(app)
+        .get('/animes/newest')
+
+      expect(status).toBe(200)
+      expect(body).toMatchObject([
+        { id: 1, name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', featured: true, thumbnailUrl: null }
+      ])
+    })
+  })
 })
