@@ -96,4 +96,18 @@ describe('EpisodeRoute', () => {
       expect(status).toBe(204)
     })
   })
+
+  describe('GET /episode/stream', () => {
+    it('should return 200 on success', async () => {
+      await Episode.create({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_video' })
+      const { status, body } = await request(app)
+        .get('/episode/stream')
+        .query({ token })
+        .query({ animeId: 1 })
+        .query({ order: 1 })
+
+      expect(status).toBe(200)
+      expect(body).toBe('any_video')
+    })
+  })
 })

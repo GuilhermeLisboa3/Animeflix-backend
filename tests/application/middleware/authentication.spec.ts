@@ -7,12 +7,14 @@ describe('AuthenticationMiddleware ', () => {
   let sut: AuthenticationMiddleware
   let authorization: string
   let accessToken: string
+  let token: string
   let authorize: jest.Mock
   let role: string
 
   beforeAll(() => {
     accessToken = 'any_access_token'
     authorization = `Bearer ${accessToken}`
+    token = 'any_token'
     authorize = jest.fn().mockResolvedValue({ accountId: 'any_id' })
     role = 'user'
   })
@@ -22,25 +24,25 @@ describe('AuthenticationMiddleware ', () => {
   })
 
   it('should return unauthorized if authorization is empty', async () => {
-    const httpResponse = await sut.handle({ authorization: '' })
+    const httpResponse = await sut.handle({ authorization: '', token: '' })
 
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
   })
 
   it('should return unauthorized if authorization is null', async () => {
-    const httpResponse = await sut.handle({ authorization: null as any })
+    const httpResponse = await sut.handle({ authorization: null as any, token: null as any })
 
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
   })
 
   it('should return unauthorized if authorization is undefined', async () => {
-    const httpResponse = await sut.handle({ authorization: undefined as any })
+    const httpResponse = await sut.handle({ authorization: undefined as any, token: null as any })
 
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
   })
 
   it('should call authorize with correct input', async () => {
-    await sut.handle({ authorization })
+    await sut.handle({ authorization, token })
 
     expect(authorize).toHaveBeenCalledWith({ accessToken, role })
     expect(authorize).toHaveBeenCalledTimes(1)
@@ -48,27 +50,27 @@ describe('AuthenticationMiddleware ', () => {
 
   it('should return 401 if authorize return AuthenticationError', async () => {
     authorize.mockRejectedValueOnce(new AuthenticationError())
-    const httpResponse = await sut.handle({ authorization })
+    const httpResponse = await sut.handle({ authorization, token })
 
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError() })
   })
 
   it('should return 403 if authorize return InsuficientPermissionError', async () => {
     authorize.mockRejectedValueOnce(new InsuficientPermissionError())
-    const httpResponse = await sut.handle({ authorization })
+    const httpResponse = await sut.handle({ authorization, token })
 
     expect(httpResponse).toEqual({ statusCode: 403, data: new ForbiddenError() })
   })
 
   it('should return 500 if authorize return throw', async () => {
     authorize.mockRejectedValueOnce(new Error())
-    const httpResponse = await sut.handle({ authorization })
+    const httpResponse = await sut.handle({ authorization, token })
 
     expect(httpResponse).toEqual({ statusCode: 500, data: new ServerError() })
   })
 
   it('should return 200 on success', async () => {
-    const httpResponse = await sut.handle({ authorization })
+    const httpResponse = await sut.handle({ authorization, token })
 
     expect(httpResponse).toEqual({ statusCode: 200, data: { accountId: 'any_id' } })
   })
