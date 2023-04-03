@@ -48,5 +48,11 @@ describe('WatchTimeRepository', () => {
 
       expect(seconds).toEqual({ seconds: 100 })
     })
+
+    it('should return seconds with value 0 if watch time not exists', async () => {
+      const seconds = await sut.load({ userId: '2', episodeId: '2' })
+
+      expect(seconds).toEqual({ seconds: 0 })
+    })
   })
 })
