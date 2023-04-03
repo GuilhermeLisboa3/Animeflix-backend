@@ -1,6 +1,7 @@
 import { AddFavoriteUseCase, AddFavorite } from '@/domain/usecases/favorite'
 import { CheckAccountById } from '@/domain/contracts/database/account'
 import { CheckAnimeById } from '@/domain/contracts/database/anime'
+import { CreateFavorite } from '@/domain/contracts/database/favorite'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
@@ -8,6 +9,7 @@ import { NotFoundError } from '@/domain/errors'
 describe('AddFavoriteUseCase', () => {
   let accountRepository: MockProxy<CheckAccountById>
   let animeRepository: MockProxy<CheckAnimeById>
+  let favoriteRepository: MockProxy<CreateFavorite>
   let makeFavorite: { accountId: string, animeId: number }
   let sut: AddFavorite
 
@@ -17,10 +19,11 @@ describe('AddFavoriteUseCase', () => {
     accountRepository.checkById.mockResolvedValue(true)
     animeRepository = mock()
     animeRepository.checkById.mockResolvedValue(true)
+    favoriteRepository = mock()
   })
 
   beforeEach(() => {
-    sut = AddFavoriteUseCase(accountRepository, animeRepository)
+    sut = AddFavoriteUseCase(accountRepository, animeRepository, favoriteRepository)
   })
 
   it('should call CheckAccountById with correct input', async () => {
@@ -51,5 +54,12 @@ describe('AddFavoriteUseCase', () => {
     const promise = sut(makeFavorite)
 
     await expect(promise).rejects.toThrow(new NotFoundError('animeId'))
+  })
+
+  it('should call CreateFavorite with correct input', async () => {
+    await sut(makeFavorite)
+
+    expect(favoriteRepository.create).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
+    expect(favoriteRepository.create).toHaveBeenCalledTimes(1)
   })
 })
