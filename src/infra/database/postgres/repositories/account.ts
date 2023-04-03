@@ -1,8 +1,8 @@
-import { CheckAccountByEmail, CheckAccountRole, CreateAccount, LoadAccountByEmail, LoadAccountById, UpdateAccountById } from '@/domain/contracts/database/account'
+import { CheckAccountByEmail, CheckAccountRole, CreateAccount, LoadAccountByEmail, LoadAccountById, UpdateAccountById, CheckAccountById } from '@/domain/contracts/database/account'
 import { Account } from '@/infra/database/postgres/entities'
 import { Op } from 'sequelize'
 
-export class AccountRepository implements CheckAccountByEmail, CreateAccount, LoadAccountByEmail, CheckAccountRole, LoadAccountById, UpdateAccountById {
+export class AccountRepository implements CheckAccountByEmail, CreateAccount, LoadAccountByEmail, CheckAccountRole, LoadAccountById, UpdateAccountById, CheckAccountById {
   async checkByEmail (email: string): Promise<boolean> {
     const existAccount = await Account.findOne({ where: { email } })
     return existAccount !== null
@@ -31,5 +31,10 @@ export class AccountRepository implements CheckAccountByEmail, CreateAccount, Lo
 
   async update (input: UpdateAccountById.Input): Promise<void> {
     await Account.update(input, { where: { id: input.id } })
+  }
+
+  async checkById ({ id }: CheckAccountById.Input): Promise<CheckAccountById.Output> {
+    const existAccount = await Account.findOne({ where: { id } })
+    return existAccount !== null
   }
 }
