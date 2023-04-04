@@ -9,5 +9,6 @@ export type AddLike = (input: Input) => Promise<void>
 export const AddLikeUseCase: Setup = (accountRepository, animeRepository) => async ({ accountId, animeId }) => {
   const existAccount = await accountRepository.checkById({ id: Number(accountId) })
   if (!existAccount) throw new NotFoundError('accountId')
-  await animeRepository.checkById({ id: animeId })
+  const existAnime = await animeRepository.checkById({ id: animeId })
+  if (!existAnime) throw new NotFoundError('animeId')
 }
