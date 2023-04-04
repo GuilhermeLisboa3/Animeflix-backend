@@ -4,13 +4,15 @@ import { RequiredField } from '@/application/validation'
 describe('AddFavoriteController', () => {
   let sut: AddFavoriteController
   let makeRequest: { accountId: string, animeId: number }
+  let AddFavorite: jest.Mock
 
   beforeAll(() => {
     makeRequest = { accountId: '1', animeId: 1 }
+    AddFavorite = jest.fn()
   })
 
   beforeEach(() => {
-    sut = new AddFavoriteController()
+    sut = new AddFavoriteController(AddFavorite)
   })
 
   it('should build Validators correctly', async () => {
@@ -20,5 +22,12 @@ describe('AddFavoriteController', () => {
       new RequiredField('1', 'accountId'),
       new RequiredField(1, 'animeId')
     ])
+  })
+
+  it('should call AddFavorite with correct input', async () => {
+    await sut.perform(makeRequest)
+
+    expect(AddFavorite).toHaveBeenCalledWith({ accountId: '1', animeId: 1 })
+    expect(AddFavorite).toHaveBeenCalledTimes(1)
   })
 })
