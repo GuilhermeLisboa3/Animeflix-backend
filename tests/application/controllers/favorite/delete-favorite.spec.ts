@@ -5,11 +5,11 @@ import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteFavoriteController', () => {
   let sut: DeleteFavoriteController
-  let makeRequest: { accountId: string, animeId: string }
+  let makeRequest: { accountId: string, id: string }
   let DeleteFavorite: jest.Mock
 
   beforeAll(() => {
-    makeRequest = { accountId: '1', animeId: '1' }
+    makeRequest = { accountId: '1', id: '1' }
     DeleteFavorite = jest.fn()
   })
 
@@ -26,7 +26,7 @@ describe('DeleteFavoriteController', () => {
 
     expect(validators).toEqual([
       new RequiredField('1', 'accountId'),
-      new RequiredField('1', 'animeId')
+      new RequiredField('1', 'id')
     ])
   })
 

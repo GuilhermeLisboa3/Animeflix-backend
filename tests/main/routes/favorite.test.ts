@@ -1,6 +1,6 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
-import { sequelize, Account, Category, Anime, Episode } from '@/infra/database/postgres/entities'
+import { sequelize, Account, Category, Anime, Episode, Favorite } from '@/infra/database/postgres/entities'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
@@ -28,6 +28,18 @@ describe('AccountRoute', () => {
         .post('/favorites')
         .set({ authorization: `Bearer: ${token}` })
         .send({ animeId: 1 })
+
+      expect(status).toBe(204)
+    })
+  })
+
+  describe('DELETE /favorites/:id', () => {
+    it('should return 204 on success', async () => {
+      await Favorite.create({ userId: 1, animeId: 1 })
+
+      const { status } = await request(app)
+        .delete(`/favorites/${1}`)
+        .set({ authorization: `Bearer: ${token}` })
 
       expect(status).toBe(204)
     })
