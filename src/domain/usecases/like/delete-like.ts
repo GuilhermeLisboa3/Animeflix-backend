@@ -9,5 +9,6 @@ export type DeleteLike = (input: Input) => Promise<void>
 export const DeleteLikeUseCase: Setup = (accountRepository, animeRepository) => async ({ accountId, animeId }) => {
   const existAccount = await accountRepository.checkById({ id: Number(accountId) })
   if (!existAccount) throw new NotFoundError('accountId')
-  await animeRepository.checkById({ id: Number(animeId) })
+  const existAnime = await animeRepository.checkById({ id: Number(animeId) })
+  if (!existAnime) throw new NotFoundError('animeId')
 }
