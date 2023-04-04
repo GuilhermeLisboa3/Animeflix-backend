@@ -1,5 +1,6 @@
 import { DeleteFavoriteController } from '@/application/controllers/favorite'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('DeleteFavoriteController', () => {
   let sut: DeleteFavoriteController
@@ -13,6 +14,10 @@ describe('DeleteFavoriteController', () => {
 
   beforeEach(() => {
     sut = new DeleteFavoriteController(DeleteFavorite)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
