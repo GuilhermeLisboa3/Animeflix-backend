@@ -1,5 +1,5 @@
 import { FavoriteRepository } from '@/infra/database/postgres/repositories'
-import { Anime, Category, sequelize, Account } from '@/infra/database/postgres/entities'
+import { Anime, Category, sequelize, Account, Favorite } from '@/infra/database/postgres/entities'
 
 describe('FavoriteRepository', () => {
   let sut: FavoriteRepository
@@ -26,6 +26,20 @@ describe('FavoriteRepository', () => {
       const seconds = await sut.create(makeFavorite)
 
       expect(seconds).toBeUndefined()
+    })
+  })
+
+  describe('delete', () => {
+    it('should return undefined on success', async () => {
+      await Favorite.create(makeFavorite)
+
+      const deleteFavorite = await sut.delete(makeFavorite)
+
+      expect(deleteFavorite).toBeUndefined()
+
+      const favorite = await Favorite.findOne({ where: { animeId: 1, userId: 1 } })
+
+      expect(favorite).toBeNull()
     })
   })
 })
