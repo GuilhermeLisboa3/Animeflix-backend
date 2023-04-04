@@ -5,7 +5,7 @@ import { sequelize, Account, Category, Anime, Episode, Favorite } from '@/infra/
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
 
-describe('AccountRoute', () => {
+describe('FavoriteRoute', () => {
   let token: string
 
   beforeAll(async () => {
