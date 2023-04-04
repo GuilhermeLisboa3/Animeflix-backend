@@ -1,5 +1,5 @@
 export interface ListFavoriteRepository {
-  list: (input: ListFavoriteRepository.Input) => Promise<void>
+  list: (input: ListFavoriteRepository.Input) => Promise<ListFavoriteRepository.Output>
 }
 
 export namespace ListFavoriteRepository {
