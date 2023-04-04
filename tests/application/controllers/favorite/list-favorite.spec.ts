@@ -1,6 +1,7 @@
 import { ListFavoriteController } from '@/application/controllers/favorite'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('ListFavoriteController', () => {
   let sut: ListFavoriteController
@@ -33,6 +34,16 @@ describe('ListFavoriteController', () => {
 
     expect(ListFavorite).toHaveBeenCalledWith({ accountId: '1' })
     expect(ListFavorite).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if ListFavorite returns NotFoundError', async () => {
+    ListFavorite.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 200 on success', async () => {
