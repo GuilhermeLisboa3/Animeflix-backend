@@ -1,12 +1,12 @@
 import { LikeRepository } from '@/infra/database/postgres/repositories'
-import { Anime, Category, sequelize, Account } from '@/infra/database/postgres/entities'
+import { Anime, Category, sequelize, Account, Like } from '@/infra/database/postgres/entities'
 
 describe('LikeRepository', () => {
   let sut: LikeRepository
-  let makeFavorite: { userId: number, animeId: number }
+  let makeLike: { userId: number, animeId: number }
 
   beforeAll(async () => {
-    makeFavorite = { userId: 1, animeId: 1 }
+    makeLike = { userId: 1, animeId: 1 }
   })
 
   beforeEach(async () => {
@@ -23,9 +23,23 @@ describe('LikeRepository', () => {
 
   describe('create', () => {
     it('should return undefined on success', async () => {
-      const seconds = await sut.create(makeFavorite)
+      const seconds = await sut.create(makeLike)
 
       expect(seconds).toBeUndefined()
+    })
+  })
+
+  describe('delete', () => {
+    it('should return undefined on success', async () => {
+      await Like.create(makeLike)
+
+      const deleteLike = await sut.delete(makeLike)
+
+      expect(deleteLike).toBeUndefined()
+
+      const like = await Like.findOne({ where: { animeId: 1, userId: 1 } })
+
+      expect(like).toBeNull()
     })
   })
 })
