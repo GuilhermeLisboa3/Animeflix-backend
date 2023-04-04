@@ -30,4 +30,13 @@ describe('AddFavoriteController', () => {
     expect(AddFavorite).toHaveBeenCalledWith({ accountId: '1', animeId: 1 })
     expect(AddFavorite).toHaveBeenCalledTimes(1)
   })
+
+  it('should return 204 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 204,
+      data: null
+    })
+  })
 })
