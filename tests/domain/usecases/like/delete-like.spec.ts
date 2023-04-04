@@ -62,4 +62,10 @@ describe('DeleteLikeUseCase', () => {
     expect(likeRepository.delete).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
     expect(likeRepository.delete).toHaveBeenCalledTimes(1)
   })
+
+  it('should return undefined on success', async () => {
+    const result = await sut(makeFavorite)
+
+    expect(result).toBeUndefined()
+  })
 })
