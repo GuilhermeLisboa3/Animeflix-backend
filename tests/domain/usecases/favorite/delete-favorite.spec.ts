@@ -1,13 +1,15 @@
 import { DeleteFavoriteUseCase, DeleteFavorite } from '@/domain/usecases/favorite'
 import { CheckAccountById } from '@/domain/contracts/database/account'
+import { CheckAnimeById } from '@/domain/contracts/database/anime'
+import { DeleteFavoriteRepository } from '@/domain/contracts/database/favorite'
+import { NotFoundError } from '@/domain/errors'
 
 import { MockProxy, mock } from 'jest-mock-extended'
-import { NotFoundError } from '@/domain/errors'
-import { CheckAnimeById } from '@/domain/contracts/database/anime'
 
 describe('DeleteFavoriteUseCase', () => {
   let accountRepository: MockProxy<CheckAccountById>
   let animeRepository: MockProxy<CheckAnimeById>
+  let favoriteRepository: MockProxy<DeleteFavoriteRepository>
   let makeFavorite: { accountId: string, animeId: string }
   let sut: DeleteFavorite
 
@@ -17,10 +19,11 @@ describe('DeleteFavoriteUseCase', () => {
     accountRepository.checkById.mockResolvedValue(true)
     animeRepository = mock()
     animeRepository.checkById.mockResolvedValue(true)
+    favoriteRepository = mock()
   })
 
   beforeEach(() => {
-    sut = DeleteFavoriteUseCase(accountRepository, animeRepository)
+    sut = DeleteFavoriteUseCase(accountRepository, animeRepository, favoriteRepository)
   })
 
   it('should call CheckAccountById with correct input', async () => {
@@ -51,5 +54,12 @@ describe('DeleteFavoriteUseCase', () => {
     const promise = sut(makeFavorite)
 
     await expect(promise).rejects.toThrow(new NotFoundError('animeId'))
+  })
+
+  it('should call DeleteFavoriteRepository with correct input', async () => {
+    await sut(makeFavorite)
+
+    expect(favoriteRepository.delete).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
+    expect(favoriteRepository.delete).toHaveBeenCalledTimes(1)
   })
 })
