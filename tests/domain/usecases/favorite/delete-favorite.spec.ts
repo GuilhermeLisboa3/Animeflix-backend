@@ -41,6 +41,15 @@ describe('DeleteFavoriteUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('accountId'))
   })
 
+  it('should rethrow if CheckAccountById throw', async () => {
+    const error = new Error('infa_error')
+    accountRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CheckAnimeById with correct input', async () => {
     await sut(makeFavorite)
 
@@ -56,11 +65,29 @@ describe('DeleteFavoriteUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('animeId'))
   })
 
+  it('should rethrow if CheckAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call DeleteFavoriteRepository with correct input', async () => {
     await sut(makeFavorite)
 
     expect(favoriteRepository.delete).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
     expect(favoriteRepository.delete).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if DeleteFavoriteRepository throw', async () => {
+    const error = new Error('infa_error')
+    favoriteRepository.delete.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
