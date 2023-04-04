@@ -1,5 +1,6 @@
 import { ListFavoriteController } from '@/application/controllers/favorite'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('ListFavoriteController', () => {
   let sut: ListFavoriteController
@@ -9,6 +10,10 @@ describe('ListFavoriteController', () => {
   beforeAll(() => {
     makeRequest = { accountId: '1' }
     ListFavorite = jest.fn().mockResolvedValue({ any: 'any_value' })
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   beforeEach(() => {
