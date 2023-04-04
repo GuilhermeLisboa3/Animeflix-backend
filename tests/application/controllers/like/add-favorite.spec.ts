@@ -1,6 +1,7 @@
 import { AddLikeController } from '@/application/controllers/like'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('AddLikeController', () => {
   let sut: AddLikeController
@@ -34,6 +35,16 @@ describe('AddLikeController', () => {
 
     expect(AddLike).toHaveBeenCalledWith({ accountId: '1', animeId: 1 })
     expect(AddLike).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if AddLike returns NotFoundError', async () => {
+    AddLike.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 204 on success', async () => {
