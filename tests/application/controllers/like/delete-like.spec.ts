@@ -5,11 +5,11 @@ import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteLikeController', () => {
   let sut: DeleteLikeController
-  let makeRequest: { accountId: string, animeId: string }
+  let makeRequest: { accountId: string, id: string }
   let DeleteLike: jest.Mock
 
   beforeAll(() => {
-    makeRequest = { accountId: '1', animeId: '1' }
+    makeRequest = { accountId: '1', id: '1' }
     DeleteLike = jest.fn()
   })
 
@@ -26,7 +26,7 @@ describe('DeleteLikeController', () => {
 
     expect(validators).toEqual([
       new RequiredField('1', 'accountId'),
-      new RequiredField('1', 'animeId')
+      new RequiredField('1', 'id')
     ])
   })
 
