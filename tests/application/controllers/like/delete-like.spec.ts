@@ -1,6 +1,7 @@
 import { DeleteLikeController } from '@/application/controllers/like'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteLikeController', () => {
   let sut: DeleteLikeController
@@ -34,6 +35,16 @@ describe('DeleteLikeController', () => {
 
     expect(DeleteLike).toHaveBeenCalledWith({ accountId: '1', animeId: '1' })
     expect(DeleteLike).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if DeleteLike returns NotFoundError', async () => {
+    DeleteLike.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 204 on success', async () => {
