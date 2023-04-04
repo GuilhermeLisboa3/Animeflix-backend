@@ -1,16 +1,14 @@
 import { Controller } from '@/application/controllers'
 import { HttpResponse, ok } from '@/application/helpers'
-import { NotFoundError } from '@/domain/errors'
-import { LoadCategory } from '@/domain/usecases/category'
+import { GetCategory } from '@/domain/usecases/category'
 
 type HttpRequest = { id: string }
 
 export class GetCategoryController extends Controller {
-  constructor (private readonly loadCategory: LoadCategory) { super() }
+  constructor (private readonly getCategory: GetCategory) { super() }
 
   async perform ({ id }: HttpRequest): Promise<HttpResponse> {
-    const category = await this.loadCategory({ id })
-    if (!category) throw new NotFoundError('category')
+    const category = await this.getCategory({ id })
     return ok(category)
   }
 }
