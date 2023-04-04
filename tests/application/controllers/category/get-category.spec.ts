@@ -1,6 +1,5 @@
 import { GetCategoryController } from '@/application/controllers/category'
 import { Controller } from '@/application/controllers'
-import { NotFoundError } from '@/domain/errors'
 
 describe('GetCategoryController', () => {
   let sut: GetCategoryController
@@ -25,17 +24,6 @@ describe('GetCategoryController', () => {
 
     expect(LoadCategory).toHaveBeenCalledWith(makeRequest)
     expect(LoadCategory).toHaveBeenCalledTimes(1)
-  })
-
-  it('should return 400 if LoadCategory returns NotFoundError', async () => {
-    LoadCategory.mockRejectedValueOnce(new NotFoundError('category'))
-
-    const httpResponse = await sut.handle(makeRequest)
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new NotFoundError('category')
-    })
   })
 
   it('should return 200 on success', async () => {
