@@ -37,7 +37,7 @@ describe('AddFavoriteController', () => {
     expect(AddFavorite).toHaveBeenCalledTimes(1)
   })
 
-  it('should return 400 if AddWatchTime returns NotFoundError', async () => {
+  it('should return 400 if AddFavorite returns NotFoundError', async () => {
     AddFavorite.mockRejectedValueOnce(new NotFoundError('id'))
     const httpResponse = await sut.handle(makeRequest)
 

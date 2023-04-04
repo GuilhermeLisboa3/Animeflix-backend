@@ -1,6 +1,7 @@
 import { DeleteFavoriteController } from '@/application/controllers/favorite'
 import { RequiredField } from '@/application/validation'
 import { Controller } from '@/application/controllers'
+import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteFavoriteController', () => {
   let sut: DeleteFavoriteController
@@ -34,6 +35,16 @@ describe('DeleteFavoriteController', () => {
 
     expect(DeleteFavorite).toHaveBeenCalledWith({ accountId: '1', animeId: '1' })
     expect(DeleteFavorite).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 400 if DeleteFavorite returns NotFoundError', async () => {
+    DeleteFavorite.mockRejectedValueOnce(new NotFoundError('id'))
+    const httpResponse = await sut.handle(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new NotFoundError('id')
+    })
   })
 
   it('should return 204 on success', async () => {
