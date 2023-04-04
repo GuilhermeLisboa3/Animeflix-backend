@@ -41,6 +41,15 @@ describe('AddLikeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('accountId'))
   })
 
+  it('should rethrow if CheckAccountById throw', async () => {
+    const error = new Error('infa_error')
+    accountRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CheckAnimeById with correct input', async () => {
     await sut(makeFavorite)
 
@@ -56,11 +65,29 @@ describe('AddLikeUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('animeId'))
   })
 
+  it('should rethrow if CheckAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call CreateLike with correct input', async () => {
     await sut(makeFavorite)
 
     expect(likeRepository.create).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
     expect(likeRepository.create).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if CreateLike throw', async () => {
+    const error = new Error('infa_error')
+    likeRepository.create.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return undefined on success', async () => {
