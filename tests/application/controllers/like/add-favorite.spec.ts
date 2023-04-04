@@ -1,5 +1,6 @@
 import { AddLikeController } from '@/application/controllers/like'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('AddLikeController', () => {
   let sut: AddLikeController
@@ -13,6 +14,10 @@ describe('AddLikeController', () => {
 
   beforeEach(() => {
     sut = new AddLikeController(AddLike)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
