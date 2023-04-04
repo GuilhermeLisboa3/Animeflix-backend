@@ -1,5 +1,6 @@
 import { AddFavoriteController } from '@/application/controllers/favorite'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('AddFavoriteController', () => {
   let sut: AddFavoriteController
@@ -13,6 +14,10 @@ describe('AddFavoriteController', () => {
 
   beforeEach(() => {
     sut = new AddFavoriteController(AddFavorite)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
