@@ -51,5 +51,11 @@ describe('FavoriteRepository', () => {
 
       expect(listAnimeId).toEqual([1])
     })
+
+    it('should return undefined if not favorite', async () => {
+      const listAnimeId = await sut.list({ userId: 1 })
+
+      expect(listAnimeId).toBeUndefined()
+    })
   })
 })
