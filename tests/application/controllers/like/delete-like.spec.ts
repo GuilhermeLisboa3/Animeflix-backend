@@ -1,5 +1,6 @@
 import { DeleteLikeController } from '@/application/controllers/like'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('DeleteLikeController', () => {
   let sut: DeleteLikeController
@@ -13,6 +14,10 @@ describe('DeleteLikeController', () => {
 
   beforeEach(() => {
     sut = new DeleteLikeController(DeleteLike)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
