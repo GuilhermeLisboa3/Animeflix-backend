@@ -20,6 +20,7 @@ describe('ListFavoriteUseCase', () => {
     favoriteRepository = mock()
     favoriteRepository.list.mockResolvedValue([1, 2])
     animeRepository = mock()
+    animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
   })
 
   beforeEach(() => {
@@ -54,5 +55,16 @@ describe('ListFavoriteUseCase', () => {
     expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '1' })
     expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '2' })
     expect(animeRepository.loadById).toHaveBeenCalledTimes(2)
+  })
+
+  it('should return list favorites on success', async () => {
+    const result = await sut(makeFavorite)
+
+    expect(result).toEqual({
+      accountId: 1,
+      animes: [
+        { id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' },
+        { id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' }]
+    })
   })
 })
