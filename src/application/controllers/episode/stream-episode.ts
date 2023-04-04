@@ -18,7 +18,7 @@ export class StreamEpisodeController extends Controller {
     return ok(videoUrl)
   }
 
-  buildValidators ({ animeId, order }: HttpRequest): Validator[] {
+  override buildValidators ({ animeId, order }: HttpRequest): Validator[] {
     return [
       ...builder.of(order, 'order').required().build(),
       ...builder.of(animeId, 'animeId').required().build()

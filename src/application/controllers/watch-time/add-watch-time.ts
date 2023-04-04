@@ -13,7 +13,7 @@ export class AddWatchTimeController extends Controller {
     return noContent()
   }
 
-  buildValidators ({ id, seconds }: HttpRequest): Validator[] {
+  override buildValidators ({ id, seconds }: HttpRequest): Validator[] {
     return [
       ...build.of(id, 'id').required().build(),
       ...build.of(seconds, 'seconds').required().build()
