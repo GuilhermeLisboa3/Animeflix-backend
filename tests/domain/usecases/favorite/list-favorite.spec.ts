@@ -42,11 +42,29 @@ describe('ListFavoriteUseCase', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('accountId'))
   })
 
+  it('should rethrow if CheckAccountById throw', async () => {
+    const error = new Error('infa_error')
+    accountRepository.checkById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call ListFavoriteRepository with correct input', async () => {
     await sut(makeFavorite)
 
     expect(favoriteRepository.list).toHaveBeenCalledWith({ userId: 1 })
     expect(favoriteRepository.list).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if ListFavoriteRepository throw', async () => {
+    const error = new Error('infa_error')
+    favoriteRepository.list.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should call LoadAnimeById with correct input', async () => {
@@ -55,6 +73,15 @@ describe('ListFavoriteUseCase', () => {
     expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '1' })
     expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '2' })
     expect(animeRepository.loadById).toHaveBeenCalledTimes(2)
+  })
+
+  it('should rethrow if LoadAnimeById throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return list favorites on success', async () => {
