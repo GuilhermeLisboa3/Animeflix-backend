@@ -8,7 +8,7 @@ describe('ListFavoriteController', () => {
 
   beforeAll(() => {
     makeRequest = { accountId: '1' }
-    ListFavorite = jest.fn()
+    ListFavorite = jest.fn().mockResolvedValue({ any: 'any_value' })
   })
 
   beforeEach(() => {
@@ -28,5 +28,14 @@ describe('ListFavoriteController', () => {
 
     expect(ListFavorite).toHaveBeenCalledWith({ accountId: '1' })
     expect(ListFavorite).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { any: 'any_value' }
+    })
   })
 })
