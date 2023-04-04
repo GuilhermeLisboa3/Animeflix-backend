@@ -42,4 +42,14 @@ describe('FavoriteRepository', () => {
       expect(favorite).toBeNull()
     })
   })
+
+  describe('list', () => {
+    it('should return list animeId on success', async () => {
+      await Favorite.create(makeFavorite)
+
+      const listAnimeId = await sut.list({ userId: 1 })
+
+      expect(listAnimeId).toEqual([1])
+    })
+  })
 })
