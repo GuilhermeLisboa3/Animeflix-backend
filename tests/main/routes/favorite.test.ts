@@ -44,4 +44,20 @@ describe('AccountRoute', () => {
       expect(status).toBe(204)
     })
   })
+
+  describe('GET /favorites', () => {
+    it('should return 200 on success', async () => {
+      await Favorite.create({ userId: 1, animeId: 1 })
+
+      const { status, body } = await request(app)
+        .get('/favorites')
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+      expect(body).toEqual({
+        accountId: 1,
+        animes: [{ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: null }]
+      })
+    })
+  })
 })
