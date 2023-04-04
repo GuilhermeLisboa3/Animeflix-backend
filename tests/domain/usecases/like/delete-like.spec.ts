@@ -2,6 +2,7 @@ import { DeleteLikeUseCase, DeleteLike } from '@/domain/usecases/like'
 import { CheckAccountById } from '@/domain/contracts/database/account'
 
 import { MockProxy, mock } from 'jest-mock-extended'
+import { NotFoundError } from '@/domain/errors'
 
 describe('DeleteLikeUseCase', () => {
   let accountRepository: MockProxy<CheckAccountById>
@@ -11,6 +12,7 @@ describe('DeleteLikeUseCase', () => {
   beforeAll(() => {
     makeFavorite = { accountId: '1', animeId: '1' }
     accountRepository = mock()
+    accountRepository.checkById.mockResolvedValue(true)
   })
 
   beforeEach(() => {
@@ -22,5 +24,13 @@ describe('DeleteLikeUseCase', () => {
 
     expect(accountRepository.checkById).toHaveBeenCalledWith({ id: 1 })
     expect(accountRepository.checkById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return NotFoundError if CheckAccountById returns false', async () => {
+    accountRepository.checkById.mockResolvedValueOnce(false)
+
+    const promise = sut(makeFavorite)
+
+    await expect(promise).rejects.toThrow(new NotFoundError('accountId'))
   })
 })
