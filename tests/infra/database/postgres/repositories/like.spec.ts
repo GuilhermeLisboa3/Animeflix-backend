@@ -51,5 +51,11 @@ describe('LikeRepository', () => {
 
       expect(existsLike).toBeTruthy()
     })
+
+    it('should return true if like not exists', async () => {
+      const existsLike = await sut.check(makeLike)
+
+      expect(existsLike).toBeFalsy()
+    })
   })
 })
