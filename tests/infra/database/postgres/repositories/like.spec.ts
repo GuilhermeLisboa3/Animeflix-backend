@@ -42,4 +42,14 @@ describe('LikeRepository', () => {
       expect(like).toBeNull()
     })
   })
+
+  describe('check', () => {
+    it('should return true if like exists', async () => {
+      await Like.create(makeLike)
+
+      const existsLike = await sut.check(makeLike)
+
+      expect(existsLike).toBeTruthy()
+    })
+  })
 })
