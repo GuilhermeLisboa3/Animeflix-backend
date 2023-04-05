@@ -18,7 +18,21 @@ export function filterLastEpisodesByAnime (episodes: Episodes[]) {
       currentList.push(episode)
       return currentList
     }
-    return []
+    const episodeFromSameAnime = currentList.find(
+      (ep) => ep.animeId === episode.animeId
+    )
+
+    if (episodeFromSameAnime && episodeFromSameAnime.order > episode.order) {
+      return currentList
+    }
+
+    const listWithoutEpisodeFromSameAnime = currentList.filter(
+      (ep) => ep.animeId !== episode.animeId
+    )
+
+    listWithoutEpisodeFromSameAnime.push(episode)
+
+    return listWithoutEpisodeFromSameAnime
   }, [] as Episodes[])
 
   return lastEpisodes
