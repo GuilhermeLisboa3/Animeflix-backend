@@ -13,6 +13,13 @@ describe('filterLastEpisodesByAnime', () => {
     expect(sut).toEqual([makeEpisode])
   })
 
+  it('should return the currentlist if the order of the episode is higher', () => {
+    const makeEpisode2 = { ...makeEpisode, order: 0 }
+    const sut = filterLastEpisodesByAnime([makeEpisode, makeEpisode2])
+
+    expect(sut).toEqual([makeEpisode])
+  })
+
   it('should replace the episode if the animeId already exists in the list', () => {
     const makeEpisode2 = { ...makeEpisode, order: 2 }
     const sut = filterLastEpisodesByAnime([makeEpisode, makeEpisode2])
