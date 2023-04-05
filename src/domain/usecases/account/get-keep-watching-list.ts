@@ -5,20 +5,40 @@ import { LoadAnimeById } from '@/domain/contracts/database/anime'
 
 type Setup = (watchTimeRepository: LoadWatchTimeByUserId & LoadWatchTime, episodeRepository: LoadEpisodeById, animeRepository: LoadAnimeById) => KeepWatchingList
 type Input = { id: string }
-export type KeepWatchingList = (input: Input) => Promise<void>
+type Output = Array<{
+  id: number
+  name: string
+  videoUrl: string | null
+  synopsis: string
+  secondsLong: number | null
+  order: number
+  animeId: number
+  watchTime: { seconds: number, userId: number, episodeId: number }
+  anime: { id: number, name: string, thumbnailUrl: string, synopsis: string, featured: boolean } | undefined
+}> | undefined
+export type KeepWatchingList = (input: Input) => Promise<Output>
 
 export const GetKeepWatchingListUseCase: Setup = (watchTimeRepository, episodeRepository, animeRepository) => async ({ id }) => {
   const listEpisodesId = await watchTimeRepository.loadByUserId({ userId: id })
   if (listEpisodesId.length > 0) {
-    const listEpisodes = []
+    let listEpisodes = []
     for (const episodeId of listEpisodesId) {
       const episode = await episodeRepository.loadById({ id: episodeId.toString() })
       if (episode) listEpisodes.push(episode)
     }
     const listLastEpisodesByAnime = filterLastEpisodesByAnime(listEpisodes)
+    listEpisodes = []
     for (const lastEpisodes of listLastEpisodesByAnime) {
-      await animeRepository.loadById({ id: lastEpisodes.id.toString() })
-      await watchTimeRepository.load({ userId: id, episodeId: lastEpisodes.id.toString() })
+      const anime = await animeRepository.loadById({ id: lastEpisodes.id.toString() })
+      const watchTime = await watchTimeRepository.load({ userId: id, episodeId: lastEpisodes.id.toString() })
+      listEpisodes.push({ ...lastEpisodes, anime, watchTime })
     }
+    listEpisodes.sort((a, b) => {
+      if (a.watchTime.updatedAt && b.watchTime.updatedAt && a.watchTime.updatedAt < b.watchTime.updatedAt) {
+        return 1
+      } else return -1
+    })
+    return listEpisodes
   }
+  return undefined
 }
