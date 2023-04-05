@@ -85,4 +85,12 @@ describe('GetKeepWatchingListUseCase', () => {
       anime: { id: 1, name: 'any_name', featured: true, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' }
     }])
   })
+
+  it('should return undefined if LoadWatchTimeByUserId return array empty', async () => {
+    watchTimeRepository.loadByUserId.mockResolvedValue([])
+
+    const result = await sut(makeAccount)
+
+    expect(result).toBeUndefined()
+  })
 })
