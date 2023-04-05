@@ -1,5 +1,5 @@
 import { GetKeepWatchingListUseCase, KeepWatchingList } from '@/domain/usecases/account'
-import { LoadWatchTimeByUserId } from '@/domain/contracts/database/watch-time'
+import { LoadWatchTime, LoadWatchTimeByUserId } from '@/domain/contracts/database/watch-time'
 import { LoadEpisodeById } from '@/domain/contracts/database/episode'
 import { filterLastEpisodesByAnime } from '@/domain/entities'
 
@@ -9,7 +9,7 @@ import { LoadAnimeById } from '@/domain/contracts/database/anime'
 jest.mock('@/domain/entities/filter-last-episodes-by-anime-id')
 
 describe('GetKeepWatchingListUseCase', () => {
-  let watchTimeRepository: MockProxy<LoadWatchTimeByUserId>
+  let watchTimeRepository: MockProxy<LoadWatchTimeByUserId & LoadWatchTime>
   let episodeRepository: MockProxy<LoadEpisodeById>
   let animeRepository: MockProxy<LoadAnimeById>
   let filterLastEpisodesByAnimeSpy: jest.Mock
@@ -59,5 +59,12 @@ describe('GetKeepWatchingListUseCase', () => {
 
     expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '1' })
     expect(animeRepository.loadById).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call LoadWatchTime with correct input', async () => {
+    await sut(makeAccount)
+
+    expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '1' })
+    expect(watchTimeRepository.load).toHaveBeenCalledTimes(1)
   })
 })
