@@ -38,11 +38,29 @@ describe('GetCategory', () => {
     await expect(promise).rejects.toThrow(new NotFoundError('categoryId'))
   })
 
+  it('should rethrow if LoadCategoryById throw', async () => {
+    const error = new Error('infa_error')
+    categoryRepository.loadById.mockRejectedValueOnce(error)
+
+    const promise = sut(category)
+
+    await expect(promise).rejects.toThrow(error)
+  })
+
   it('should call LoadAnimesByCategoryId with correct input', async () => {
     await sut(category)
 
     expect(animeRepository.loadByCategoryId).toHaveBeenCalledWith({ categoryId: '1' })
     expect(animeRepository.loadByCategoryId).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrow if LoadAnimesByCategoryId throw', async () => {
+    const error = new Error('infa_error')
+    animeRepository.loadByCategoryId.mockRejectedValueOnce(error)
+
+    const promise = sut(category)
+
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('should return category on success', async () => {
