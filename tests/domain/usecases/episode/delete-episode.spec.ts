@@ -14,7 +14,7 @@ describe('DeleteEpisodeUseCase', () => {
   beforeAll(() => {
     makeEpisode = { episodeId: '1' }
     episodeRepository = mock()
-    episodeRepository.loadById.mockResolvedValue({ videoUrl: 'any_value' })
+    episodeRepository.loadById.mockResolvedValue({ name: 'any_name', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', id: 1, secondsLong: 100 })
     fileStorage = mock()
   })
 

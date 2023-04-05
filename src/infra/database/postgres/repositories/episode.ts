@@ -13,7 +13,7 @@ export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, Lo
   }
 
   async loadById ({ id }: LoadEpisodeById.Input): Promise<LoadEpisodeById.Output> {
-    const episode = await Episode.findOne({ attributes: [['video_url', 'videoUrl']], where: { id } })
+    const episode = await Episode.findByPk(id)
     return episode !== null ? episode : undefined
   }
 

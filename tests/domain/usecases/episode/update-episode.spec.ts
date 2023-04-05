@@ -17,7 +17,7 @@ describe('UpdateEpisodeUseCase', () => {
   beforeAll(() => {
     makeEpisode = { id: '1', file: { buffer: Buffer.from('any'), mimeType: 'image/mp4' }, animeId: 1, order: 1 }
     episodeRepository = mock()
-    episodeRepository.loadById.mockResolvedValue({ videoUrl: 'any_value' })
+    episodeRepository.loadById.mockResolvedValue({ name: 'any_name', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', id: 1, secondsLong: 100 })
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue('any_url')
     uuid = mock()
