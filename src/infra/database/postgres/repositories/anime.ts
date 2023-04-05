@@ -64,7 +64,7 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
   }
 
   async loadByCategoryId ({ categoryId }: LoadAnimesByCategoryId.Input): Promise<LoadAnimesByCategoryId.Output> {
-    const listAnime = await Anime.findAll({ where: { categoryId } })
+    const listAnime = await Anime.findAll({ attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']], where: { categoryId } })
     return listAnime
   }
 }
