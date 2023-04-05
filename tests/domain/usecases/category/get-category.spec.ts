@@ -1,9 +1,9 @@
 import { GetCategoryUseCase, GetCategory } from '@/domain/usecases/category'
 import { LoadCategoryById } from '@/domain/contracts/database/category'
 import { LoadAnimesByCategoryId } from '@/domain/contracts/database/anime'
-import { NotFoundError } from '@/domain/errors'
 
 import { mock, MockProxy } from 'jest-mock-extended'
+import { NotFoundError } from '@/domain/errors'
 
 describe('GetCategory', () => {
   let categoryRepository: MockProxy<LoadCategoryById>
@@ -15,6 +15,7 @@ describe('GetCategory', () => {
     categoryRepository = mock()
     categoryRepository.loadById.mockResolvedValue({ id: 'any_id', name: 'any_name', position: 1 })
     animeRepository = mock()
+    animeRepository.loadByCategoryId.mockResolvedValue([{ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value' }])
     category = { id: '1' }
   })
 
@@ -42,5 +43,16 @@ describe('GetCategory', () => {
 
     expect(animeRepository.loadByCategoryId).toHaveBeenCalledWith({ categoryId: '1' })
     expect(animeRepository.loadByCategoryId).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return category on success', async () => {
+    const result = await sut(category)
+
+    expect(result).toEqual({
+      id: 'any_id',
+      name: 'any_name',
+      position: 1,
+      animes: [{ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value' }]
+    })
   })
 })
