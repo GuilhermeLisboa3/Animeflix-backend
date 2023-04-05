@@ -6,6 +6,8 @@
   "rules": {
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/prefer-reduce-type-parameter": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-namespace": "off"
   }
 }
