@@ -150,4 +150,14 @@ describe('AnimeRepository', () => {
       expect(existAnime).toBeFalsy()
     })
   })
+
+  describe('loadByCategoryId', () => {
+    it('should return list anime on success', async () => {
+      await Anime.create(makeAnime)
+
+      const listAnimes = await sut.loadByCategoryId({ categoryId: '1' })
+
+      expect(listAnimes).toMatchObject([{ name: 'any_name', id: 1, synopsis: 'any_synopsis', thumbnailUrl: null }])
+    })
+  })
 })
