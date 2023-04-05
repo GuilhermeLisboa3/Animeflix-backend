@@ -1,5 +1,5 @@
 import { GetCategoryController } from '@/application/controllers/category'
-import { makeCategoryRepository } from '@/main/factories/infra/database/postgres'
+import { makeGetCategory } from '@/main/factories/domain/usecases/category'
 export const makeGetCategoryController = (): GetCategoryController => {
-  return new GetCategoryController(makeCategoryRepository().loadById)
+  return new GetCategoryController(makeGetCategory())
 }
