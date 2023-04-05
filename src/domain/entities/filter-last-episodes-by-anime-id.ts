@@ -6,8 +6,8 @@ type Episodes = {
   videoUrl: string | null
   secondsLong: number | null
   animeId: number
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export function filterLastEpisodesByAnime (episodes: Episodes[]) {
