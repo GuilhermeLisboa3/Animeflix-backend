@@ -1,6 +1,7 @@
 import { GetAnimeByIdUseCase, GetAnimeById } from '@/domain/usecases/anime'
 import { LoadAnimeById } from '@/domain/contracts/database/anime'
 import { LoadEpisodeByAnimeId } from '@/domain/contracts/database/episode'
+import { CheckLike } from '@/domain/contracts/database/like'
 
 import { MockProxy, mock } from 'jest-mock-extended'
 import { NotFoundError } from '@/domain/errors'
@@ -8,25 +9,27 @@ import { NotFoundError } from '@/domain/errors'
 describe('GetAnimeById', () => {
   let animeRepository: MockProxy<LoadAnimeById>
   let episodeRepository: MockProxy<LoadEpisodeByAnimeId>
-  let makeAnime: { id: string }
+  let likeRepository: MockProxy<CheckLike>
+  let makeAnime: { id: string, accountId: string }
   let sut: GetAnimeById
 
   beforeAll(() => {
-    makeAnime = { id: '1' }
+    makeAnime = { id: '1', accountId: '1' }
     animeRepository = mock()
     animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
     episodeRepository = mock()
     episodeRepository.loadByAnimeId.mockResolvedValue([{ id: 1, name: 'any_name', synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', secondsLong: 1 }])
+    likeRepository = mock()
   })
 
   beforeEach(() => {
-    sut = GetAnimeByIdUseCase(animeRepository, episodeRepository)
+    sut = GetAnimeByIdUseCase(animeRepository, episodeRepository, likeRepository)
   })
 
   it('should call LoadAnimeById with correct input', async () => {
     await sut(makeAnime)
 
-    expect(animeRepository.loadById).toHaveBeenCalledWith(makeAnime)
+    expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '1' })
     expect(animeRepository.loadById).toHaveBeenCalledTimes(1)
   })
 
@@ -61,6 +64,13 @@ describe('GetAnimeById', () => {
     const promise = sut(makeAnime)
 
     await expect(promise).rejects.toThrow(error)
+  })
+
+  it('should call CheckLike with correct input', async () => {
+    await sut(makeAnime)
+
+    expect(likeRepository.check).toHaveBeenCalledWith({ userId: 1, animeId: 1 })
+    expect(likeRepository.check).toHaveBeenCalledTimes(1)
   })
 
   it('should return anime on success', async () => {
