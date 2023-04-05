@@ -4,5 +4,5 @@ export interface LoadAnimeById {
 
 export namespace LoadAnimeById {
   export type Input = { id: string }
-  export type Output = { id: number, name: string, thumbnailUrl: string, synopsis: string } | undefined
+  export type Output = { id: number, name: string, thumbnailUrl: string, synopsis: string, featured: boolean } | undefined
 }

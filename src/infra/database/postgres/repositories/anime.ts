@@ -14,7 +14,7 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
   }
 
   async loadById ({ id }: LoadAnimeById.Input): Promise<LoadAnimeById.Output> {
-    const anime = await Anime.findByPk(id, { attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']] })
+    const anime = await Anime.findByPk(id, { attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl'], 'featured'] })
     return anime !== null ? anime : undefined
   }
 

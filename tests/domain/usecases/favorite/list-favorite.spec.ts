@@ -20,7 +20,7 @@ describe('ListFavoriteUseCase', () => {
     favoriteRepository = mock()
     favoriteRepository.list.mockResolvedValue([1, 2])
     animeRepository = mock()
-    animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
+    animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl', featured: true })
   })
 
   beforeEach(() => {

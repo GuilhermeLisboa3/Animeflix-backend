@@ -20,5 +20,5 @@ export const ListFavoriteUseCase: Setup = (accountRepository, favoriteRepository
       if (anime) animes.push(anime)
     }
   }
-  return { accountId: accountIdNumber, animes }
+  return { accountId: accountIdNumber, animes: animes.map(anime => ({ id: anime.id, name: anime.name, synopsis: anime.synopsis, thumbnailUrl: anime.thumbnailUrl })) }
 }

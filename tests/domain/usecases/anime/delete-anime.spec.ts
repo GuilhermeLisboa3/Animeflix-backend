@@ -14,7 +14,7 @@ describe('DeleteAnimeUseCase', () => {
   beforeAll(() => {
     makeAnime = { id: '1' }
     animeRepository = mock()
-    animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value' })
+    animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', synopsis: 'any_synopsis', thumbnailUrl: 'any_value', featured: true })
     fileStorage = mock()
   })
 
