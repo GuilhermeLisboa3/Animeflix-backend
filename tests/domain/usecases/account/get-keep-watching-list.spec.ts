@@ -25,7 +25,7 @@ describe('GetKeepWatchingListUseCase', () => {
     episodeRepository.loadById.mockResolvedValue(makeEpisode)
     animeRepository = mock()
     animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', featured: true, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
-    filterLastEpisodesByAnimeSpy = jest.fn().mockImplementation(() => ([makeEpisode]))
+    filterLastEpisodesByAnimeSpy = jest.fn().mockImplementation(() => ([makeEpisode, { ...makeEpisode, animeId: 2, id: 2 }, { ...makeEpisode, animeId: 3, id: 3 }]))
     jest.mocked(filterLastEpisodesByAnime).mockImplementation(filterLastEpisodesByAnimeSpy)
     makeAccount = { id: '1' }
   })
@@ -60,20 +60,48 @@ describe('GetKeepWatchingListUseCase', () => {
     await sut(makeAccount)
 
     expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '1' })
-    expect(animeRepository.loadById).toHaveBeenCalledTimes(1)
+    expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '2' })
+    expect(animeRepository.loadById).toHaveBeenCalledWith({ id: '3' })
+    expect(animeRepository.loadById).toHaveBeenCalledTimes(3)
   })
 
   it('should call LoadWatchTime with correct input', async () => {
     await sut(makeAccount)
 
     expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '1' })
-    expect(watchTimeRepository.load).toHaveBeenCalledTimes(1)
+    expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '2' })
+    expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '3' })
+    expect(watchTimeRepository.load).toHaveBeenCalledTimes(3)
   })
 
   it('should return keep watching list on success', async () => {
+    watchTimeRepository.load.mockResolvedValueOnce({ userId: 1, episodeId: 1, seconds: 10, updatedAt: '2021-04-03' })
+    watchTimeRepository.load.mockResolvedValueOnce({ userId: 1, episodeId: 1, seconds: 10, updatedAt: '2022-04-03' })
+
     const result = await sut(makeAccount)
 
     expect(result).toEqual([{
+      name: 'any_name',
+      animeId: 2,
+      synopsis: 'any_synopsis',
+      order: 1,
+      videoUrl: 'any_value',
+      id: 2,
+      secondsLong: 100,
+      watchTime: { userId: 1, episodeId: 1, seconds: 10, updatedAt: '2022-04-03' },
+      anime: { id: 1, name: 'any_name', featured: true, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' }
+    },
+    {
+      name: 'any_name',
+      animeId: 3,
+      synopsis: 'any_synopsis',
+      order: 1,
+      videoUrl: 'any_value',
+      id: 3,
+      secondsLong: 100,
+      watchTime: { userId: 1, episodeId: 1, seconds: 10, updatedAt: '2021-04-03' },
+      anime: { id: 1, name: 'any_name', featured: true, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' }
+    }, {
       name: 'any_name',
       animeId: 1,
       synopsis: 'any_synopsis',
