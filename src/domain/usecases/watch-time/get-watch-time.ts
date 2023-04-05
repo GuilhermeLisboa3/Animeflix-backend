@@ -13,6 +13,6 @@ export const GetWatchTimeUseCase: Setup = (accountRepository, episodeRepository,
   if (!existAccount) throw new NotFoundError('accountId')
   const existEpisode = await episodeRepository.checkById({ id: episodeId })
   if (!existEpisode) throw new NotFoundError('episodeId')
-  const seconds = await watchTimeRepository.load({ userId: accountId, episodeId })
-  return seconds
+  const watchTime = await watchTimeRepository.load({ userId: accountId, episodeId })
+  return { seconds: watchTime.seconds }
 }

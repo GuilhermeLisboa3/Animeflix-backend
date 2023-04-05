@@ -41,18 +41,18 @@ describe('WatchTimeRepository', () => {
   })
 
   describe('load', () => {
-    it('should return seconds on success', async () => {
+    it('should return watch time on success', async () => {
       await WatchTime.create(makeWatchTime)
 
       const seconds = await sut.load({ userId: '1', episodeId: '1' })
 
-      expect(seconds).toEqual({ seconds: 100 })
+      expect(seconds).toMatchObject({ seconds: 100, userId: 1, episodeId: 1 })
     })
 
-    it('should return seconds with value 0 if watch time not exists', async () => {
-      const seconds = await sut.load({ userId: '2', episodeId: '2' })
+    it('should return error if watch time not exists', async () => {
+      const promise = sut.load({ userId: '2', episodeId: '2' })
 
-      expect(seconds).toEqual({ seconds: 0 })
+      await expect(promise).rejects.toThrow()
     })
   })
 })

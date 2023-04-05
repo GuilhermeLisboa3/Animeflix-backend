@@ -20,7 +20,7 @@ describe('GetWatchTimeUseCase', () => {
     episodeRepository = mock()
     episodeRepository.checkById.mockResolvedValue(true)
     watchTimeRepository = mock()
-    watchTimeRepository.load.mockResolvedValue({ seconds: 10 })
+    watchTimeRepository.load.mockResolvedValue({ seconds: 10, userId: 1, episodeId: 1 })
   })
 
   beforeEach(() => {
