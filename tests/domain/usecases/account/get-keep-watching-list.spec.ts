@@ -20,9 +20,11 @@ describe('GetKeepWatchingListUseCase', () => {
   beforeAll(() => {
     watchTimeRepository = mock()
     watchTimeRepository.loadByUserId.mockResolvedValue([1, 2])
+    watchTimeRepository.load.mockResolvedValue({ userId: 1, episodeId: 1, seconds: 10, updatedAt: '2021-04-03' })
     episodeRepository = mock()
     episodeRepository.loadById.mockResolvedValue(makeEpisode)
     animeRepository = mock()
+    animeRepository.loadById.mockResolvedValue({ id: 1, name: 'any_name', featured: true, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' })
     filterLastEpisodesByAnimeSpy = jest.fn().mockImplementation(() => ([makeEpisode]))
     jest.mocked(filterLastEpisodesByAnime).mockImplementation(filterLastEpisodesByAnimeSpy)
     makeAccount = { id: '1' }
@@ -66,5 +68,21 @@ describe('GetKeepWatchingListUseCase', () => {
 
     expect(watchTimeRepository.load).toHaveBeenCalledWith({ userId: '1', episodeId: '1' })
     expect(watchTimeRepository.load).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return keep watching list on success', async () => {
+    const result = await sut(makeAccount)
+
+    expect(result).toEqual([{
+      name: 'any_name',
+      animeId: 1,
+      synopsis: 'any_synopsis',
+      order: 1,
+      videoUrl: 'any_value',
+      id: 1,
+      secondsLong: 100,
+      watchTime: { userId: 1, episodeId: 1, seconds: 10, updatedAt: '2021-04-03' },
+      anime: { id: 1, name: 'any_name', featured: true, synopsis: 'any_synopsis', thumbnailUrl: 'any_thumbnailUrl' }
+    }])
   })
 })
