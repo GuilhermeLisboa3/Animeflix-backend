@@ -1,3 +1,4 @@
+import { HttpResponse, ok } from '@/application/helpers'
 import { Validator, ValidationBuilder as build } from '@/application/validation'
 import { KeepWatchingList } from '@/domain/usecases/account'
 
@@ -6,8 +7,9 @@ type HttpRequest = { accountId: string }
 export class GetKeepWatchingListController {
   constructor (private readonly keepWatchingList: KeepWatchingList) {}
 
-  async perform ({ accountId }: HttpRequest): Promise<void> {
-    await this.keepWatchingList({ id: accountId })
+  async perform ({ accountId }: HttpRequest): Promise<HttpResponse> {
+    const keepWatchingList = await this.keepWatchingList({ id: accountId })
+    return ok(keepWatchingList)
   }
 
   buildValidators ({ accountId }: HttpRequest): Validator[] {
