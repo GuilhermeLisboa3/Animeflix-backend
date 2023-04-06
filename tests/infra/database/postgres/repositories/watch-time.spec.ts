@@ -64,5 +64,11 @@ describe('WatchTimeRepository', () => {
 
       expect(listAnimeId).toEqual([1])
     })
+
+    it('should return array empty if watchTime not exists', async () => {
+      const listAnimeId = await sut.loadByUserId({ userId: '1' })
+
+      expect(listAnimeId).toEqual([])
+    })
   })
 })
