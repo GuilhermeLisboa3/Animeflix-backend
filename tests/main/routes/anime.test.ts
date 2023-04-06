@@ -1,6 +1,6 @@
 import { app } from '@/main/config/app'
 import env from '@/main/config/env'
-import { sequelize, Account, Category, Anime, Episode } from '@/infra/database/postgres/entities'
+import { sequelize, Account, Category, Anime, Episode, Like } from '@/infra/database/postgres/entities'
 
 import request from 'supertest'
 import { sign } from 'jsonwebtoken'
@@ -144,6 +144,21 @@ describe('AnimeRoute', () => {
 
       expect(status).toBe(200)
       expect(body).toEqual([{ id: 1, name: 'any_anime', synopsis: 'any_synopsis', thumbnailUrl: null }])
+    })
+  })
+
+  describe('GET /animes/popular', () => {
+    it('should return 200 on success', async () => {
+      await Anime.create({ name: 'any_anime', categoryId: 1, synopsis: 'any_synopsis', featured: true, thumbnailUrl: 'any_thumbnailUrl' })
+      await Like.create({ userId: 1, animeId: 1 })
+      const { status, body } = await request(app)
+        .get('/animes/popular')
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+      expect(body).toMatchObject([
+        { id: 1, name: 'any_anime', synopsis: 'any_synopsis', thumbnailurl: 'any_thumbnailUrl', likes: '1' }
+      ])
     })
   })
 
