@@ -4,12 +4,14 @@ import { RequiredField } from '@/application/validation'
 describe('GetKeepWatchingListController', () => {
   let sut: GetKeepWatchingListController
   let makeRequest: { accountId: string }
+  let KeepWatchingList: jest.Mock
   beforeAll(() => {
     makeRequest = { accountId: '1' }
+    KeepWatchingList = jest.fn()
   })
 
   beforeEach(() => {
-    sut = new GetKeepWatchingListController()
+    sut = new GetKeepWatchingListController(KeepWatchingList)
   })
 
   it('should build Validators correctly', async () => {
@@ -18,5 +20,12 @@ describe('GetKeepWatchingListController', () => {
     expect(validators).toEqual([
       new RequiredField('1', 'accountId')
     ])
+  })
+
+  it('should call KeepWatchingList with correct input', async () => {
+    await sut.perform(makeRequest)
+
+    expect(KeepWatchingList).toHaveBeenCalledWith({ id: '1' })
+    expect(KeepWatchingList).toHaveBeenCalledTimes(1)
   })
 })
