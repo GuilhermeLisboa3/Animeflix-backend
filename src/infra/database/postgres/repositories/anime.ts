@@ -67,4 +67,25 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
     const listAnime = await Anime.findAll({ attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']], where: { categoryId } })
     return listAnime
   }
+
+  async getTopTenByLikes () {
+    const result = await Anime.sequelize?.query(
+      `SELECT 
+          animes.id,
+          animes.name,
+          animes.synopsis,
+          animes.thumbnail_url AS thumbnailUrl,
+          COUNT(users.id) AS likes
+      FROM animes
+          LEFT OUTER JOIN likes
+            ON animes.id = likes.anime_id
+              INNER JOIN users
+                  ON users.id = likes.user_id
+      GROUP BY animes.id
+      ORDER BY likes DESC
+      LIMIT 10;
+      `
+    )
+    if (result) { return result[0] } else { return null }
+  }
 }
