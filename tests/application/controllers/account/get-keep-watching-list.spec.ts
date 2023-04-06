@@ -1,5 +1,6 @@
 import { GetKeepWatchingListController } from '@/application/controllers/account'
 import { RequiredField } from '@/application/validation'
+import { Controller } from '@/application/controllers'
 
 describe('GetKeepWatchingListController', () => {
   let sut: GetKeepWatchingListController
@@ -12,6 +13,10 @@ describe('GetKeepWatchingListController', () => {
 
   beforeEach(() => {
     sut = new GetKeepWatchingListController(KeepWatchingList)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build Validators correctly', async () => {
