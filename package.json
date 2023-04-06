@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dotenv/config dist/main",
-    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/main/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --clear -r dotenv/config --inspect=0.0.0.0:9229 src/main/server.ts",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm run test -- --watch",
