@@ -1,4 +1,5 @@
 import { GetTopTenAnimesByLikesController } from '@/application/controllers/anime'
+import { Controller } from '@/application/controllers'
 
 describe('GetTopTenAnimesByLikesController', () => {
   let sut: GetTopTenAnimesByLikesController
@@ -10,6 +11,10 @@ describe('GetTopTenAnimesByLikesController', () => {
 
   beforeEach(() => {
     sut = new GetTopTenAnimesByLikesController(TopTenAnimesByLike)
+  })
+
+  it('should extends Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call TopTenAnimesByLike with correct input', async () => {
