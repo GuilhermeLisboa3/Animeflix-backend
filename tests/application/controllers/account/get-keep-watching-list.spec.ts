@@ -7,7 +7,7 @@ describe('GetKeepWatchingListController', () => {
   let KeepWatchingList: jest.Mock
   beforeAll(() => {
     makeRequest = { accountId: '1' }
-    KeepWatchingList = jest.fn()
+    KeepWatchingList = jest.fn().mockResolvedValue({ any: 'any_value' })
   })
 
   beforeEach(() => {
@@ -27,5 +27,11 @@ describe('GetKeepWatchingListController', () => {
 
     expect(KeepWatchingList).toHaveBeenCalledWith({ id: '1' })
     expect(KeepWatchingList).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const httpResponse = await sut.perform(makeRequest)
+
+    expect(httpResponse).toEqual({ statusCode: 200, data: { any: 'any_value' } })
   })
 })
