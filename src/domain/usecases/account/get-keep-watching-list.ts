@@ -29,7 +29,7 @@ export const GetKeepWatchingListUseCase: Setup = (watchTimeRepository, episodeRe
     const listLastEpisodesByAnime = filterLastEpisodesByAnime(listEpisodes)
     listEpisodes = []
     for (const lastEpisodes of listLastEpisodesByAnime) {
-      const anime = await animeRepository.loadById({ id: lastEpisodes.id.toString() })
+      const anime = await animeRepository.loadById({ id: lastEpisodes.animeId.toString() })
       const watchTime = await watchTimeRepository.load({ userId: id, episodeId: lastEpisodes.id.toString() })
       listEpisodes.push({ ...lastEpisodes, anime, watchTime })
     }

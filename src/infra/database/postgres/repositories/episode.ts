@@ -13,8 +13,20 @@ export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, Lo
   }
 
   async loadById ({ id }: LoadEpisodeById.Input): Promise<LoadEpisodeById.Output> {
-    const episode = await Episode.findByPk(id)
-    return episode !== null ? episode : undefined
+    const episode = await Episode.findByPk(id, {
+      attributes: [
+        'id',
+        'name',
+        'videoUrl',
+        'synopsis',
+        'secondsLong',
+        'order',
+        ['video_url', 'videoUrl'],
+        ['anime_id', 'animeId'],
+        ['created_at', 'createdAt'],
+        ['updated_at', 'updatedAt']]
+    })
+    return episode !== null ? episode.dataValues : undefined
   }
 
   async update ({ id, animeId, name, order, secondsLong, synopsis, videoUrl }: UpdateEpisodeRepository.Input): Promise<void> {
