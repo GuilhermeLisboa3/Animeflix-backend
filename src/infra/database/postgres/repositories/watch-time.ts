@@ -1,7 +1,7 @@
-import { LoadWatchTime, SaveWatchTime } from '@/domain/contracts/database/watch-time'
+import { LoadWatchTime, SaveWatchTime, LoadWatchTimeByUserId } from '@/domain/contracts/database/watch-time'
 import { WatchTime } from '@/infra/database/postgres/entities'
 
-export class WatchTimeRepository implements SaveWatchTime, LoadWatchTime {
+export class WatchTimeRepository implements SaveWatchTime, LoadWatchTime, LoadWatchTimeByUserId {
   async save ({ episodeId, seconds, userId }: SaveWatchTime.Input): Promise<void> {
     const watchTimeAlreadyExists = await WatchTime.findOne({ where: { userId, episodeId } })
     if (watchTimeAlreadyExists) {
@@ -16,5 +16,11 @@ export class WatchTimeRepository implements SaveWatchTime, LoadWatchTime {
     const watchTime = await WatchTime.findOne({ where: { episodeId, userId } })
     if (!watchTime) throw new Error()
     return watchTime
+  }
+
+  async loadByUserId ({ userId }: LoadWatchTimeByUserId.Input): Promise<LoadWatchTimeByUserId.Output> {
+    const listWatchTime = await WatchTime.findAll({ where: { userId } })
+    const listEpisodeId = listWatchTime.map(watchTime => watchTime.episodeId)
+    return listEpisodeId.length === 0 ? [] : listEpisodeId
   }
 }
