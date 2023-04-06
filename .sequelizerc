@@ -4,4 +4,5 @@ module.exports = {
   'config': path.resolve('config', 'sequelizeCli.js'),
   'models-path': path.resolve('src', 'infra', 'database', 'postgres', 'entities'),
   'migrations-path': path.resolve('src', 'infra', 'database', 'postgres', 'helpers', 'migrations'),
+  'seeders-path': path.resolve('src', 'infra', 'database', 'postgres', 'helpers', 'seeders'),
 }
