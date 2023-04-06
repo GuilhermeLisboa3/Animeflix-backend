@@ -5,7 +5,7 @@ describe('GetTopTenAnimesByLikesController', () => {
   let TopTenAnimesByLike: jest.Mock
 
   beforeAll(() => {
-    TopTenAnimesByLike = jest.fn()
+    TopTenAnimesByLike = jest.fn().mockResolvedValue({ any: 'any_value' })
   })
 
   beforeEach(() => {
@@ -17,5 +17,14 @@ describe('GetTopTenAnimesByLikesController', () => {
 
     expect(TopTenAnimesByLike).toHaveBeenCalledWith()
     expect(TopTenAnimesByLike).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 on success', async () => {
+    const result = await sut.perform()
+
+    expect(result).toEqual({
+      statusCode: 200,
+      data: { any: 'any_value' }
+    })
   })
 })
