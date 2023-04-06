@@ -190,4 +190,16 @@ describe('AccountRoute', () => {
       expect(status).toBe(200)
     })
   })
+
+  describe('GET /users/current/watching', () => {
+    it('should return 200 on success', async () => {
+      await Account.create(makeAccount)
+
+      const { status } = await request(app)
+        .get('/users/current/watching')
+        .set({ authorization: `Bearer: ${token}` })
+
+      expect(status).toBe(200)
+    })
+  })
 })
