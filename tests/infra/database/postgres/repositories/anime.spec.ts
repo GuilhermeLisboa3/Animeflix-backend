@@ -1,5 +1,5 @@
 import { AnimeRepository } from '@/infra/database/postgres/repositories'
-import { Anime, Category, sequelize } from '@/infra/database/postgres/entities'
+import { Account, Anime, Category, Like, sequelize } from '@/infra/database/postgres/entities'
 
 import MockDate from 'mockdate'
 
@@ -158,6 +158,18 @@ describe('AnimeRepository', () => {
       const listAnimes = await sut.loadByCategoryId({ categoryId: '1' })
 
       expect(listAnimes).toMatchObject([{ name: 'any_name', id: 1, synopsis: 'any_synopsis', thumbnailUrl: null }])
+    })
+  })
+
+  describe('getTopTenByLikes', () => {
+    it('should return list anime on success', async () => {
+      await Anime.create(makeAnime)
+      await Account.create({ firstName: 'any_name', lastName: 'any_last_name', email: 'any_email', password: 'any_password', birth: new Date(), phone: 'any_phone', role: 'user' })
+      await Like.create({ userId: 1, animeId: 1 })
+
+      const listAnimes = await sut.getTopTenByLikes()
+
+      expect(listAnimes).toMatchObject([{ name: 'any_name', id: 1, synopsis: 'any_synopsis', likes: '1' }])
     })
   })
 })
