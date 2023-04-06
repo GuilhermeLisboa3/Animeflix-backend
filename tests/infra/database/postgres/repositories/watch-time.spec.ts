@@ -55,4 +55,14 @@ describe('WatchTimeRepository', () => {
       await expect(promise).rejects.toThrow()
     })
   })
+
+  describe('loadByUserId', () => {
+    it('should return list episodeId on success', async () => {
+      await WatchTime.create(makeWatchTime)
+
+      const listAnimeId = await sut.loadByUserId({ userId: '1' })
+
+      expect(listAnimeId).toEqual([1])
+    })
+  })
 })
