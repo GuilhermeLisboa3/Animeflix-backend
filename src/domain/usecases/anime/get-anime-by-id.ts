@@ -14,13 +14,14 @@ export const GetAnimeByIdUseCase: Setup = (animeRepository, episodeRepository, l
   if (!anime) throw new NotFoundError('id')
   const episodes = await episodeRepository.loadByAnimeId({ animeId: id })
   const liked = await likeRepository.check({ userId: Number(accountId), animeId: Number(id) })
-  await favoriteRepository.check({ userId: accountId, animeId: id })
+  const favorited = await favoriteRepository.check({ userId: accountId, animeId: id })
   return {
     id: anime.id,
     name: anime.name,
     thumbnailUrl: anime.thumbnailUrl,
     synopsis: anime.synopsis,
     episodes,
-    liked
+    liked,
+    favorited
   }
 }
