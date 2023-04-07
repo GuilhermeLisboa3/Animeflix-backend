@@ -67,5 +67,11 @@ describe('FavoriteRepository', () => {
 
       expect(checkFavorite).toBeTruthy()
     })
+
+    it('should return false if favorite not exists', async () => {
+      const checkFavorite = await sut.check({ userId: '1', animeId: '1' })
+
+      expect(checkFavorite).toBeFalsy()
+    })
   })
 })
