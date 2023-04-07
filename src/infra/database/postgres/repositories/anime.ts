@@ -86,6 +86,6 @@ export class AnimeRepository implements CheckAnime, CreateAnime, LoadAnimeById, 
       LIMIT 10;
       `
     )
-    if (result) { return result[0] } else { return null }
+    if (result) { return result[0] }
   }
 }

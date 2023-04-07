@@ -1,1 +1,1 @@
-export type TopTenAnimesByLike = () => Promise<unknown[] | null>
+export type TopTenAnimesByLike = () => Promise<unknown[] | undefined>
