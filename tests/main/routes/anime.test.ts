@@ -112,7 +112,8 @@ describe('AnimeRoute', () => {
         synopsis: 'any_synopsis',
         thumbnailUrl: 'any_thumbnailUrl',
         episodes: [{ id: 1, name: 'any_anime', synopsis: 'any_synopsis', order: 1, videoUrl: 'any_video', secondsLong: null }],
-        liked: false
+        liked: false,
+        favorited: false
       })
     })
   })
