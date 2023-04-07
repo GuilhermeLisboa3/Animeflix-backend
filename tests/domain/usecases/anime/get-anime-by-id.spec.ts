@@ -24,6 +24,7 @@ describe('GetAnimeById', () => {
     likeRepository = mock()
     likeRepository.check.mockResolvedValue(true)
     favoriteRepository = mock()
+    favoriteRepository.check.mockResolvedValue(false)
   })
 
   beforeEach(() => {
@@ -111,7 +112,8 @@ describe('GetAnimeById', () => {
       synopsis: 'any_synopsis',
       thumbnailUrl: 'any_thumbnailUrl',
       episodes: [{ id: 1, name: 'any_name', synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', secondsLong: 1 }],
-      liked: true
+      liked: true,
+      favorited: false
     })
   })
 })
