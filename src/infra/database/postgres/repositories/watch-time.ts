@@ -14,7 +14,7 @@ export class WatchTimeRepository implements SaveWatchTime, LoadWatchTime, LoadWa
 
   async load ({ episodeId, userId }: LoadWatchTime.Input): Promise<LoadWatchTime.Output> {
     const watchTime = await WatchTime.findOne({ where: { episodeId, userId } })
-    if (!watchTime) throw new Error()
+    if (!watchTime) return null
     return watchTime
   }
 

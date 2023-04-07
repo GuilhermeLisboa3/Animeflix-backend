@@ -49,10 +49,10 @@ describe('WatchTimeRepository', () => {
       expect(seconds).toMatchObject({ seconds: 100, userId: 1, episodeId: 1 })
     })
 
-    it('should return error if watch time not exists', async () => {
-      const promise = sut.load({ userId: '2', episodeId: '2' })
+    it('should return null if watch time not exists', async () => {
+      const watchTime = await sut.load({ userId: '2', episodeId: '2' })
 
-      await expect(promise).rejects.toThrow()
+      expect(watchTime).toBeNull()
     })
   })
 

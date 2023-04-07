@@ -13,7 +13,7 @@ type Output = Array<{
   secondsLong: number | null
   order: number
   animeId: number
-  watchTime: { seconds: number, userId: number, episodeId: number }
+  watchTime: { seconds: number, userId: number, episodeId: number } | null
   anime: { id: number, name: string, thumbnailUrl: string, synopsis: string, featured: boolean } | undefined
 }> | undefined
 export type KeepWatchingList = (input: Input) => Promise<Output>
@@ -34,7 +34,7 @@ export const GetKeepWatchingListUseCase: Setup = (watchTimeRepository, episodeRe
       listEpisodes.push({ ...lastEpisodes, anime, watchTime })
     }
     listEpisodes.sort((a, b) => {
-      if (a.watchTime.updatedAt && b.watchTime.updatedAt && a.watchTime.updatedAt < b.watchTime.updatedAt) {
+      if (a.watchTime && b.watchTime && a.watchTime.updatedAt && b.watchTime.updatedAt && a.watchTime.updatedAt < b.watchTime.updatedAt) {
         return 1
       } else return -1
     })

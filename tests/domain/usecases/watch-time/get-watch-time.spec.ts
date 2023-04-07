@@ -96,4 +96,12 @@ describe('GetWatchTimeUseCase', () => {
 
     expect(result).toEqual({ seconds: 10 })
   })
+
+  it('should return null if watchTime not exists', async () => {
+    watchTimeRepository.load.mockResolvedValueOnce(null)
+
+    const result = await sut(makeWatchTime)
+
+    expect(result).toBeNull()
+  })
 })

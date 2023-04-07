@@ -5,7 +5,7 @@ import { NotFoundError } from '@/domain/errors'
 
 type Setup = (accountRepository: CheckAccountById, episodeRepository: CheckEpisodeById, watchTimeRepository: LoadWatchTime) => GetWatchTime
 type Input = { accountId: string, episodeId: string }
-type Output = { seconds: number }
+type Output = { seconds: number } | null
 export type GetWatchTime = (input: Input) => Promise<Output>
 
 export const GetWatchTimeUseCase: Setup = (accountRepository, episodeRepository, watchTimeRepository) => async ({ accountId, episodeId }) => {
@@ -14,5 +14,5 @@ export const GetWatchTimeUseCase: Setup = (accountRepository, episodeRepository,
   const existEpisode = await episodeRepository.checkById({ id: episodeId })
   if (!existEpisode) throw new NotFoundError('episodeId')
   const watchTime = await watchTimeRepository.load({ userId: accountId, episodeId })
-  return { seconds: watchTime.seconds }
+  return watchTime !== null ? { seconds: watchTime.seconds } : null
 }
