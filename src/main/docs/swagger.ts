@@ -1,6 +1,6 @@
-import { signup, login } from '@/main/docs/paths/account'
-import { signUpRequest, signUpResponse, loginRequest, loginResponse } from '@/main/docs/schema/account'
-import { badRequest, serverError, unauthorized } from '@/main/docs/components'
+import { signup, login, updateAccount } from '@/main/docs/paths/account'
+import { signUpRequest, signUpResponse, loginRequest, loginResponse, updateAccountRequest } from '@/main/docs/schema/account'
+import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
 export const swagger = {
@@ -18,7 +18,8 @@ export const swagger = {
   tags: [{ name: 'Account' }],
   paths: {
     '/auth/register': signup,
-    '/auth/login': login
+    '/auth/login': login,
+    '/users/current': updateAccount
   },
   schemas: {
     // error
@@ -27,7 +28,8 @@ export const swagger = {
     signUpRequest,
     signUpResponse,
     loginRequest,
-    loginResponse
+    loginResponse,
+    updateAccountRequest
   },
-  components: { badRequest, serverError, unauthorized }
+  components: { securitySchemes, badRequest, serverError, unauthorized, forbidden }
 }
