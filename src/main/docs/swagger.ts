@@ -4,7 +4,7 @@ import { listCategory, getCategory, addCategory, deleteCategory } from '@/main/d
 import { listCategoryResponse, getCategoryResponse, addCategoryResponse } from '@/main/docs/schema/category'
 import { listAnimeByFeatured, getTopTenAnimesByLikes, listAnimeNewest, getAnimeById, searchAnimesByName, addAnime, updateAnime, deleteAnime } from '@/main/docs/paths/anime'
 import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse, listAnimeNewestResponse, getAnimeByIdResponse, searchAnimesByNameResponse, addAnimeResponse } from '@/main/docs/schema/anime'
-import { addEpisode } from '@/main/docs/paths/episodes'
+import { addEpisode, updateEpisode } from '@/main/docs/paths/episodes'
 import { addEpisodeResponse } from '@/main/docs/schema/episode'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
@@ -45,7 +45,8 @@ export const swagger = {
     '/anime/{id}': updateAnime,
     '/anime/{id}/': deleteAnime,
     // episode
-    '/episode': addEpisode
+    '/episode': addEpisode,
+    '/episode/{id}': updateEpisode
   },
   schemas: {
     // error
