@@ -16,13 +16,20 @@ export const UpdateEpisodeUseCase: Setup = (episodeRepository, fileStorage, uuid
     const key = uuid.generate()
     videoUrl = await fileStorage.upload({ file: file.buffer, fileName: `${key}.${file.mimeType.split('/')[1]}` })
   }
-  if (order) {
-    const existsEpisode = await episodeRepository.checkByOrder({ order })
-    if (existsEpisode) throw new FieldInUseError('order')
-  }
+  let existsEpisode: boolean = false
   if (animeId) {
     const existsAnime = await animeRepository.checkById({ id: animeId })
     if (!existsAnime) throw new NotFoundError('animeId')
+    if (!order) {
+      existsEpisode = await episodeRepository.checkByOrder({ order: episode.order, animeId: Number(animeId) })
+    }
+    if (order) {
+      existsEpisode = await episodeRepository.checkByOrder({ order, animeId: Number(animeId) })
+    }
   }
+  if (order && !animeId) {
+    existsEpisode = await episodeRepository.checkByOrder({ order, animeId: Number(episode.animeId) })
+  }
+  if (existsEpisode) throw new FieldInUseError('order')
   await episodeRepository.update({ id, animeId, order, videoUrl, name, synopsis, secondsLong })
 }

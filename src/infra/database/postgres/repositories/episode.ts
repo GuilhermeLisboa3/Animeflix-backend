@@ -2,8 +2,8 @@ import { CheckEpisodeByOrder, CheckEpisodeById, CreateEpisode, DeleteEpisodeById
 import { Episode } from '@/infra/database/postgres/entities'
 
 export class EpisodeRepository implements CheckEpisodeByOrder, CreateEpisode, LoadEpisodeById, UpdateEpisodeRepository, DeleteEpisodeById, LoadEpisode, LoadEpisodeByAnimeId, CheckEpisodeById {
-  async checkByOrder ({ order }: CheckEpisodeByOrder.Input): Promise<CheckEpisodeByOrder.Output> {
-    const existEpisode = await Episode.findOne({ where: { order } })
+  async checkByOrder ({ order, animeId }: CheckEpisodeByOrder.Input): Promise<CheckEpisodeByOrder.Output> {
+    const existEpisode = await Episode.findOne({ where: { order, animeId } })
     return existEpisode !== null
   }
 

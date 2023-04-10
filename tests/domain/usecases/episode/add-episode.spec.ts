@@ -57,7 +57,7 @@ describe('AddEpisodeUseCase', () => {
   it('should call CheckEpisodeByOrder with correct input', async () => {
     await sut(makeEpisode)
 
-    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1 })
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1, animeId: 1 })
     expect(episodeRepository.checkByOrder).toHaveBeenCalledTimes(1)
   })
 

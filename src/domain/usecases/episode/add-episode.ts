@@ -10,7 +10,7 @@ export type AddEpisode = (input: Input) => Promise<void>
 export const AddEpisodeUseCase: Setup = (animeRepository, episodeRepository, uuid, fileStorage) => async ({ animeId, order, file, name, synopsis, secondsLong }) => {
   const animeExists = await animeRepository.checkById({ id: animeId })
   if (!animeExists) throw new NotFoundError('animeId')
-  const episodeExists = await episodeRepository.checkByOrder({ order })
+  const episodeExists = await episodeRepository.checkByOrder({ order, animeId })
   if (episodeExists) throw new FieldInUseError('order')
   const key = uuid.generate()
   let videoUrl: string | undefined

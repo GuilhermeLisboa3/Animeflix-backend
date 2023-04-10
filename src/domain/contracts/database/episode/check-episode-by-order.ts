@@ -3,6 +3,6 @@ export interface CheckEpisodeByOrder {
 }
 
 export namespace CheckEpisodeByOrder {
-  export type Input = { order: number }
+  export type Input = { order: number, animeId: number }
   export type Output = boolean
 }

@@ -17,7 +17,7 @@ describe('UpdateEpisodeUseCase', () => {
   beforeAll(() => {
     makeEpisode = { id: '1', file: { buffer: Buffer.from('any'), mimeType: 'image/mp4' }, animeId: 1, order: 1 }
     episodeRepository = mock()
-    episodeRepository.loadById.mockResolvedValue({ name: 'any_name', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_value', id: 1, secondsLong: 100 })
+    episodeRepository.loadById.mockResolvedValue({ name: 'any_name', animeId: 2, synopsis: 'any_synopsis', order: 2, videoUrl: 'any_value', id: 1, secondsLong: 100 })
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue('any_url')
     uuid = mock()
@@ -57,7 +57,21 @@ describe('UpdateEpisodeUseCase', () => {
   it('should call CheckEpisodeByOrder with correct input', async () => {
     await sut(makeEpisode)
 
-    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1 })
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1, animeId: 1 })
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call CheckEpisodeByOrder if animeId not exists', async () => {
+    await sut({ id: '1', order: 1 })
+
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 1, animeId: 2 })
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call CheckEpisodeByOrder if order not exists', async () => {
+    await sut({ id: '1', animeId: 1 })
+
+    expect(episodeRepository.checkByOrder).toHaveBeenCalledWith({ order: 2, animeId: 1 })
     expect(episodeRepository.checkByOrder).toHaveBeenCalledTimes(1)
   })
 

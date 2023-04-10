@@ -24,13 +24,13 @@ describe('EpisodeRepository', () => {
     it('should return true if episode exists', async () => {
       await Episode.create(makeEpisode)
 
-      const existEpisode = await sut.checkByOrder({ order: 1 })
+      const existEpisode = await sut.checkByOrder({ order: 1, animeId: 1 })
 
       expect(existEpisode).toBeTruthy()
     })
 
     it('should return false if episode not exists', async () => {
-      const existEpisode = await sut.checkByOrder({ order: 1 })
+      const existEpisode = await sut.checkByOrder({ order: 1, animeId: 1 })
 
       expect(existEpisode).toBeFalsy()
     })
