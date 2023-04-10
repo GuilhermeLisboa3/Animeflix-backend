@@ -1,5 +1,5 @@
 import { signup, login, updateAccount, updatePassword, getAccountData, getKeepWatchingList } from '@/main/docs/paths/account'
-import { listCategory, getCategory, addCategory } from '@/main/docs/paths/category'
+import { listCategory, getCategory, addCategory, deleteCategory } from '@/main/docs/paths/category'
 import { signUpRequest, signUpResponse, loginRequest, loginResponse, updateAccountRequest, updatePasswordRequest, getAccountDataResponse, getKeepWatchingResponse } from '@/main/docs/schema/account'
 import { listCategoryResponse, getCategoryResponse, addCategoryResponse } from '@/main/docs/schema/category'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
@@ -29,7 +29,8 @@ export const swagger = {
     // category
     '/categories?page=&perPage=': listCategory,
     '/categories/{id}': getCategory,
-    '/category': addCategory
+    '/category': addCategory,
+    '/category/{id}': deleteCategory
   },
   schemas: {
     // error
