@@ -8,7 +8,7 @@ import { addEpisode, deleteEpisode, streamEpisode, updateEpisode } from '@/main/
 import { addEpisodeResponse } from '@/main/docs/schema/episode'
 import { addWatchTime, getWatchTime } from '@/main/docs/paths/watch-time'
 import { addLike, deleteLike } from '@/main/docs/paths/like'
-import { listFavorite, addFavorite } from '@/main/docs/paths/favorite'
+import { listFavorite, addFavorite, deleteFavorite } from '@/main/docs/paths/favorite'
 import { listFavoriteResponse } from '@/main/docs/schema/favorite'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
@@ -21,6 +21,7 @@ export const swagger = {
     version: '1.0.0',
     contact: {
       name: 'Guilherme Gonçalves Lisboa',
+      email: 'Guime0162@gmail.com',
       url: 'https://www.linkedin.com/in/guilhermegon%C3%A7alveslisboa/'
     }
   },
@@ -61,7 +62,8 @@ export const swagger = {
     '/likes/{id}': deleteLike,
     // favorite
     '/favorites': listFavorite,
-    '/favorites/': addFavorite
+    '/favorites/': addFavorite,
+    '/favorites/{id}': deleteFavorite
   },
   schemas: {
     // error
