@@ -8,6 +8,8 @@ import { addEpisode, deleteEpisode, streamEpisode, updateEpisode } from '@/main/
 import { addEpisodeResponse } from '@/main/docs/schema/episode'
 import { addWatchTime, getWatchTime } from '@/main/docs/paths/watch-time'
 import { addLike, deleteLike } from '@/main/docs/paths/like'
+import { listFavorite } from '@/main/docs/paths/favorite'
+import { listFavoriteResponse } from '@/main/docs/schema/favorite'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
@@ -23,7 +25,7 @@ export const swagger = {
     }
   },
   servers: [{ url: '/' }],
-  tags: [{ name: 'Account' }, { name: 'Category' }, { name: 'Anime' }, { name: 'Episode' }, { name: 'WatchTime' }, { name: 'Like' }],
+  tags: [{ name: 'Account' }, { name: 'Category' }, { name: 'Anime' }, { name: 'Episode' }, { name: 'WatchTime' }, { name: 'Like' }, { name: 'Favorite' }],
   paths: {
     // account
     '/auth/register': signup,
@@ -56,7 +58,9 @@ export const swagger = {
     '/episodes/{id}/WatchTime/': getWatchTime,
     // like
     '/likes': addLike,
-    '/likes/{id}': deleteLike
+    '/likes/{id}': deleteLike,
+    // favorite
+    '/favorites': listFavorite
   },
   schemas: {
     // error
@@ -82,7 +86,9 @@ export const swagger = {
     searchAnimesByNameResponse,
     addAnimeResponse,
     // episode
-    addEpisodeResponse
+    addEpisodeResponse,
+    // favorite
+    listFavoriteResponse
   },
   components: { securitySchemes, badRequest, serverError, unauthorized, forbidden }
 }
