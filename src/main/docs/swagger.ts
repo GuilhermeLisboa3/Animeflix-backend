@@ -7,6 +7,7 @@ import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse, listAnimeN
 import { addEpisode, deleteEpisode, streamEpisode, updateEpisode } from '@/main/docs/paths/episodes'
 import { addEpisodeResponse } from '@/main/docs/schema/episode'
 import { addWatchTime, getWatchTime } from '@/main/docs/paths/watch-time'
+import { addLike } from '@/main/docs/paths/like'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
@@ -22,7 +23,7 @@ export const swagger = {
     }
   },
   servers: [{ url: '/' }],
-  tags: [{ name: 'Account' }, { name: 'Category' }, { name: 'Anime' }, { name: 'Episode' }, { name: 'WatchTime' }],
+  tags: [{ name: 'Account' }, { name: 'Category' }, { name: 'Anime' }, { name: 'Episode' }, { name: 'WatchTime' }, { name: 'Like' }],
   paths: {
     // account
     '/auth/register': signup,
@@ -52,7 +53,9 @@ export const swagger = {
     '/episode/stream?token=&animeId=&order=': streamEpisode,
     // watchTime
     '/episodes/{id}/WatchTime': addWatchTime,
-    '/episodes/{id}/WatchTime/': getWatchTime
+    '/episodes/{id}/WatchTime/': getWatchTime,
+    // like
+    '/likes': addLike
   },
   schemas: {
     // error
