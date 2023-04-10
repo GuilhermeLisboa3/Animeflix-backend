@@ -4,6 +4,8 @@ import { listCategory, getCategory, addCategory, deleteCategory } from '@/main/d
 import { listCategoryResponse, getCategoryResponse, addCategoryResponse } from '@/main/docs/schema/category'
 import { listAnimeByFeatured, getTopTenAnimesByLikes, listAnimeNewest, getAnimeById, searchAnimesByName, addAnime, updateAnime, deleteAnime } from '@/main/docs/paths/anime'
 import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse, listAnimeNewestResponse, getAnimeByIdResponse, searchAnimesByNameResponse, addAnimeResponse } from '@/main/docs/schema/anime'
+import { addEpisode } from '@/main/docs/paths/episodes'
+import { addEpisodeResponse } from '@/main/docs/schema/episode'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
@@ -19,7 +21,7 @@ export const swagger = {
     }
   },
   servers: [{ url: '/' }],
-  tags: [{ name: 'Account' }, { name: 'Category' }, { name: 'Anime' }],
+  tags: [{ name: 'Account' }, { name: 'Category' }, { name: 'Anime' }, { name: 'Episode' }],
   paths: {
     // account
     '/auth/register': signup,
@@ -41,7 +43,9 @@ export const swagger = {
     '/animes/search?name=&page=&perPage=': searchAnimesByName,
     '/anime': addAnime,
     '/anime/{id}': updateAnime,
-    '/anime/{id}/': deleteAnime
+    '/anime/{id}/': deleteAnime,
+    // episode
+    '/episode': addEpisode
   },
   schemas: {
     // error
@@ -65,7 +69,9 @@ export const swagger = {
     listAnimeNewestResponse,
     getAnimeByIdResponse,
     searchAnimesByNameResponse,
-    addAnimeResponse
+    addAnimeResponse,
+    // episode
+    addEpisodeResponse
   },
   components: { securitySchemes, badRequest, serverError, unauthorized, forbidden }
 }
