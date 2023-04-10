@@ -8,7 +8,7 @@ import { addEpisode, deleteEpisode, streamEpisode, updateEpisode } from '@/main/
 import { addEpisodeResponse } from '@/main/docs/schema/episode'
 import { addWatchTime, getWatchTime } from '@/main/docs/paths/watch-time'
 import { addLike, deleteLike } from '@/main/docs/paths/like'
-import { listFavorite } from '@/main/docs/paths/favorite'
+import { listFavorite, addFavorite } from '@/main/docs/paths/favorite'
 import { listFavoriteResponse } from '@/main/docs/schema/favorite'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
@@ -60,7 +60,8 @@ export const swagger = {
     '/likes': addLike,
     '/likes/{id}': deleteLike,
     // favorite
-    '/favorites': listFavorite
+    '/favorites': listFavorite,
+    '/favorites/': addFavorite
   },
   schemas: {
     // error
