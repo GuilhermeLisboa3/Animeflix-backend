@@ -2,8 +2,8 @@ import { signup, login, updateAccount, updatePassword, getAccountData, getKeepWa
 import { signUpRequest, signUpResponse, loginRequest, loginResponse, updateAccountRequest, updatePasswordRequest, getAccountDataResponse, getKeepWatchingResponse } from '@/main/docs/schema/account'
 import { listCategory, getCategory, addCategory, deleteCategory } from '@/main/docs/paths/category'
 import { listCategoryResponse, getCategoryResponse, addCategoryResponse } from '@/main/docs/schema/category'
-import { listAnimeByFeatured, getTopTenAnimesByLikes, listAnimeNewest } from '@/main/docs/paths/anime'
-import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse, listAnimeNewestResponse } from '@/main/docs/schema/anime'
+import { listAnimeByFeatured, getTopTenAnimesByLikes, listAnimeNewest, getAnimeById } from '@/main/docs/paths/anime'
+import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse, listAnimeNewestResponse, getAnimeByIdResponse } from '@/main/docs/schema/anime'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
@@ -36,7 +36,8 @@ export const swagger = {
     // anime
     '/animes/featured': listAnimeByFeatured,
     '/animes/popular': getTopTenAnimesByLikes,
-    '/animes/newest': listAnimeNewest
+    '/animes/newest': listAnimeNewest,
+    '/animes/{id}': getAnimeById
   },
   schemas: {
     // error
@@ -57,7 +58,8 @@ export const swagger = {
     // anime
     listAnimeByFeaturedResponse,
     getTopTenAnimesByLikesResponse,
-    listAnimeNewestResponse
+    listAnimeNewestResponse,
+    getAnimeByIdResponse
   },
   components: { securitySchemes, badRequest, serverError, unauthorized, forbidden }
 }
