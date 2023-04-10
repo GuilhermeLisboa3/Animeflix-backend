@@ -6,6 +6,5 @@ export const addAnimeResponse = {
     file: { type: 'string', format: 'binary' },
     featured: { type: 'boolean' },
     categoryId: { type: 'number' }
-  },
-  required: ['name', 'synopsis', 'categoryId']
+  }
 }
