@@ -6,7 +6,7 @@ import { listAnimeByFeatured, getTopTenAnimesByLikes, listAnimeNewest, getAnimeB
 import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse, listAnimeNewestResponse, getAnimeByIdResponse, searchAnimesByNameResponse, addAnimeResponse } from '@/main/docs/schema/anime'
 import { addEpisode, deleteEpisode, streamEpisode, updateEpisode } from '@/main/docs/paths/episodes'
 import { addEpisodeResponse } from '@/main/docs/schema/episode'
-import { addWatchTime } from '@/main/docs/paths/watch-time'
+import { addWatchTime, getWatchTime } from '@/main/docs/paths/watch-time'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
@@ -51,7 +51,8 @@ export const swagger = {
     '/episode/{id}/': deleteEpisode,
     '/episode/stream?token=&animeId=&order=': streamEpisode,
     // watchTime
-    '/episodes/{id}/WatchTime': addWatchTime
+    '/episodes/{id}/WatchTime': addWatchTime,
+    '/episodes/{id}/WatchTime/': getWatchTime
   },
   schemas: {
     // error
