@@ -1,9 +1,9 @@
 import { signup, login, updateAccount, updatePassword, getAccountData, getKeepWatchingList } from '@/main/docs/paths/account'
-import { listCategory, getCategory, addCategory, deleteCategory } from '@/main/docs/paths/category'
-import { listAnimeByFeatured } from '@/main/docs/paths/anime'
 import { signUpRequest, signUpResponse, loginRequest, loginResponse, updateAccountRequest, updatePasswordRequest, getAccountDataResponse, getKeepWatchingResponse } from '@/main/docs/schema/account'
+import { listCategory, getCategory, addCategory, deleteCategory } from '@/main/docs/paths/category'
 import { listCategoryResponse, getCategoryResponse, addCategoryResponse } from '@/main/docs/schema/category'
-import { listAnimeByFeaturedResponse } from '@/main/docs/schema/anime'
+import { listAnimeByFeatured, getTopTenAnimesByLikes } from '@/main/docs/paths/anime'
+import { listAnimeByFeaturedResponse, getTopTenAnimesByLikesResponse } from '@/main/docs/schema/anime'
 import { badRequest, serverError, unauthorized, forbidden, securitySchemes } from '@/main/docs/components'
 import { error } from '@/main/docs/schema/error'
 
@@ -34,7 +34,8 @@ export const swagger = {
     '/category': addCategory,
     '/category/{id}': deleteCategory,
     // anime
-    '/animes/featured': listAnimeByFeatured
+    '/animes/featured': listAnimeByFeatured,
+    '/animes/popular': getTopTenAnimesByLikes
   },
   schemas: {
     // error
@@ -53,7 +54,8 @@ export const swagger = {
     getCategoryResponse,
     addCategoryResponse,
     // anime
-    listAnimeByFeaturedResponse
+    listAnimeByFeaturedResponse,
+    getTopTenAnimesByLikesResponse
   },
   components: { securitySchemes, badRequest, serverError, unauthorized, forbidden }
 }
