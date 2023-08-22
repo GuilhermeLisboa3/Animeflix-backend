@@ -88,7 +88,7 @@ describe('EpisodeRoute', () => {
 
   describe('DELETE /episode/:id', () => {
     it('should return 204 on success', async () => {
-      await Episode.create({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis', order: 1, videoUrl: 'any_video' })
+      await Episode.create({ name: 'any_anime', animeId: 1, synopsis: 'any_synopsis', order: 1 })
       const { status } = await request(app)
         .delete(`/episode/${1}`)
         .set({ authorization: `Bearer: ${token}` })
